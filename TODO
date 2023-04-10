@@ -4,4 +4,24 @@
   - mongoConnections
   - settings
 
-2. 
+    1.1.  Setup Collections in Database
+    1.2. Connect application to the dataabse using Node.js
+    1.3. Insert sample data first and check the connection
+    1.4. Gather sample data for database. like couple of users (for testing purpose)
+
+
+2. Setup boiler plate code
+   - initialize node, create collections in DB
+   - get skeleton of files laid out
+3. UI/UX or Flow 
+ userstory1: 1. user enters the login page, 2. user fills the credetnials or goes to signup page , 3. .......
+ 1. home page
+ 2. log in/ sign up
+  2a. if signing up - enter your account info (name, location, service provider/service seeker, ... )
+  2b. if logging in then take to your own homepage which will show relevant posts
+ 3. Ability to interact 
+ 1. usre rating 
+  . 1. user goes to x page 
+ locagtion: "string"
+4. Login infrastucture
+5. 
