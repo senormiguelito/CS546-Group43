@@ -13,6 +13,7 @@ const dbConnection = async () => {
   return _db;
 };
 
+
 const closeConnection = async () => {
   await _connection.close();
 };

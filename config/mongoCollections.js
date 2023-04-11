@@ -14,4 +14,7 @@ const getCollectionFn = (collection) => {
   };
 };
 
-export const collection_required = getCollectionFn(''); // placeholder for later on
+export const users = getCollectionFn('users');
+export const posts = getCollectionFn('posts');
+export const reviews = getCollectionFn('reviews');
+export const dms = getCollectionFn('direct_massages');
