@@ -1,4 +1,4 @@
 export const mongoConfig = {
-  serverUrl: 'url',
+  serverUrl: 'mongodb://localhost:27017/',
   database: 'TradesBridgeDB'
 };
