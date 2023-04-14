@@ -4,10 +4,9 @@ import * as posts from './data/posts.js'
 import * as reviewRatings from './data/reviewRatings.js'
 import * as directMessages from './data/directMessages.js'
 
-
 async function main(){
     const db = await dbConnection()
-    await db.dropDatabase()
+    // await db.dropDatabase()
 
     console.log("seeding started")
 
