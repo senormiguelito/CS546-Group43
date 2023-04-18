@@ -1,10 +1,13 @@
-import allRoutes from './routes.js';
+import allRoutes from "./routes.js";
+import homeRoutes from "./home.js";
+import userRoutes from "./user.js";
 
 const constructorMethod = (app) => {
-  app.use('/', allRoutes);
+  app.use("/", homeRoutes);
+  app.use("/user", userRoutes);
 
-  app.use('*', (req, res) => {
-    res.status(404).json({error: 'Not found'});
+  app.use("*", (req, res) => {
+    res.status(404).json({ error: "Not found" });
   });
 };
 
