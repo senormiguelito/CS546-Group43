@@ -1,0 +1,35 @@
+
+<header>
+  <h1>Registration Page</h1>
+</header>
+<div class="result">
+<form id="registration-form" method="POST" action="/register">
+  <label for="firstNameInput">First Name:</label>
+  <input type="text" name="firstName" id="firstNameInput">
+  <br>
+  <label for="lastNameInput">Last Name:</label>
+  <input type="text" name="lastName" id="lastNameInput">
+  <br>
+  <label for="emailAddressInput">Email Address:</label>
+  <input type="email" name="email" id="emailAddressInput">
+  <br>
+  <label for="passwordInput">Password:</label>
+  <input type="password" name="password" id="passwordInput">
+  <br>
+  <label for="confirmPasswordInput">Confirm Password:</label>
+  <input type="password" name="confirmPassword" id="confirmPasswordInput">
+  <br>
+  <label for="roleInput">Role:</label>
+  <select name="role" id="roleInput">
+    <option value="admin">Admin</option>
+    <option value="user">User</option>
+  </select>
+  <br>
+  <div id="error" hidden></div>
+  <br>
+  <button type="submit" id="registerButton">Register</button>
+</form>
+ </div>
+<p class="error">{{#if error}}{{error}}{{/if}}</p>
+
+<p><a href="/login">Already have an account? Click here to log-in</a></p>
