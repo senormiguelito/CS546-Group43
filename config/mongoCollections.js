@@ -1,6 +1,5 @@
 import { dbConnection } from './mongoConnections.js';
 
-// 1 reference to each collection per app
 const getCollectionFn = (collection) => {
   let _col = undefined;
 
@@ -17,4 +16,4 @@ const getCollectionFn = (collection) => {
 export const users = getCollectionFn('users');
 export const posts = getCollectionFn('posts');
 export const reviewRatings = getCollectionFn('reviews');
-export const directMessages = getCollectionFn('direct_massages');
+export const directMessages = getCollectionFn('direct_messages');

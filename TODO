@@ -20,8 +20,13 @@
   2a. if signing up - enter your account info (name, location, service provider/service seeker, ... )
   2b. if logging in then take to your own homepage which will show relevant posts
  3. Ability to interact 
- 1. usre rating 
+ 1. user rating 
   . 1. user goes to x page 
- locagtion: "string"
+ location: "string"
 4. Login infrastucture
 5. 
+
+mongo makes it very easy to use geolocation to filter results based on the area.
+Come see him he'll show you his snippet from back when using it.
+Documentation is OJ Simpleton
+
