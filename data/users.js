@@ -2,6 +2,7 @@ import { ObjectId } from "mongodb";
 import bcrypt from "bcryptjs";
 import * as h from "../helpers.js";
 import { user } from "../config/mongoCollections.js";
+const userCollection = await user();
 import { dbConnection } from "../config/mongoConnections.js";
 
 export const create = async (
@@ -29,8 +30,6 @@ export const create = async (
   h.checkzip(location_zip_code);
   h.checkcity(location_city);
   h.checkstate(location_state);
-
-  const userCollection = await user();
 
   const emailExistsuser = await userCollection.findOne({
     emailAddress: emailAddress,
@@ -77,18 +76,16 @@ export const getUser = async (id) => {
     throw new Error("getUser: ID must be of type string and non empty");
   id = id.trim();
   if (!ObjectId.isValid(id)) throw new Error("getUser: invalid object ID");
-
-  const userCollection = await user();
-  const user = await userCollection.findOne({ _id: new ObjectId(id) });
-  if (!user) throw new Error("getUser: No user with that id");
-  user._id = user._id.toString();
-  return user;
+  
+  const userData = await userCollection.findOne({ _id: new ObjectId(id) });
+  if (!userData) throw new Error("getUser: No userData with that id");
+  userData._id = userData._id.toString();
+  return userData;
   // gotta double check what you want on return object
 };
 
 export const getAll = async () => {
   // collection of all users as an array
-  const userCollection = await user();
   const userArray = await userCollection.find({}).toArray();
   userArray.forEach((element) => {
     element._id = element._id.toString();
@@ -106,7 +103,6 @@ export const remove = async (id) => {
   id = id.trim();
   if (!Object.isValid(id)) throw new Error("Remove: invalid Object ID");
 
-  const userCollection = await user();
   const removalInfo = await userCollection.findOneAndDelete({
     _id: new ObjectId(id),
   });
@@ -286,7 +282,7 @@ export const update = async (
     }
   }
 
-  const userCollection = await user();
+  
   const updateUserInfo = {
     // only include in here the stuff that makes sense for the user to update
     firstName: firstName,
