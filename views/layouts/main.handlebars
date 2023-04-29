@@ -3,11 +3,24 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <link href="public/css/lab10.css" rel="stylesheet">
+    <link href="/public/css/main.css" rel="stylesheet">
     <title>{{title}}</title>  
   </head>
+  <header class="top-bar">
+  <nav>
+    <ul class="nav-links">
+      <li class="nav-link"><a href="/">Home</a></li>
+      <li class="nav-link"><a href="/provideList">Job Providers</a></li>
+      <li class="nav-link"><a href="/seekers">Job Seekers</a></li>
+      <li class="nav-link"><a href="/profile">My Profile</a></li>
+      <li class="nav-link"><a href="/posts">My Posts</a></li>
+      <li class="nav-link"><a href="/logout">Logout</a></li>
+    </ul>
+  </nav>
+</header>
   <body>
     {{{body}}}
-    <script src="public/js/lab10.js"></script>
+    <script src="/public/js/main.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
   </body>
 </html>

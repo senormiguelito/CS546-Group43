@@ -3,33 +3,108 @@
   <h1>Registration Page</h1>
 </header>
 <div class="result">
-<form id="registration-form" method="POST" action="/register">
-  <label for="firstNameInput">First Name:</label>
+<form id="signup-form" method="POST" action="/user/signup">
+  <label for="firstNameInput">First Name<span class="required">*</span>: </label>
   <input type="text" name="firstName" id="firstNameInput">
   <br>
   <label for="lastNameInput">Last Name:</label>
   <input type="text" name="lastName" id="lastNameInput">
   <br>
-  <label for="emailAddressInput">Email Address:</label>
+  <label for="emailAddressInput">Email Address<span class="required">*</span>:</label>
   <input type="email" name="email" id="emailAddressInput">
   <br>
-  <label for="passwordInput">Password:</label>
+  <label for="phoneNumberInput">Phone Number<span class="required">*</span>:</label>
+  <input type="tel" name="phoneNumber" id="phoneNumberInput">
+  <br>
+  <label for="passwordInput"> 
+  Password<span class="required">*</span>:<span class="info-button" title="Password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one special character like (@#$%^&*!/.,;-`~) and one number"></span></label>
   <input type="password" name="password" id="passwordInput">
   <br>
-  <label for="confirmPasswordInput">Confirm Password:</label>
+  <label for="confirmPasswordInput">Confirm Password<span class="required">*</span>:</label>
   <input type="password" name="confirmPassword" id="confirmPasswordInput">
+  
   <br>
-  <label for="roleInput">Role:</label>
+  <label for="roleInput">Role<span class="required">*</span>:</label>
   <select name="role" id="roleInput">
-    <option value="admin">Admin</option>
-    <option value="user">User</option>
+    <option value="provider">Job Provider</option>
+    <option value="seeker">Job Seeker</option>
   </select>
+   <br>
+  <label for="Address">Address<span class="required">*</span>:</label>
+  <input class="addr" type="text" name="zip" id="zipInput" placeholder="zipcode" >
+  <input class="addr" type="text" name="city" id="cityInput" >
+  <input class="addr" type="text" name="state" id="stateInput">
   <br>
-  <div id="error" hidden></div>
+  <br>
+  <div id="error"  role="alert" hidden></div>
   <br>
   <button type="submit" id="registerButton">Register</button>
+  <button type="button" id="reset-button">Reset</button>
 </form>
  </div>
 <p class="error">{{#if error}}{{error}}{{/if}}</p>
 
-<p><a href="/login">Already have an account? Click here to log-in</a></p>
+<p><a href="/user/login">Already have an account? Click here to log-in</a></p>
+
+
+
+{{!--
+  <label for="Categories">Categories:</label>
+  <select name="workers[]" id="workerInput" multiple>
+  <option value="" disabled selected>Select a Skilled Worker</option>
+  <option value="electrician">Electrician</option>
+  <option value="plumber">Plumber</option>
+  <option value="carpenter">Carpenter</option>
+  <option value="welder">Welder</option>
+  <option value="mechanic">Mechanic</option>
+  <option value="hvac-technician">HVAC Technician</option>
+  <option value="mason">Mason</option>
+  <option value="painter">Painter</option>
+  <option value="landscaper">Landscaper</option>
+  <option value="roofer">Roofer</option>
+  <option value="glazier">Glazier</option>
+  <option value="tile-setter">Tile Setter</option>
+  <option value="bricklayer">Bricklayer</option>
+  <option value="drywaller">Drywaller</option>
+  <option value="upholsterer">Upholsterer</option>
+  <option value="locksmith">Locksmith</option>
+  <option value="blacksmith">Blacksmith</option>
+  <option value="glass-blower">Glass Blower</option>
+  <option value="jeweler">Jeweler</option>
+  <option value="tailor">Tailor</option>
+  <option value="shoemaker">Shoemaker</option>
+  <option value="baker">Baker</option>
+  <option value="butcher">Butcher</option>
+  <option value="chef">Chef</option>
+  <option value="bartender">Bartender</option>
+  <option value="waiter-waitress">Waiter/Waitress</option>
+  <option value="hair-stylist-barber">Hair Stylist/Barber</option>
+  <option value="makeup-artist">Makeup Artist</option>
+  <option value="nail-technician">Nail Technician</option>
+  <option value="massage-therapist">Massage Therapist</option>
+  </select><br>
+  <label for="Bio">Bio: </label>
+  <input type="text" name="Bio" id="Bio" placeholder="Bio, about your work"> --}}
+ 
+<script>
+const zipInput = document.getElementById('zipInput');
+const cityInput = document.getElementById('cityInput');
+const stateInput = document.getElementById('stateInput');
+
+zipInput.addEventListener('change', () => {
+  const zipcode = zipInput.value;
+  const url = `https://api.zippopotam.us/us/${zipcode}`;
+
+  fetch(url)
+    .then(response => response.json())
+    .then(data => {
+      const city = data.places[0]['place name'];
+      const state = data.places[0]['state abbreviation'];
+      cityInput.value = city;
+      stateInput.value = state;
+    })
+    .catch(error => {
+      console.error(error);
+    });
+});
+</script>
