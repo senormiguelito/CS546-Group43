@@ -20,3 +20,9 @@ Documentation is OJ Simpleton
 Update: 4/29
 
 Create user must take in user birth date to verify minimum age because of laws and regulations and shit
+
+
+Update: 4/30
+
+Helper functions implementing for /posts functions error checking
+Do we want reviews to push into user object?

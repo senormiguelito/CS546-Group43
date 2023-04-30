@@ -77,9 +77,28 @@ export const create = async (
 
 export const get = async (id) => {
   
-  const reviewRatingsCollection = await reviewRatings()
+  const reviewRatingsCollection = await reviewRatings();
   const reviewRating = await reviewRatingsCollection.findOne({_id: new ObjectId(id)});
   if (!reviewRating) throw new Error('No review/rating with that id');
   reviewRating._id = reviewRating._id.toString();
   return reviewRating;
   };
+
+
+export const getAll = async (revieweeId) => {
+  
+  if (!revieweeId) throw new Error("no revieweeId provided");
+  if (typeof revieweeId !== "string" || revieweeId.trim() === "") throw new Error("revieweeId must be a non-empty string");
+  revieweeId = revieweeId.trim();
+  if (!ObjectId.isValid(revieweeId)) throw new Error("revieweeId is not a valid ObjectId");
+
+  const reviewRatingsCollection = await reviewRatings();  
+  const reviewsList = await reviewRatingsCollection.find({}).toArray();
+  reviewsList.forEach(element => {
+    element._id = element._id.toString();
+  });
+  if (reviewsList.length === 0) {
+    return [];
+  }
+  return reviewsList;
+};
