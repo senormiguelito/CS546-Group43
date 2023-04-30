@@ -178,4 +178,4 @@ const getAll = async () => {
     return newPost.value;
   }
 
-  export {create, get, getAll, remove, upated}
+export { create, get, getAll, remove, upated };

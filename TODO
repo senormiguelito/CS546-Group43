@@ -1,18 +1,4 @@
-1. Get DB set up:
-  
-  - mongoCollections
-  - mongoConnections
-  - settings
 
-    1.1.  Setup Collections in Database
-    1.2. Connect application to the dataabse using Node.js
-    1.3. Insert sample data first and check the connection
-    1.4. Gather sample data for database. like couple of users (for testing purpose)
-
-
-2. Setup boiler plate code
-   - initialize node, create collections in DB
-   - get skeleton of files laid out
 3. UI/UX or Flow 
  userstory1: 1. user enters the login page, 2. user fills the credetnials or goes to signup page , 3. .......
  1. home page
@@ -30,3 +16,7 @@ mongo makes it very easy to use geolocation to filter results based on the area.
 Come see him he'll show you his snippet from back when using it.
 Documentation is OJ Simpleton
 
+
+Update: 4/29
+
+Create user must take in user birth date to verify minimum age because of laws and regulations and shit

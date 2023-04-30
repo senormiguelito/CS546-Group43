@@ -1,3 +1,5 @@
+import { ObjectId } from 'mongodb';
+
 function isvalid(value, variable) {
   if (!value) throw `${variable} is not provided`;
   if (!value.trim()) {
@@ -9,12 +11,12 @@ function checkname(Name, varName) {
   isvalid(Name, varName);
   const letterPattern = /^[a-zA-Z]+$/;
   if (!letterPattern.test(Name)) {
-    throw `${varName} must contain only alphabets`;
+    throw `${varName} must contain only letters`;
   }
   const min = 2;
   const max = 25;
   if (Name.length < min || Name.length > max)
-    throw `${varName} must have a length between ${min} and ${max} characters`;
+    throw `${varName} must be at least ${min} characters and no longer than ${max} characters`;
 }
 
 export const checkfirstname = (name) => {
@@ -29,7 +31,7 @@ export const checkemail = async (email) => {
   isvalid(email, "Email");
 
   const emailAddress = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if (!emailAddress.test(email)) throw `Not a valid email!!`;
+  if (!emailAddress.test(email)) throw `Please enter a valid email`;
 };
 
 export const checkpassword = (password) => {
@@ -67,7 +69,7 @@ export const checkphone = (phone) => {
   const phoneNumber = phone.trim();
   // console.log(phoneNumber);
   if (!phoneNumberRegex.test(phoneNumber))
-    throw `Please enter valid phone number, It should be 10 digit`;
+    throw `Please enter a valid 10 digit phone number`;
 };
 
 export const checkzip = (zip) => {
@@ -75,14 +77,14 @@ export const checkzip = (zip) => {
 
   const zipRegex = /^\d{5}(?:[-\s]\d{4})?$/;
   zip = zip.trim();
-  if (!zipRegex.test(zip)) throw `Invalid zip code, It should be 5 digit only`;
+  if (!zipRegex.test(zip)) throw `Please enter a valid 5 digit zip code`;
 };
 export const checkcity = (city) => {
   isvalid(city, "City");
   city = city.trim();
   for (let i in city) {
     if (typeof city[i] === "number")
-      throw `Location: city can not contain numbers`;
+      throw `Location: city should not contain numbers`;
   }
 };
 
@@ -91,6 +93,38 @@ export const checkstate = (state) => {
   state = state.trim();
   for (let i in state) {
     if (typeof state[i] === "number")
-      throw `Location: state can not contain numbers`;
+      throw `Location: state should not contain numbers`;
   }
 };
+
+export const checkRating = (rating) => {
+  isvalid(rating, "rating");
+  if (typeof rating !== "number") throw new Error("rating must be a number");
+  if (rating > 5 || rating < 0) throw new Error("rating can not be less than 0 or greater than 5");
+};
+
+export const checkValidUserID = (userId) => {
+  isvalid(userId, "userId");
+  if (!ObjectId.isValid(userId)) throw new Error("userId is not a valid ObjectId");
+}
+
+export const checkValidRevieweeId = (revieweeId) => {
+  isvalid(revieweeId, "revieweeId");
+  if (!ObjectId.isValid(revieweeId)) throw new Error("revieweeId is not a valid ObjectId");
+}
+
+export const checkValidProjectId = (projectId) => {
+  isvalid(projectId, "proejctId");
+  if (!ObjectId.isValid(projectId)) throw new Error("projectId is not a valid ObjectId");
+}
+
+export const checkReview = (comment) => {
+  isvalid(comment, "comment");
+  if (typeof comment !== 'string') throw new Error("comment must be of type string");
+  if (comment.length > 2500) throw new Error("comment has a maximum length of 2500 characters");
+  if (comment.trim() === "") throw new Error("comment must not be empty");
+}
+
+export const selfReview = (userId, revieweeId) => {
+  if (userId === revieweeId) throw new Error("You can not leave a review for yourself!");
+}
