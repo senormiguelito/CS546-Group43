@@ -29,8 +29,8 @@ export const checklastname = (name) => {
   checkname(name, "LastName");
 };
 
-export const checkemail = async (email) => {
 
+export const checkemail = (email) => {
   isvalid(email, "Email");
 
   if (typeof email !== 'string') throw new Error("email address must be of type string");
@@ -73,7 +73,7 @@ export const checkphone = (phone) => {
   isvalid(phone, "PhoneNumber");
 
   const phoneNumberRegex = /^\d{10}$/;
-  phone = phone.replace(/[-()]/g, "");
+  phone = phone.replace(/[- ()]/g, "");
   const phoneNumber = phone.trim();
   // console.log(phoneNumber);
   if (!phoneNumberRegex.test(phoneNumber)) throw new Error(`Please enter a valid 10 digit phone number`);

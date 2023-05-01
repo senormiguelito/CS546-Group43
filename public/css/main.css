@@ -68,16 +68,23 @@
   input[type="email"],
   input[type="password"],
   input[type="tel"],
+  input[type="date"],
   select,button {
     width: 100%;
     padding: 10px;
+    box-sizing: border-box;
     margin-bottom: 10px;
     border: 1px solid #ccc;
     border-radius: 3px;
     text-align: center;
     box-sizing: border-box;
   }
-  
+/* 
+  input[type="date"]::-webkit-calendar-picker-indicator {
+    width: 100%;
+    height: 100%;
+  }
+   */
   button[type="submit"] {
     background-color: #007bff;
     color: #fff;

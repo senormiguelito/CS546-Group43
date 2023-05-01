@@ -71,7 +71,7 @@ export const create = async (
 };
 
 export const getAll = async () => {
-  console.log("inside data > posts > getAll");
+  // console.log("inside data > posts > getAll");
   const postsCollection = await posts();
   let postList = await postsCollection.find({}).toArray();
   if (!postList) throw new Error('Could not get all posts');

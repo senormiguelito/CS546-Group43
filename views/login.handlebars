@@ -2,8 +2,10 @@
 <header>
   <h1 class="login">Login Page</h1>
 </header>
+<p class="error">{{#if Error}}{{Error}}{{/if}}</p>
+<p class="message" id="success">{{#if Message}}{{Message}}{{/if}}</p>
 <div class="result">
-<form id="login-form" method="POST" action="/login">
+<form id="login-form" method="POST" action="/user/login">
   <label for="emailAddressInput">Email Address:</label>
   <input type="email" name="emailAddressInput" id="emailAddressInput">
   <br>
@@ -14,6 +16,6 @@
 </form>
 </div>
 <div id="error" hidden></div>
-<p class="error">{{#if error}}{{error}}{{/if}}</p>
+
 <p>New user?
 <a href="/user/signup">Click here to register!</a></p>
