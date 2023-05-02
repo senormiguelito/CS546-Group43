@@ -5,6 +5,7 @@ import userRoutes from "./user.js";
 const constructorMethod = (app) => {
   app.use("/", homeRoutes);
   app.use("/user", userRoutes);
+  app.use("/api", allRoutes);
   // app.use("/home", homeRoutes);
 
   app.use("*", (req, res) => {

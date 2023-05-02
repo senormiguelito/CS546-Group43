@@ -1,1 +1,22 @@
-<p>mnessages</p>
+{{!-- {
+    _id: '6451109f8011e24e500bbe41',
+    senderId: '6451109b8011e24e500bbe35',
+    recipientId: '6451109f8011e24e500bbe36',
+    message: 'I am the service provider you are looking for!',
+    timeStamp: '2023-05-02T13:31:02.778Z'
+  }  --}}
+  <div class = "messagePage">
+  <div class="messageSection">
+  {{#each messages}}
+    <div class="message" id = "message">
+        <p>{{senderId}}</p>
+        <p id = "desc" hidden>{{message}}</p>
+        <p>{{timeStamp}}</p>
+    </div>
+    {{/each}}
+</div>
+<div class="thatMessage">
+<p class="m" id = "m">
+</p>
+</div>
+</div>

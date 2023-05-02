@@ -25,7 +25,7 @@ const create = async (
     return newDirectMessage;
   };
 
-  const get = async (id) => {
+  const getMessages = async (id) => {
   
     const directMessagesCollection = await directMessages()
     const directMessage = await directMessagesCollection.findOne({_id: new ObjectId(id)});
@@ -33,5 +33,17 @@ const create = async (
     directMessage._id = directMessage._id.toString()
     return directMessage;
   };
+  const getAllMessages = async () => {
+    // console.log("inside data > posts > getAll");
+    const directMessagesCollection = await directMessages();
+    let directMessageList = await directMessagesCollection.find({}).toArray();
+    if (!directMessageList) throw new Error('Could not get all direct messages');
 
-  export {create,get}
+    directMessageList = directMessageList.map((element) => {
+      element._id = element._id.toString();
+      return element;
+    });
+    return directMessageList;
+  }
+
+  export {create,getMessages, getAllMessages}

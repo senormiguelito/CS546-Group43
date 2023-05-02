@@ -1,5 +1,6 @@
 import { postData } from "../data/index.js";
 import { Router } from "express";
+import {messageData} from "../data/index.js";
 const router = Router();
 
 router.route("/").get(async (req, res) => {
@@ -22,7 +23,9 @@ router.route("/provideList").get(async (req, res) => {
 });
 
 router.route("/messages").get(async (req, res) => {
-  res.render("dmList", { title: "messages", messages: [] });
+  const messages = await messageData.getAllMessages();
+  console.log(messages)
+  res.render("dmList", { title: "messages", messages: messages });
 });
 
 export default router;
