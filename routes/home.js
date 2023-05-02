@@ -20,4 +20,9 @@ router.route("/provideList").get(async (req, res) => {
     return res.status(400).render("error", { error: e });
   }
 });
+
+router.route("/messages").get(async (req, res) => {
+  res.render("dmList", { title: "messages", messages: [] });
+});
+
 export default router;

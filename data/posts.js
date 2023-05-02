@@ -12,35 +12,35 @@ export const create = async (
   budget,
   images) => {
   
-  // if seekerId, title, description, location, categories, budget are not provided at all, the method should throw.
-  if(!seekerId || !title || !description || !location || !categories || !budget) throw 'seekerId, title, description, location, categories, budget must be provided'
+  // // if seekerId, title, description, location, categories, budget are not provided at all, the method should throw.
+  // if(!seekerId || !title || !description || !location || !categories || !budget) throw 'seekerId, title, description, location, categories, budget must be provided'
 
-  // if seekerId, title, description, location are not string, the method should throw.
-  if(typeof seekerId !=='string' ||typeof title !== 'string' || typeof description !== 'string' || typeof location !== 'string') throw 'seekerId, title, description, and location must be a string'
+  // // if seekerId, title, description, location are not string, the method should throw.
+  // if(typeof seekerId !=='string' ||typeof title !== 'string' || typeof description !== 'string' || typeof location !== 'string') throw 'seekerId, title, description, and location must be a string'
 
-  if(seekerId.trim().length === 0) throw 'invalid id'
-  // If the seekerId  provided is not a valid ObjectId, the method should throw.
-  if(!ObjectId.isValid(seekerId)) throw 'Invalid seekerId'
+  // if(seekerId.trim().length === 0) throw 'invalid id'
+  // // If the seekerId  provided is not a valid ObjectId, the method should throw.
+  // if(!ObjectId.isValid(seekerId)) throw 'Invalid seekerId'
 
-  // if title, description, location are empty string, the method should throw.
-  if(title.trim().length === 0 || description.trim().length === 0 || location.trim().length === 0) throw 'title, description, and location must be a non-empty string'
+  // // if title, description, location are empty string, the method should throw.
+  // if(title.trim().length === 0 || description.trim().length === 0 || location.trim().length === 0) throw 'title, description, and location must be a non-empty string'
 
-  // if categories is not an array of string, method should throw.
-  if(!Array.isArray(categories)) throw 'categories must be an array'
+  // // if categories is not an array of string, method should throw.
+  // if(!Array.isArray(categories)) throw 'categories must be an array'
 
-  // if categories have an non-string or an empty string, method should throw.
-  categories.forEach(element => {
-    if(typeof element === 'string'){
-      if(element.trim().length === 0) throw 'categories can not have an empty string'
-      element = element.trim()
-    }else{
-      throw 'categories must be an array of strings'
-    }
-  });
+  // // if categories have an non-string or an empty string, method should throw.
+  // categories.forEach(element => {
+  //   if(typeof element === 'string'){
+  //     if(element.trim().length === 0) throw 'categories can not have an empty string'
+  //     element = element.trim()
+  //   }else{
+  //     throw 'categories must be an array of strings'
+  //   }
+  // });
 
-  //if budget is a negative number, method should throw.
-  if (typeof budget !== 'number') throw 'budget should be a valid number'
-  if(budget <= 0) throw 'how come your budget is zero or less?'
+  // //if budget is a negative number, method should throw.
+  // if (typeof budget !== 'number') throw 'budget should be a valid number'
+  // if(budget <= 0) throw 'how come your budget is zero or less?'
 
   //needs to check if images have valid img type
 
