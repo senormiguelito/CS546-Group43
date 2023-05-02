@@ -30,6 +30,16 @@ export const checklastname = (name) => {
 };
 
 
+export const checkDOB = (date_of_birth) => {
+  const [month, day, year] = date_of_birth.split('/').map(cal => parseInt(cal)); // parse each sub-string and convert into an integer
+  if (month > 12 || month < 1) throw new Error("Invalid month");
+  if (day < 1 || (month === 2 && day > 28) || ((month === 4 || 6 || 9 || 11) && day > 30) || (day > 31)) throw new Error("Invalid date");
+  if (year > 2010) throw new Error("You are too young to join. Grow up.");
+  if (year < 1900) throw new Error("That is preposterous");
+  date_of_birth = date_of_birth.trim(); 
+  if (releaseDate.length !== 10) throw new Error("Incorrect releaseDate format");
+}
+
 export const checkemail = (email) => {
   isvalid(email, "Email");
 
@@ -156,6 +166,8 @@ export const checkbio = (bio) => {
 };
 
 export const checkCategories = (categories) => {
+  if (!categories) throw new Error("categories not provided");
+  // double check with categories, how we want it input as, when taking in the 'getUsersByCategory' func
   if (!Array.isArray(categories))
     throw new Error("Update: categories must be an array");
   if (categories.length < 1)
@@ -169,4 +181,5 @@ export const checkCategories = (categories) => {
         throw new Error("Update: invalid category response");
     }
   }
+  
 };

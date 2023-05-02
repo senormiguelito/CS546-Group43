@@ -4,9 +4,10 @@ import * as h from "../helpers.js";
 import { user } from "../config/mongoCollections.js";
 const userCollection = await user();
 
-export const create = async (
+export const create = async ( // getting from the route, which pulls from the form
   firstName,
   lastName,
+  date_of_birth,
   emailAddress,
   phoneNumber,
   password,
@@ -14,7 +15,6 @@ export const create = async (
   location_zip_code,
   location_city,
   location_state
-
   // categories,     // initialize empty []
   // bio,            // initialize ""
   // reviews,        // initialize empty []
@@ -23,6 +23,7 @@ export const create = async (
 ) => {
   h.checkfirstname(firstName);
   h.checklastname(lastName);
+  h.checkDOB(date_of_birth);  // for now splitting and parsing as a string, but we will use html <input type="date"> to avoid potential errors & invalid inputs
   h.checkemail(emailAddress);
   h.checkphone(phoneNumber);
   h.checkpassword(password);
@@ -41,18 +42,16 @@ export const create = async (
   location_city = location_city.trim();
   location_state = location_state.trim();
 
-  const emailExistsuser = await userCollection.findOne({
+  const emailExists = await userCollection.findOne({
     emailAddress: emailAddress,
   });
 
-  if (emailExistsuser)
-    throw new Error(
-      "There is already a user with this email address in our database"
-    );
+  if (emailExists) throw new Error("There is already a user with this email address in our database");
 
-  if (!emailExistsuser) {
+  if (!emailExists) {
     const saltRounds = 16;
     const hashPassword = await bcrypt.hash(password, saltRounds);
+  
     const userInsert = {
       firstName: firstName,
       lastName: lastName,
@@ -71,14 +70,15 @@ export const create = async (
       // joiningDate:joiningDate
     };
 
+
     const insertIntoDB = await userCollection.insertOne(userInsert);
+    if (insertIntoDB.insertedCount === 0) throw new Error("User was not successfully inserted into the database");
 
-    if (insertIntoDB.insertedCount === 0)
-      throw new Error("User was not successfully inserted into the database");
-
-    insertIntoDB._id = insertIntoDB.insertedId.toString();
+    // const getStringID = await this.get(insertIntoDB.insertedId.toString());
     const newUser = await getUser(insertIntoDB.insertedId.toString());
-    return { newUser, insertedUser: true };
+
+    return newUser;
+    // return { newUser, insertedUser: true };
   }
 };
 
@@ -88,8 +88,9 @@ export const checkUser = async (emailAddress, password) => {
   emailAddress = emailAddress.toLowerCase(); //hey here I realized that we have to lower the case at the data entry time also, for mail.
 
   const thisUser = await userCollection.findOne({ emailAddress: emailAddress });
-  if (!thisUser)
-    throw new Error("Either the email address or password is invalid");
+  // find a way to get ID, look @ lab 6, add into user obejct. Will be useful for authentication, add to return object
+  const userById = await userCollection.findOne({ _id: new ObjectId(thisUser._id) });   // good?
+  if (!thisUser) throw new Error("Either the email address or password is invalid");
 
   // let bcryptCompare;    // = false?
   const hashedPass = thisUser.password;
@@ -108,7 +109,7 @@ export const checkUser = async (emailAddress, password) => {
         location_state: thisUser.location_state,
         location_zip_code: thisUser.location_zip_code,
         authentication: true,
-      };
+      }; 
     }
   } catch (e) {
     console.log(e);
@@ -127,6 +128,66 @@ export const getUser = async (id) => {
   userData._id = userData._id.toString();
   return userData;
   // gotta double check what you want on return object
+};
+
+export const getUsersByRole = async (role) => {
+  h.checkrole(role);
+  const usersArray = await userCollection.find({ role: role }).toArray();
+  usersArray.forEach(user => {
+    user._id = user._id.toString();
+  });
+  if (!usersArray || usersArray.length === 0) throw new Error("No users found with given role");
+  // Orrr do we just wanna return an empty array? []
+  return usersArray;
+}
+
+export const getUsersByCategory = async (category) => {
+  h.checkCategories(category);
+  const users_byCategory = await userCollection.find({ categories: category }).toArray();
+  
+  const stringIDs = users_byCategory.map(user => {  // --> converts each '_id' to a string before returning... good?
+    user._id = user._id.toString();
+  });
+  
+  if (!users_byCategory) throw new Error("No users with specified category field found");
+  return users_byCategory;
+
+};
+
+export const getUsersByCity = async (location_city) => {
+  h.checkcity(location_city);
+  const usersByCity = await userCollection.find({ location_city: location_city }).toArray();
+  
+  const stringIDusers_city = usersByCity.map(user => {
+    user._id = user._id.toString();
+  }); // can comment out if unnecessary/needed
+
+  if (!usersByCity || usersByCity.length === 0) throw new Error("No users in the specified city found");
+  return usersByCity;
+};
+
+export const getUsersByState = async (location_state) => {
+  h.checkstate(location_state);
+  const usersByState = await userCollection.find({ location_state: location_state }).toArray();
+  
+  const stringIDusers_state = usersByState.map(user => {
+    user._id = user._id.toString();
+  });
+
+  if (!usersByState || usersByState.length === 0) throw new Error("No users in this state found");
+  return usersByState;
+};
+
+export const getUsersByZip = async (location_zip_code) => {
+  h.checkzipcode(location_zip_code);
+  const usersByZip = await userCollection.find({ location_zip_code: location_zip_code }).toArray();
+  
+  const stringIDusers_zip = usersByZip.map(user => {
+    user._id = user._id.toString();
+  });
+
+  if (!usersByZip || usersByZip.length === 0) throw new Error("No users in this zip code found");
+  return usersByZip;
 };
 
 export const getAll = async () => {
@@ -284,3 +345,17 @@ export const update = async (
 //     role: emailExistUser.role,
 //   };
 // };
+
+// get users by category: 
+  // let userReturn = {
+  //   _id: users_byCategory._id.toString(),
+  //   firstName: users_byCategory.firstName,
+  //   lastName: users_byCategory.lastName,
+  //   emailAddress: users_byCategory.emailAddress,
+  //   phoneNumber: users_byCategory.phoneNumber,
+  //   role: users_byCategory.role,
+  //   categories: users_byCategory.categories,
+  //   location_city: users_byCategory.location_city,
+  //   location_state: users_byCategory.location_state
+  // }
+  // return userReturn; --------> this way would only return 1 user

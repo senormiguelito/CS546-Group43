@@ -26,3 +26,21 @@ Update: 4/30
 
 Helper functions implementing for /posts functions error checking
 Do we want reviews to push into user object?
+
+
+
+Update 5/2
+
+1. In our proposal we listed contct and direct messages separately, so to implement contact we can just make a button that reveals all contact info.
+(obviously only viewable if logged in)
+
+2. Still need to implement project creation. Tricky logic, easy once figured out.
+  So once people react to each other's posts/interact, they can agree to create a project.
+  Projects are necessary to create a review, because the review object will have to refer the id of the project being reviewed
+  Projects = subdocument of both users involved
+
+3. Posts needs to be cleaned up:
+  create helper functions for each input and/or function and implement those into the code
+
+
+4. Routes, client side js, middleware!!!

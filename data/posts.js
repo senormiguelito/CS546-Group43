@@ -64,7 +64,7 @@ export const create = async (
     const postsCollection = await posts()
     const insertInfo = await postsCollection.insertOne(newPostsInfo)
     if (!insertInfo.acknowledged || !insertInfo.insertedId)
-        throw 'Could not add post';
+        throw new Error('Could not add post');
     insertInfo._id = insertInfo.insertedId.toString()
     const newPost = await get(insertInfo.insertedId.toString());
     return newPost;
@@ -101,11 +101,11 @@ export const get = async (id) => {
 
 export const remove = async (id) => {
   let result = {};
-  if (!id) throw 'You must provide an id to search for';
-  if (typeof id !== 'string') throw 'Id must be a string';
-  if (id.trim().length === 0) throw 'id cannot be an empty string or just spaces';
+  if (!id) throw new Error('You must provide an id to search for');
+  if (typeof id !== 'string') throw new Error('Id must be a string');
+  if (id.trim().length === 0) throw new Error('id cannot be an empty string or just spaces');
   id = id.trim();
-  if (!ObjectId.isValid(id)) throw 'invalid object ID';
+  if (!ObjectId.isValid(id)) throw new Error("invalid object ID");
 
   const postsCollection = await posts()
   const deletionInfo = await postsCollection.findOneAndDelete({
@@ -129,34 +129,33 @@ export const update = async (postId,
   images
 ) => {
   // if postId, seekerId, title, description, location, categories, budget are not provided at all, the method should throw.
-  if (!postId || !seekerId || !title || !description || !location || !categories || !budget) throw 'postId, seekerId, title, description, location, categories, budget must be provided'
+  if (!postId || !seekerId || !title || !description || !location || !categories || !budget) throw new Error('postId, seekerId, title, description, location, categories, budget must be provided');
 
   // if postId, seekerId, title, description, location are not string, the method should throw.
-  if (typeof postId !== 'string' || typeof seekerId !== 'string' || typeof title !== 'string' || typeof description !== 'string' || typeof location !== 'string') throw 'postId, seekerId, title, description, and location must be a string'
+  if (typeof postId !== 'string' || typeof seekerId !== 'string' || typeof title !== 'string' || typeof description !== 'string' || typeof location !== 'string') throw new Error('postId, seekerId, title, description, and location must be a string');
 
   // if  postId, seekerId, title, description, location are empty string, the method should throw.
-  if (postId.trim().length === 0 || seekerId.trim().length === 0 || title.trim().length === 0 || description.trim().length === 0 || location.trim().length === 0) throw ' postId, seekerId, title, description, and location must be a non-empty string'
+  if (postId.trim().length === 0 || seekerId.trim().length === 0 || title.trim().length === 0 || description.trim().length === 0 || location.trim().length === 0) throw new Error('postId, seekerId, title, description, and location must be a non-empty string');
 
   // If the postId and seekerId  provided are not a valid ObjectId, the method should throw.
-  if (!ObjectId.isValid(postId) || !ObjectId.isValid(seekerId)) throw 'Invalid postId or seekerId'
+  if (!ObjectId.isValid(postId) || !ObjectId.isValid(seekerId)) throw new Error('Invalid postId or seekerId');
 
   // if categories is not an array of string, method should throw.
-  if (!Array.isArray(categories)) throw 'categories must be an array'
+  if (!Array.isArray(categories)) throw new Error('categories must be an array');
 
   // if categories have an non-string or an empty string, method should throw.
   categories.forEach(element => {
     if (typeof element === 'string') {
-      if (element.trim().length === 0) throw 'categories can not have an empty string'
-      element = element.trim()
+      if (element.trim().length === 0) throw new Error('categories can not have an empty string');
+      element = element.trim();
     } else {
-      throw 'categories must be an array of strings'
+      throw new Error('categories must be an array of strings');
     }
   });
 
   //if budget is a negative number, method should throw.
-  if (typeof budget !== 'number') throw 'budget should be a valid number'
-  if (budget <= 0) throw 'how come your budget is zero or less?'
-
+  if (typeof budget !== 'number') throw new Error('budget should be a valid number');
+  if (budget <= 0) throw ('budget must be a postive number');
   //needs to check if images have valid img type
 
   postId = postId.trim();
@@ -168,10 +167,10 @@ export const update = async (postId,
   const postsCollection = await posts();
   let oldPost = await get(postId);
 
-  if (oldPost.seekerId !== seekerId) throw "You can only update a post which you've created";
+  if (oldPost.seekerId !== seekerId) throw new Error("You can only update a post which you've created");
   //  postId, seekerId, title, description, location, categories, budget, images
   if (oldPost.title === title && oldPost.description === description && oldPost.location === location && JSON.stringify(oldPost.categories) === JSON.stringify(categories) && oldPost.budget === budget)
-    throw 'yo its the same as before! make a change to actually update'
+    throw ('No change noticed. Nothing to update');
 
   const newPostsInfo = {
     seekerId: seekerId,

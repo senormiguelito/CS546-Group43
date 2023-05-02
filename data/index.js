@@ -9,10 +9,7 @@ export const userData = usersFunctions;
 export const messageData = directMessages;
 
 /* 
-
 I suppose this makes it easier to refer to the functions in routes:
 
   const reviews = await reviewData.get(revieweeId);
-
-
 */
