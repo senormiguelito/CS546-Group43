@@ -1,6 +1,7 @@
 import { postData } from "../data/index.js";
 import { Router } from "express";
 import { messageData } from "../data/index.js";
+import {userData} from "../data/index.js";
 const router = Router();
 
 router.route("/").get(async (req, res) => {
@@ -23,8 +24,11 @@ router.route("/").get(async (req, res) => {
 });
 
 router.route("/provideList").get(async (req, res) => {
+  
   try {
-    res.render("providerlist");
+    const userList = await userData.getUsersByRole("provider");
+    // console.log(userList)
+    res.render("providerlist", { userList: userList });
   } catch (e) {
     return res.status(400).render("error", { error: e });
   }
