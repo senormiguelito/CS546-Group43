@@ -192,6 +192,20 @@
   height: 100%;
   object-fit: cover;
 }
+
+.profile-img-box {
+  margin: 0 auto;
+  width: 15%;
+  border-radius: 50%; /* Make the container round */
+  border: 3px solid #ddd; /* Add a border to the container */
+  overflow: hidden;
+}
+
+.profile-img-box img {
+  display: block; 
+  max-width: 100%; 
+  height: auto;
+}
 .addr{
   width: auto;
 }

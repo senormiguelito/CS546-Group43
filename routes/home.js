@@ -10,7 +10,8 @@ router.route("/").get(async (req, res) => {
     // console.log(posts)
     let message = "";
     if (req.session.user) {
-      message = `Hey ${req.session.user.firstName},This is your user ID : ${req.session.user.userID}`;
+      const userSession = req.session.user.userSessionData;
+      message = `Hey ${userSession.firstName},This is your user ID : ${req.session.user.userID}`;
     } else {
       message = `hey you entered without login!!!, how???`;
     }
@@ -36,6 +37,9 @@ router.route("/messages").get(async (req, res) => {
 });
 
 router.route("/myprofile").get(async (req, res) => {
-  res.render("myprofile", { title: "Profile" });
+  const sessionObj = req.session.user.userSessionData;
+  const userID = req.session.user.userID;
+
+  res.render("myprofile", { title: "Profile", userID, sessionObj });
 });
 export default router;

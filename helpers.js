@@ -219,3 +219,12 @@ export const checkCategories = (categories) => {
     }
   }
 };
+
+export const getJoiningDate = () => {
+  let date = new Date(); // get current date
+  let year = date.getFullYear();
+  let month = (date.getMonth() + 1).toString().padStart(2, "0"); // add leading zero
+  let day = date.getDate().toString().padStart(2, "0"); // add leading zero
+  let joinedDate = `${year}-${month}-${day}`; // format date as "YYYY-MM-DD"
+  return joinedDate;
+};

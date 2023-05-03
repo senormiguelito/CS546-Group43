@@ -15,12 +15,12 @@ export const create = async (
   role,
   location_zip_code,
   location_city,
-  location_state
+  location_state,
+  joiningDate // add automatically?
   // categories,     // initialize empty []
   // bio,            // initialize ""
   // reviews,        // initialize empty []
   // projects,       // initialize empty []
-  // joiningDate     // add automatically?
 ) => {
   h.checkfirstname(firstName);
   h.checklastname(lastName);
@@ -42,6 +42,7 @@ export const create = async (
   location_zip_code = location_zip_code.trim();
   location_city = location_city.trim();
   location_state = location_state.trim();
+  joiningDate = h.getJoiningDate();
 
   const emailExists = await userCollection.findOne({
     emailAddress: emailAddress,
@@ -71,7 +72,7 @@ export const create = async (
       bio: "", // create as a user feature, but not upon profile creation
       reviews: [],
       projects: [],
-      // joiningDate:joiningDate
+      joiningDate: joiningDate,
     };
 
     const insertIntoDB = await userCollection.insertOne(userInsert);
@@ -92,30 +93,18 @@ export const checkUser = async (emailAddress, password) => {
 
   const thisUser = await userCollection.findOne({ emailAddress: emailAddress });
   // find a way to get ID, look @ lab 6, add into user obejct. Will be useful for authentication, add to return object
-  const userById = await userCollection.findOne({
-    _id: new ObjectId(thisUser._id),
-  }); // good?
+  // const userById = await userCollection.findOne({_id: new ObjectId(thisUser._id)  }); // good?
   if (!thisUser)
     throw `No user registered with this email "${emailAddress}", Register now.`; // not error, it's a validation message that user can see at the login page.
 
   // let bcryptCompare;    // = false?
   const hashedPass = thisUser.password;
-  const userId = thisUser._id.toString();
-  console.log(userId);
 
   const bcryptCompare = await bcrypt.compare(password, hashedPass);
   if (bcryptCompare) {
     return {
       // talk with group about what we want to return to get user logged in
-      userId: userId,
-      firstName: thisUser.firstName,
-      lastName: thisUser.lastName,
-      emailAddress: thisUser.emailAddress,
-      phoneNumber: thisUser.phoneNumber,
-      role: thisUser.role,
-      location_city: thisUser.location_city,
-      location_state: thisUser.location_state,
-      location_zip_code: thisUser.location_zip_code,
+      thisUser,
       authentication: true,
     };
   } else {

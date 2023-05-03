@@ -1,1 +1,23 @@
-<p>this is my prfile page</p>
+
+<div class="container">
+    <h1>My Profile</h1>
+    
+    <div class="profile-details">
+     <div class="profile-img-box"> 
+        <img src="/public/images/No_Image_Available.jpg" alt="User photo">
+      </div>
+      <div class="user-details">
+        <p>Name: {{sessionObj.firstName}} {{sessionObj.lastName}}</p>
+        <p>Email: {{sessionObj.emailAddress}}</p>
+        <p>Date of Birth: {{sessionObj.dob}}</p>
+        <p>Phone Number: {{sessionObj.phoneNumber}}</p>
+        <p>Role: {{sessionObj.role}}</p>
+        <p>Location: {{sessionObj.location_city}}, {{sessionObj.location_state}} {{sessionObj.location_zip_code}}</p>
+        <p>Categories: {{sessionObj.categories}}</p>
+        <p>Bio: {{sessionObj.bio}}</p>
+        <p>Reviews: {{sessionObj.reviews}}</p>
+        <p>Projects: {{sessionObj.projects}}</p>
+        <p>Joining Date: {{sessionObj.joiningDate}}</p>  
+        <button class="edit-button">Edit</button>
+      </div>
+    </div>

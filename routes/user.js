@@ -28,6 +28,7 @@ router
         }
         if (req.session.user.justRegistered) {
           req.session.destroy();
+          req.session.user = { allowtoRegister: true };
         }
       } else {
         res
@@ -52,21 +53,16 @@ router
     try {
       h.checkemail(emailAddress);
       h.checkpassword(password);
-    } catch (e) {
-      res
-        .status(400)
-        .render("login", { Error: e, layout: "main", isHide: true });
-    }
-    try {
+
       const loginDetails = await userData.checkUser(emailAddress, password);
       if (loginDetails) {
         if (loginDetails.authentication) {
+          const userSessionData = loginDetails.thisUser;
+          const userId = userSessionData._id.toString();
+          // console.log(userId);
           req.session.user = {
-            userID: loginDetails.userId, // --> here I am sending user's Object Id converted into string data into session.
-            firstName: loginDetails.firstName,
-            lastName: loginDetails.lastName,
-            emailAddress: loginDetails.emailAddress,
-            role: loginDetails.role,
+            userID: userId, // --> here I am sending user's Object Id converted into string data into session.
+            userSessionData,
             authentication: true,
           };
           res.redirect("/home/myprofile");

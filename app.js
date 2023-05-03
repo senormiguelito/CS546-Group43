@@ -81,7 +81,11 @@ app.use("/logout", (req, res, next) => {
 
 app.use("/signup", (req, res, next) => {
   if (req.session.user) {
-    return res.redirect("/home");
+    if (req.session.user.allowtoRegister) {
+      next();
+    } else {
+      return res.redirect("/home");
+    }
   } else if (!req.session.user) {
     next();
   }
