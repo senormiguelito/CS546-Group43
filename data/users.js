@@ -36,7 +36,7 @@ export const create = async (
   firstName = firstName.trim();
   lastName = lastName.trim();
   emailAddress = emailAddress.trim().toLowerCase();
-  phoneNumber = phoneNumber.trim();
+  phoneNumber = phoneNumber.replace(/[- ()]/g, "").trim();
   password = password.trim();
   role = role.trim();
   location_zip_code = location_zip_code.trim();
@@ -59,7 +59,7 @@ export const create = async (
     const userInsert = {
       firstName: firstName,
       lastName: lastName,
-      // username: username,
+      dob: date_of_birth,
       emailAddress: emailAddress,
       password: hashPassword,
       role: role,

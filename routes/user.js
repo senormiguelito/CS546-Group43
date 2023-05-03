@@ -26,13 +26,16 @@ router
             Message: message,
           });
         }
+        if (req.session.user.justRegistered) {
+          req.session.destroy();
+        }
+      } else {
+        res
+          .status(200)
+          .render("login", { title: "Login", layout: "main", isHide: true });
+        // (this above line is needed, if you don't put this line, it will never render anything, page will load infinite, when there is session but
+        // not registered so it will not going to throw any error so no catch(e), so your website will be loading but never render login page.)
       }
-      res
-        .status(200)
-        .render("login", { title: "Login", layout: "main", isHide: true });
-      // (this above line is needed, if you don't put this line, it will never render anything, page will load infinite, when there is session but
-      // not registered so it will not going to throw any error so no catch(e), so your website will be loading but never render login page.)
-      req.session.destroy();
     } catch (e) {
       res.status(400).render("login", {
         Error: e,
@@ -52,7 +55,7 @@ router
     } catch (e) {
       res
         .status(400)
-        .render("login", { error: e, layout: "main", isHide: true });
+        .render("login", { Error: e, layout: "main", isHide: true });
     }
     try {
       const loginDetails = await userData.checkUser(emailAddress, password);
@@ -99,7 +102,7 @@ router
     //code here for POST
     const firstName = req.body.firstName;
     const lastName = req.body.lastName;
-    const DOB = req.body.date_of_birth;
+    const DOB = req.body.dob;
     const emailAddress = req.body.email;
     // console.log(req.body.phoneNumber);
     const phone = req.body.phoneNumber;
@@ -114,7 +117,7 @@ router
     try {
       h.checkfirstname(firstName);
       h.checklastname(lastName);
-      h.checkDOB(DOB); // important check
+      h.checkDOB(DOB); // important check //please if you change anything please check it twise that it is working or not, h.checkDOB(date_of_birth); is never gonna work here.
       h.checkemail(emailAddress);
       h.checkphone(phone);
       h.checkpassword(password);
@@ -122,17 +125,12 @@ router
       h.checkrole(role);
       h.checkcity(city);
       h.checkstate(state);
-      h.checkzip(zip);
-    } catch (e) {
-      // console.log("this is data user file", e);
-      res
-        .status(400)
-        .render("sign-up", { error: e, title: "Registration", isHide: true });
-    }
-    try {
+      h.checkzipcode(zip);
+
       let newUser = await userData.create(
-        firstName,
+        firstName, // here order is matter, so don't change anything random if you want to send dob in create function then it should be after lastname only. or you have to change the order in create function in users.js data file
         lastName,
+        DOB,
         emailAddress,
         phone,
         password,
@@ -157,7 +155,7 @@ router
     } catch (e) {
       res
         .status(400)
-        .render("sign-up", { error: e, title: "Registration", isHide: true });
+        .render("sign-up", { Error: e, title: "Registration", isHide: true });
     }
   });
 
@@ -174,7 +172,7 @@ router.route("/logout").get(async (req, res) => {
     req.session.destroy();
     res.status(200).redirect("/");
   } catch (e) {
-    res.status(400).render("error", { error: e });
+    res.status(400).render("error", { Error: e });
   }
 });
 

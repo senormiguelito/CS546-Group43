@@ -88,11 +88,15 @@ app.use("/signup", (req, res, next) => {
 });
 
 app.use("/login", (req, res, next) => {
-  console.log("it is worked");
-  console.log(req.session.user);
+  // console.log("it is worked");
+  // console.log(req.session.user);
   if (req.session.user) {
-    console.log("redirecting to home");
-    return res.redirect("/home");
+    // console.log("redirecting to home");
+    if (req.session.user.justRegistered) {
+      next();
+    } else if (req.session.user.authentication) {
+      return res.redirect("/home");
+    }
   } else if (!req.session.user) {
     next();
   }
