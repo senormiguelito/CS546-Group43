@@ -1,11 +1,10 @@
 
-<header>
-  <h1 class="login">Login Page</h1>
-</header>
+
+<h1 class="login">Login Page</h1>
 <p class="error">{{#if Error}}{{Error}}{{/if}}</p>
 <p class="message" id="success">{{#if Message}}{{Message}}{{/if}}</p>
 <div class="result">
-<form id="login-form" method="POST" action="/user/login">
+<form id="login-form" method="POST" action="/login">
   <label for="emailAddressInput">Email Address:</label>
   <input type="email" name="emailAddressInput" id="emailAddressInput">
   <br>
@@ -18,4 +17,4 @@
 <div id="error" hidden></div>
 
 <p>New user?
-<a href="/user/signup">Click here to register!</a></p>
+<a href="/signup">Click here to register!</a></p>

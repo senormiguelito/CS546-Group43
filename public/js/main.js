@@ -130,7 +130,7 @@ if (resetButton) {
     // console.log("hiiiiiii");
     // Clear the sessionStorage
     sessionStorage.clear();
-    window.location.href = "/user/signup";
+    window.location.href = "/signup";
   });
 }
 

@@ -5,7 +5,7 @@
 <p class="error">{{#if Error}}{{Error}}{{/if}}</p>
 <div id="error" role="alert" hidden></div>
 <div class="result">
-<form id="signup-form" method="POST" action="/user/signup">
+<form id="signup-form" method="POST" action="/signup">
   <label for="firstNameInput">First Name<span class="required">*</span>: </label>
   <input type="text" name="firstName" id="firstNameInput">
   <br>
@@ -47,7 +47,7 @@
   <button type="button" id="reset-button">Reset</button>
 </form>
 </div>
-<p><a href="/user/login">Already have an account? Click here to log-in</a></p>
+<p><a href="/login">Already have an account? Click here to log-in</a></p>
 
 {{!
 example of using type 'date': 

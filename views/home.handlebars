@@ -1,4 +1,5 @@
 <h1>Welcome to Your Home Page!</h1>
+<p class="error" id="success">{{#if Message}}{{Message}}{{/if}}</p>
     <p class="about">Check out our latest job posts:</p>
     <div class="post-list-container">
       {{#each posts}}
@@ -17,6 +18,6 @@
 
 </div>
 <br>
-<a href="/providers" class="see-all">See All Job Providers</a>
+<a href="/home/provideList" class="see-all">See All Job Providers</a>
 <br>
-<a href="user/login" class="see-all">login/sigup</a>
+{{!-- <a href="/login" class="see-all">login/sigup</a> --}}

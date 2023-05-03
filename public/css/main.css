@@ -114,6 +114,11 @@
     font-weight: bold;
   }
 
+  .error{
+    color: red;
+    font-size: 18px;
+    font-weight: bold;
+  }
   .info-button {
     display: inline-block;
     width: 16px;
@@ -189,4 +194,27 @@
 }
 .addr{
   width: auto;
+}
+
+.notfound {
+  font-family: Arial, sans-serif;
+  font-size: 16px;
+  color: #333;
+  text-align: center;
+  margin-top: 50px;
+}
+.notfoundtitle {
+  font-size: 48px;
+  margin-bottom: 30px;
+}
+.notfoundmessage {
+  font-size: 24px;
+  margin-bottom: 30px;
+}
+.notfoundlink {
+  color: #007bff;
+  text-decoration: none;
+}
+.notfoundlink:hover {
+  text-decoration: underline;
 }

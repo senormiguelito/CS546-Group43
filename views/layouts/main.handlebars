@@ -6,19 +6,20 @@
     <link href="/public/css/message.css" rel="stylesheet">
     <title>{{title}}</title>  
   </head>
-  <header class="top-bar">
+  <header class="top-bar" {{#if isHide}}hidden{{/if}}> 
   <nav>
     <ul class="nav-links">
-      <li class="nav-link"><a href="/">Home</a></li>
-      <li class="nav-link"><a href="/providerList">Job Providers</a></li>
-      <li class="nav-link"><a href="/seekers">Job Seekers</a></li>
-      <li class="nav-link"><a href="/profile">My Profile</a></li>
-      <li class="nav-link"><a href="/posts">My Posts</a></li>
-      <li class="nav-link"><a href="/messages">Messages</a></li>
+      <li class="nav-link"><a href="/home">Home</a></li>
+      <li class="nav-link"><a href="/home/provideList">Job Providers</a></li>
+      <li class="nav-link"><a href="/home/seekers">Job Seekers</a></li>
+      <li class="nav-link"><a href="/home/myprofile">My Profile</a></li>
+      <li class="nav-link"><a href="/home/posts">My Posts</a></li>
+      <li class="nav-link"><a href="/home/messages">Messages</a></li>
       <li class="nav-link"><a href="/logout">Logout</a></li>
     </ul>
   </nav>
   </header>
+  
   <body>
     {{{body}}}
     <script src="/public/js/main.js"></script>
