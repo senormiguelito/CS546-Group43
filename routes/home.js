@@ -31,10 +31,39 @@ router.route("/provideList").get(async (req, res) => {
 });
 
 router.route("/messages").get(async (req, res) => {
-  const messages = await messageData.getAllMessages();
-  console.log(messages);
-  res.render("dmList", { title: "messages", messages: messages });
-});
+  const userSession = req.session.user.userSessionData;
+  // console.log(userSession)
+  try {
+    const messages = await messageData.getMessages(userSession._id);
+    // console.log(messages);
+    
+    res.render("dmList", { title: "messages", messages: messages });
+  }
+  catch (e) {
+    console.log(e);
+    // return res.status(400).render("error", { error: e });
+  }
+  // const messages = await messageData.getMessages(userSession._id);
+  // console.log(messages);
+  // res.render("dmList", { title: "messages", messages: messages });
+})
+.post(async (req, res) => {
+  const userSession = req.session.user.userSessionData;
+  const sender = userSession._id;
+  const reciever = req.body.reciever;
+  const message = req.body.message;
+  try {
+    const newMessage = await messageData.sendMessage(sender, reciever, message);
+    // res.redirect("/messages");
+    console.log("message sent")
+  }
+  catch (e) {
+    console.log(e);
+    // return res.status(400).render("error", { error: e });
+  }
+})
+
+
 
 router.route("/myprofile").get(async (req, res) => {
   const sessionObj = req.session.user.userSessionData;

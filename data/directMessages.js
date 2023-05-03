@@ -28,9 +28,13 @@ const create = async (
   const getMessages = async (id) => {
   
     const directMessagesCollection = await directMessages()
-    const directMessage = await directMessagesCollection.findOne({_id: new ObjectId(id)});
-    if (!directMessage) throw 'No direct message with that id';
-    directMessage._id = directMessage._id.toString()
+    let directMessage = await directMessagesCollection.find({$or:[{senderId:id},{recipientId:id}]}).toArray()
+    if(directMessage.length==0) {
+      directMessage = []
+    }
+
+    // const directMessage = await directMessagesCollection.findOne({_id: new ObjectId(id)});
+    // if (!directMessage) throw 'No direct message with that id';
     return directMessage;
   };
   const getAllMessages = async () => {
@@ -45,5 +49,28 @@ const create = async (
     });
     return directMessageList;
   }
+  const sendMessage = async (sender, reciever, message) => {
+    const directMessagesCollection = await directMessages();
+    if(!sender || !reciever || !message) throw 'You must provide all fields to send a message';
+    if(typeof sender !== 'string' || typeof reciever !== 'string' || typeof message !== 'string') throw 'You must provide all fields to send a message';
+    if(ObjectId.isValid(sender) === false || ObjectId.isValid(reciever) === false) throw 'You must provide all fields to send a message';
+    if(sender === reciever) throw 'You cannot send a message to yourself';
+    const d1 = new Date();
+    
+    const newMessage = {
+      senderId: sender,
+      recieverId: reciever,
+      message: message,
+      timeStamp: d1.toISOString()
+    };
+    const insertInfo = await directMessagesCollection.insertOne(newMessage);
+    if (!insertInfo.acknowledged || !insertInfo.insertedId)
+      throw 'Could not send direct message';
+    insertInfo._id = insertInfo.insertedId.toString();
+    const newDirectMessage = await get(insertInfo.insertedId.toString());
+    return newDirectMessage;
+  };
 
-  export {create,getMessages, getAllMessages}
+
+
+  export {create,getMessages, getAllMessages, sendMessage}
