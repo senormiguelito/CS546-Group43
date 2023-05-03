@@ -1,0 +1,38 @@
+<div>
+    <p>POST:</p>
+    {{!-- title, description, location, categories, budget, images --}}
+    <div class="result">
+        <form id="create-post-form" method="POST" action="/post/createPost">
+        <label for="titleInput">Title:</label>
+        <input type="text" name="titleInput" id="titleInput">
+        <br>
+        <label for="descriptionInput">Description:</label>
+        <input type="text" name="descriptionInput" id="descriptionInput">
+        <br>
+        <label for="locationInput">Location:</label>
+        <input type="text" name="locationInput" id="locationInput">
+        <br>
+        <div>
+            <label for="categoriesInput">Category</label>
+            <input type="text" name="categoriesInput[]" id="categoriesInput">
+            <button type="button" onclick="addCategory()">Add Category</button>
+        </div>
+        
+        <br>
+        <label for="budgetInput">Budget:</label>
+        <input type="text" name="budgetInput" id="budgetInput">
+        <br>
+        <button type="submit">Create</button>
+
+
+
+        <script>
+            function addCategory() {
+                const input = document.createElement('input');
+                input.type = 'text';
+                input.name = 'items[]';
+            }
+        </script>
+</form>
+</div>
+</div>

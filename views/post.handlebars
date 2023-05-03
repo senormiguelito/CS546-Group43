@@ -1,0 +1,45 @@
+
+<h1>Welcome to Our post Page!</h1>
+    <p class="about">Check out our latest job posts:</p>
+    <div class="post-list-container">
+        <div class="post-list-box" onclick="location.href='{{_id}}';">
+        <div class="post-list-img-box"><img src="../public/images/No_Image_Available.jpg" alt="Post 1 Image"></div>
+        <h2>{{post.title}} title</h2>
+        <p>{{post.description}} description</p>
+        </div>
+      {{#if comms}}
+        {{#each comms}}
+            <div class="post-comment">
+                <p>{{userEmailAddress}} : {{comment}}<a href="/{{_id}}/deleteComment" id="delete-comment"> Delete</a></p>
+                <script>
+                  let deleteComment = document.getElementById("delete-link");
+                  deleteComment.addEventListener("click", function(event) {
+                    event.preventDefault(); 
+                    let url = `/${_id}/deleteComment`;
+                    let header = new XMLHttpRequest();
+                    header.open("DELETE", url);
+                    header.send();
+                  })
+                </script>
+            </div>
+        {{/each}}
+        {{/if}}
+
+        <div class="comment-box">
+            <form method="post" action = "/{{post._id}}/comment" id="comment-form" >
+            <label>Add comment</label>
+            <input = "text" placeholder="Comment" name="postCommentInput" id="postCommentInput">
+            <input type="submit" value="post">
+            </form>
+        </div>
+
+
+</div>
+<br>
+<a href="map" class="see-all">map</a>
+<br>
+<a href="contact" class="see-all">contact</a>
+<br>
+<a href="/providers" class="see-all">See All Job Providers</a>
+<br>
+<a href="user/login" class="see-all">login/sigup</a>
