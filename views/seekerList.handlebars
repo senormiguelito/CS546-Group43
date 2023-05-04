@@ -1,12 +1,13 @@
 
-<h1>Providers</h1>
+<h1>Seekers</h1>
     
     {{#each userList}}
-        <div class="provider">
+        <div class="seeker">
             <h2>{{firstName}} {{lastName}}</h2>
             <p>{{location_state}}</p>
-            <p><a href="/provider/{{_id}}">View</a></p>
+            <p><a href="/seeker/{{_id}}">View</a></p>
         </div>
     {{/each}}
+
     <p>{{error}}</p>
 <li><a href="/" id="auth">Back</a></li>

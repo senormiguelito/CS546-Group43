@@ -30,9 +30,22 @@ router.route("/provideList").get(async (req, res) => {
     // console.log(userList)
     res.render("providerlist", { userList: userList });
   } catch (e) {
-    return res.status(400).render("error", { error: e });
+    res.render("providerlist", { error: e });
+    // return res.status(400).render("error", { error: e });
   }
 });
+
+router.route("/seekers").get(async (req, res) => {
+  try {
+    const userList = await userData.getUsersByRole("seeker");
+    // console.log(userList)
+    res.render("seekerList", { userList: userList });
+  } catch (e) {
+    res.render("seekerList", { error: e });
+    // return res.status(400).render("error", { error: e });
+  }
+});
+
 
  // needs to change method from get to delete
  router.route("/:commentId/deleteComment").get(async (req, res) => {
@@ -56,8 +69,6 @@ router.route("/provideList").get(async (req, res) => {
 
 router.route("/post/createPost").get(async (req, res) => {
   try {
-
-    
     res.render("create_post");
     
   } catch (e) {
