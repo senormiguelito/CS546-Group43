@@ -16,7 +16,7 @@ export const create = async (
   location_zip_code,
   location_city,
   location_state,
-  joiningDate // add automatically?
+  joiningDate
   // categories,     // initialize empty []
   // bio,            // initialize ""
   // reviews,        // initialize empty []
@@ -41,7 +41,7 @@ export const create = async (
   role = role.trim();
   location_zip_code = location_zip_code.trim();
   location_city = location_city.trim();
-  location_state = location_state.trim();
+  location_state = location_state.toUpperCase().trim(); 
   joiningDate = h.getJoiningDate();
 
   const emailExists = await userCollection.findOne({
@@ -92,21 +92,20 @@ export const checkUser = async (emailAddress, password) => {
   emailAddress = emailAddress.toLowerCase(); //hey here I realized that we have to lower the case at the data entry time also, for mail.
 
   const thisUser = await userCollection.findOne({ emailAddress: emailAddress });
-  // find a way to get ID, look @ lab 6, add into user obejct. Will be useful for authentication, add to return object
-  // const userById = await userCollection.findOne({_id: new ObjectId(thisUser._id)  }); // good?
+   // const userById = await userCollection.findOne({_id: new ObjectId(thisUser._id)  }); // good?
   if (!thisUser)
     throw `No user registered with this email "${emailAddress}", Register now.`; // not error, it's a validation message that user can see at the login page.
 
-  // let bcryptCompare;    // = false?
   const hashedPass = thisUser.password;
 
   const bcryptCompare = await bcrypt.compare(password, hashedPass);
   if (bcryptCompare) {
+    
     return {
-      // talk with group about what we want to return to get user logged in
       thisUser,
       authentication: true,
     };
+
   } else {
     throw `Either the email address or password is invalid`; // It's not error, just telling user this validation fails. So, I removed new Error().
   }
@@ -120,10 +119,21 @@ export const getUser = async (id) => {
   if (!ObjectId.isValid(id)) throw new Error("getUser: invalid object ID");
 
   const userData = await userCollection.findOne({ _id: new ObjectId(id) });
-  if (!userData) throw new Error("getUser: No userData with that id");
+  if (!userData) throw `No userData with that id`;
   userData._id = userData._id.toString();
   return userData;
   // gotta double check what you want on return object
+};
+
+export const getUserByEmail = async (email) => {  // implementing so that we can easily start a message with a user from 'Messages' in tool bar
+  if (!email) throw new Error("getUserByEmail: no email provided");
+  h.checkemail(email);
+  const userByEmail = await userCollection.findOne({ emailAddress: email }); 
+  if (!userByEmail) throw `No user with that email in our database. If you know them personally, invite them to join!`;
+  const user_to_ID = userByEmail._id.toString();    // again double check with group
+  
+  return user_to_ID;  // talk with vamsi
+
 };
 
 export const getUsersByRole = async (role) => {
@@ -133,7 +143,7 @@ export const getUsersByRole = async (role) => {
     user._id = user._id.toString();
   });
   if (!usersArray || usersArray.length === 0)
-    throw new Error("No users found with given role");
+    throw `No users found with given role`;
   // Orrr do we just wanna return an empty array? []
   return usersArray;
 };
@@ -190,13 +200,13 @@ export const getUsersByZip = async (location_zip_code) => {
     .find({ location_zip_code: location_zip_code })
     .toArray();
 
-  const stringIDusers_zip = usersByZip.map((user) => {
+  usersByZip.map((user) => {
     user._id = user._id.toString();
   });
 
   if (!usersByZip || usersByZip.length === 0)
     throw new Error("No users in this zip code found");
-  return usersByZip;
+  return usersByZip;    // double check this return
 };
 
 export const getAll = async () => {
@@ -242,20 +252,7 @@ export const update = async (
   categories,
   bio
 ) => {
-  if (
-    !firstName ||
-    !lastName ||
-    !emailAddress ||
-    !password ||
-    !phoneNumber ||
-    !location_city ||
-    !location_state ||
-    !location_zip_code ||
-    !categories ||
-    !bio
-  ) {
-    throw new Error("every field must be provided");
-  }
+  
   h.checkfirstname(firstName);
   h.checklastname(lastName);
   h.checkemail(emailAddress);

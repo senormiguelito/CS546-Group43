@@ -16,17 +16,10 @@ mongo makes it very easy to use geolocation to filter results based on the area.
 Come see him he'll show you his snippet from back when using it.
 Documentation is OJ Simpleton
 
-
-Update: 4/29
-
-Create user must take in user birth date to verify minimum age because of laws and regulations and shit
-
-
 Update: 4/30
 
 Helper functions implementing for /posts functions error checking
 Do we want reviews to push into user object?
-
 
 
 Update 5/2
@@ -44,3 +37,46 @@ Update 5/2
 
 
 4. Routes, client side js, middleware!!!
+
+5. Cam we modify the sign up so once they are signed up, it logs them in with that info
+
+
+## Login/Signup:
+Once register/login form is submitted, it takes a long time to load... is there a way to improve that?
+For log out: add confirmation message after clicking 'Logout' to confirm to the user that they have been logged out
+
+## Profile:
+'Edit' button is not routing
+
+## Messages:
+'Messages' page shows blank (assuming currently because there are none..) lets add option to create a message
+- by pasting in a userID? Or if that's impractical, by email.
+- call getby(email) function, see if it makes sense to have that call the get by id function once you extract the id from the email that corresponds to that user object 
+
+## data/users.js
+Do we want to throw errors if there are no users found when calling getBy() or just return something empty?
+--> return empty () and display a message "No users found when filtering by X"
+
+## data/posts.js
+Helper functions are implemented, its cleaned up. Rushiraj, check thru and make sure all objects are returning as you want them to
+** need to check on what we want to do with images **
+
+## Unauthorized access:
+If a user types in a specific url (which does correspond to an existing route), lets make the message that appears correspond to the page they tried to access and that they must be logged in to access it
+
+If a user types in an invalid (nonexisting route) url --> hide the toolbar/contents of the website just like login/signup
+
+## My posts
+
+## Mikey sux:
+I suck at coding
+
+## AJAX:
+Need at least 1 ajax form submission
+
+
+
+
+
+## (tota11y accessibility shit ....for much, much later on)
+can't forget about because there is a lot of points to be lost for this

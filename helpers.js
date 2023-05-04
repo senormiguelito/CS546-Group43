@@ -31,7 +31,7 @@ export const checklastname = (name) => {
   checkname(name, "LastName");
 };
 
-export const checkDOB = (date_of_birth) => {
+export const checkDOB = (date_of_birth) => {    // thoroughly inspect this
   const [year, month, day] = date_of_birth
     .split("-")
     .map((str) => parseInt(str)); // parse each sub-string and convert into an integer
@@ -60,7 +60,7 @@ export const checkemail = (email) => {
     throw new Error(`Please enter a valid email address`);
   if (email.trim() === "") throw new Error("Email must not be an empty field");
   email = email.trim();
-  email = email.toLowerCase(); // here? or in corresponding code?
+  email = email.toLowerCase();
 };
 
 export const checkpassword = (password) => {
@@ -144,6 +144,7 @@ export const checkstate = (state) => {
   }
   if (state.length !== 2)
     throw new Error("Location: state must be exactly 2 letters");
+  state = state.toUpperCase();  // no inconsistencies
 };
 
 export const checkRating = (rating) => {
@@ -153,13 +154,20 @@ export const checkRating = (rating) => {
     throw new Error("rating can not be less than 0 or greater than 5");
 };
 
-export const checkValidUserID = (userId) => {
+export const checkValid = (userId) => {
   isvalid(userId, "userId");
-  if (typeof userId !== "string")
-    throw new Error("userId must be of type string");
+  if (typeof userId !== "string") throw new Error("userId must be of type string");
   userId = userId.trim();
-  if (!ObjectId.isValid(userId))
-    throw new Error("userId is not a valid ObjectId");
+  if (userId === "") throw new Error("userId must not be an empty field");
+  if (!ObjectId.isValid(userId)) throw new Error("userId is not a valid ObjectId");
+};
+
+export const checkId = (id) => {
+  isvalid(id, "id");
+  if (typeof id !== "string") throw new Error("Id must be of type string");
+  id = id.trim();
+  if (id === "") throw new Error("id must not be empty");
+  if (!ObjectId.isValid(id)) throw new Error("This id is not a valid ObjectId");
 };
 
 export const checkValidRevieweeId = (revieweeId) => {
@@ -194,6 +202,20 @@ export const selfReview = (userId, revieweeId) => {
     throw new Error("You can not leave a review for yourself!");
 };
 
+export const checkTitle = (title) => {
+  isvalid(title, "title");
+  if (typeof title != "string") throw new Error("Title must be a string");
+  title = title.trim();
+  if (title.length > 200) throw new Error("Title must be no more than 200 characters");
+  if (title.trim() === "") throw new Error("Title must be supplied!");
+}
+export const checkDescription = (description) => {
+  isvalid(description, "description");
+  if (typeof description !== "string") throw new Error("description must be a string");
+  description = description.trim();
+  if (description.trim() === "") throw new Error("description must not be empty");
+  if (description.length > 2500) throw new Error("description must no more than 2500 characters");
+}
 export const checkbio = (bio) => {
   if (typeof bio !== "string") throw new Error("Bio must be of type string");
   bio = bio.trim();
@@ -220,6 +242,15 @@ export const checkCategories = (categories) => {
   }
 };
 
+export const checkbudget = (budget) => {
+  if (!budget) throw new Error("no budget provided");
+  budget = parseInt(budget);
+  if (typeof budget !== 'number') throw new Error('budget should be a valid number');
+  if (budget <= 0) throw new Error('Budget can not be a negative number!');
+}
+
+
+
 export const getJoiningDate = () => {
   let date = new Date(); // get current date
   let year = date.getFullYear();
@@ -228,3 +259,4 @@ export const getJoiningDate = () => {
   let joinedDate = `${year}-${month}-${day}`; // format date as "YYYY-MM-DD"
   return joinedDate;
 };
+
