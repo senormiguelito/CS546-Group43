@@ -4,12 +4,12 @@ import { postData, userData } from "./index.js";
 
 const create = async (postId, comment) => {
     console.log("in create comment")
-    console.log(postId)
     if(!comment || !postId) throw 'post Id and comment must be provided!'
     if(comment.trim().length === 0 || postId.trim().length === 0) throw 'can not have an empty post id or comment'
     comment = comment.trim()
     postId = postId.trim()
 
+    console.log(postId, comment)
     let post = await postData.get(postId)
     if(!post) throw "we don't have post with that Id"
     const postsCollection = await posts()

@@ -1,11 +1,14 @@
 import allRoutes from "./routes.js";
 import homeRoutes from "./home.js";
 import userRoutes from "./user.js";
+import postRoutes from "./post.js"
+
 
 const constructorMethod = (app) => {
   app.use("/", userRoutes);
   app.use("/home", homeRoutes);
   app.use("/api", allRoutes);
+  app.use("/post", postRoutes);
   // app.use("/home", homeRoutes);
 
   app.use("*", (req, res) => {

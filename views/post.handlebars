@@ -10,8 +10,8 @@
       {{#if comms}}
         {{#each comms}}
             <div class="post-comment">
-                <p>{{userEmailAddress}} : {{comment}}<a href="/{{_id}}/deleteComment" id="delete-comment"> Delete</a></p>
-                <script>
+                <p>{{userEmailAddress}} : {{comment}}<a href="/post/{{_id}}/deleteComment" id="delete-comment"> Delete</a></p>
+                {{!-- <script>
                   let deleteComment = document.getElementById("delete-link");
                   deleteComment.addEventListener("click", function(event) {
                     event.preventDefault(); 
@@ -20,13 +20,13 @@
                     header.open("DELETE", url);
                     header.send();
                   })
-                </script>
+                </script> --}}
             </div>
         {{/each}}
         {{/if}}
 
         <div class="comment-box">
-            <form method="post" action = "/{{post._id}}/comment" id="comment-form" >
+            <form method="post" action = "/post/{{post._id}}/comment" id="comment-form" >
             <label>Add comment</label>
             <input = "text" placeholder="Comment" name="postCommentInput" id="postCommentInput">
             <input type="submit" value="post">

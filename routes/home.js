@@ -23,6 +23,14 @@ router.route("/").get(async (req, res) => {
   }
 });
 
+
+router.route("/myprofile").get(async (req, res) => {
+  const sessionObj = req.session.user.userSessionData;
+  const userID = req.session.user.userID;
+
+  res.render("myprofile", { title: "Profile", userID, sessionObj });
+});
+
 router.route("/provideList").get(async (req, res) => {
   
   try {
@@ -136,10 +144,5 @@ router.route("/messages").get(async (req, res) => {
 
 
 
-router.route("/myprofile").get(async (req, res) => {
-  const sessionObj = req.session.user.userSessionData;
-  const userID = req.session.user.userID;
 
-  res.render("myprofile", { title: "Profile", userID, sessionObj });
-});
 export default router;
