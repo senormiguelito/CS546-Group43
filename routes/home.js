@@ -22,69 +22,22 @@ router.route("/").get(async (req, res) => {
   }
 });
 
+
+router.route("/myprofile").get(async (req, res) => {
+  const sessionObj = req.session.user.userSessionData;
+  const userID = req.session.user.userID;
+
+  res.render("myprofile", { title: "Profile", userID, sessionObj });
+});
+
 router.route("/provideList").get(async (req, res) => {
   try {
     res.render("providerlist");
   } catch (e) {
-    return res.status(400).render("error", { error: e });
+    return res.status(400).render("404", { error: e });
   }
 });
 
- // needs to change method from get to delete
- router.route("/:commentId/deleteComment").get(async (req, res) => {
-  try {
-    if(!req.params.commentId) throw 'could not find comment Id'
-    if (typeof req.params.commentId !== "string") throw "Id must be a string";
-    if (req.params.commentId.trim().length === 0)
-      throw "id cannot be an empty string or just spaces";
-    req.params.commentId = req.params.commentId.trim();
-    if (!ObjectId.isValid(req.params.commentId)) throw "invalid object ID";
-    let commentId = req.params.commentId
-    commentId = commentId.trim()
-
-    let deletedComment = await postComment.remove(commentId)
-    if(deletedComment) return res.send(`Comment with ${commentId} has been deleted successfully!`)
-    res.json(req.params);
-  } catch (e) {
-    return res.status(400).render("error", { error: e });
-  }
-}); 
-
-router.route("/post/createPost").get(async (req, res) => {
-  try {
-
-    
-    res.render("create_post");
-    
-  } catch (e) {
-    return res.status(400).render("error", { error: e });
-  }
-}); 
-
-router.route("/post/createPost").post(async (req, res) => {
-  try {
-    let title  = req.body.titleInput
-    let description = req.body.descriptionInput
-    let location = req.body.locationInput
-    let categories = req.body.categoriesInput
-    let budget = req.body.budgetInput
-
-    console.log(title, description,location,categories,budget)
-    let newPost = await postData.create(title, description,location,categories,budget)
-    res.redirect('/')
-  } catch (e) {
-    return res.status(400).render("error", { error: e });
-  }
-}); 
-
-router.route("/post/createJob").get(async (req, res) => {
-  try {
-    
-    res.render("create_job");
-  } catch (e) {
-    return res.status(400).render("error", { error: e });
-  }
-}); 
 
 router.route("/messages").get(async (req, res) => {
   const userSession = req.session.user.userSessionData;
@@ -121,10 +74,5 @@ router.route("/messages").get(async (req, res) => {
 
 
 
-router.route("/myprofile").get(async (req, res) => {
-  const sessionObj = req.session.user.userSessionData;
-  const userID = req.session.user.userID;
 
-  res.render("myprofile", { title: "Profile", userID, sessionObj });
-});
 export default router;

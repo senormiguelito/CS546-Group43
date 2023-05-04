@@ -3,14 +3,16 @@
     <p class="about">Check out our latest job posts:</p>
     <a href="/providers" class="see-all">See All Job Providers</a>
     <br>
-    <a href="/post/createPost" class="create-post">Want to get something done?</a>
+    <a href="/post/newPost/createPost" class="create-post">Want to get something done?</a>
     <br>
     <a href="/post/createJob" class="create-job">Want a job?</a>
     <br>
     <div class="post-list-container">
       {{#each posts}}
-        <div class="post-list-box" onclick="location.href='{{_id}}';">
+        {{!-- <div class="post-list-box" onclick="location.href='/{{_id}}';"> --}}
+        <div class="post-list-box" data-id="{{_id}}">
         <div class="post-list-img-box"><img src="../public/images/No_Image_Available.jpg" alt="Post 1 Image"></div>
+        {{!-- <p>{{_id}} id</p> --}}
         <h2>{{title}}</h2>
         <p>{{description}}</p>
         </div>

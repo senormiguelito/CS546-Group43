@@ -4,13 +4,13 @@ let d1 = new Date();
 import * as h from "../helpers.js";
 
 export const create = async ( title, description, location_city, location_state, location_zip_code, categories, budget, images) => {
-  h.checkTitle(title);
-  h.checkDescription(description);
-  h.checkcity(location_city);
-  h.checkstate(location_state);
-  h.checkzipcode(location_zip_code);
-  h.checkCategories(categories);
-  h.checkbudget(budget);
+  // h.checkTitle(title);
+  // h.checkDescription(description);
+  // h.checkcity(location_city);
+  // h.checkstate(location_state);
+  // h.checkzipcode(location_zip_code);
+  // h.checkCategories(categories);
+  // h.checkbudget(budget);
   
   let seekerId = new ObjectId("64529868ae63cfc5d091c394").toString();
 
@@ -20,21 +20,21 @@ export const create = async ( title, description, location_city, location_state,
   //needs to check if images have valid img type
 
   // double check on providerId/seekerId!!!
-  providerId = providerId.trim();
+  // providerId = providerId.trim();
   seekerId = seekerId.trim();
   title = title.trim();
   description = description.trim();
-  location_city = location_city.trim();
-  location_state = location_state.trim();
-  location_zip_code = location_zip_code.trim();
+  // location_city = location_city.trim();
+  // location_state = location_state.trim();
+  // location_zip_code = location_zip_code.trim();
 
   const newPostsInfo = {
     seekerId: seekerId,
     title: title,
     description: description,
-    location_city: location_city,
-    location_state: location_state,
-    location_zip_code: location_zip_code,
+    // location_city: location_city,
+    // location_state: location_state,
+    // location_zip_code: location_zip_code,
     categories: categories,
     budget: budget,
     role: "seeker", // double check on this!
@@ -58,7 +58,7 @@ export const getAll = async () => {
   let postList = await postsCollection.find({}).toArray();
   postList = postList.map((element) => {
     element._id = element._id.toString();
-    // return element;
+    return element;
   });
   if (!postList) throw 'Could not get all posts'; // check if this is more appropriate method for return than below
   // if (postList.length === 0) {
