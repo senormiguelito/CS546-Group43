@@ -6,32 +6,28 @@ import * as h from "../helpers.js";
 
 export const create = async (userId, title, description, budget, role, categories, location_zip_code, location_city, location_state, images) => {
   // title, description, budget, role, categories, zip, city, state
+  h.checkValid(userId)
   h.checkTitle(title);
   h.checkDescription(description);
   h.checkcity(location_city);
   h.checkstate(location_state);
   h.checkzipcode(location_zip_code);
-  h.checkCategories(categories);
+  // h.checkCategories(categories);
   h.checkbudget(budget);
   console.log("In create post data ")
-  // console.log(req,"req")
-  // console.log(req.Session.user.userTd,"sessionId")
-  // let seekerId = new ObjectId("64529868ae63cfc5d091c394").toString();
-  // console.log(userId)
+ 
 
-  if (userId.trim().length === 0) throw 'invalid id';
-  if (!ObjectId.isValid(userId)) throw 'Invalid seekerId';
+
 
   //needs to check if images have valid img type
 
-  // double check on providerId/seekerId!!!
-  // providerId = providerId.trim();
+ 
   userId = userId.trim();
   title = title.trim();
   description = description.trim();
-  // location_city = location_city.trim();
-  // location_state = location_state.trim();
-  // location_zip_code = location_zip_code.trim();
+  location_city = location_city.trim();
+  location_state = location_state.trim();
+  location_zip_code = location_zip_code.trim();
 
   // title, description, budget, role, categories, zip, city, state
   
@@ -67,10 +63,7 @@ export const getAll = async () => {
     element._id = element._id.toString();
     return element;
   });
-  if (!postList) throw 'Could not get all posts'; // check if this is more appropriate method for return than below
-  // if (postList.length === 0) {
-  //   return [];
-  // }
+  if (!postList) throw 'Could not get all posts'; 
   return postList;
 };
 
@@ -150,5 +143,17 @@ export const update = async (postId, seekerId, title, description, location_city
     
   if (newPost.lastErrorObject.n === 0) throw [404, `Could not update the post with id ${id}`];
   
-  return newPost.value; // what is newPost.value?
+  return newPost.value; 
+};
+
+export const getByCommentId = async (id) => {
+
+  h.checkId(id)
+  id = id.trim()
+  const postsCollection = await posts();
+  const post = await postsCollection.findOne({comments :{ $elemMatch: {_id : new ObjectId(id) }}});
+ 
+  if (!post) throw 'No band with that id';
+  // post._id = post._id.toString()
+  return post;
 };

@@ -2,15 +2,17 @@
 <h1>Welcome to Our post Page!</h1>
     <p class="about">Check out our latest job posts:</p>
     <div class="post-list-container">
-        <div class="post-list-box" onclick="location.href='{{_id}}';">
+        <div class="post-list-box"';">
         <div class="post-list-img-box"><img src="../public/images/No_Image_Available.jpg" alt="Post 1 Image"></div>
-        <h2>{{post.title}} title</h2>
-        <p>{{post.description}} description</p>
+        <h2>{{post.title}}</h2>
+        <p>{{post.description}}</p>
         </div>
       {{#if comms}}
         {{#each comms}}
             <div class="post-comment">
-                <p>{{userEmailAddress}} : {{comment}}<a href="/post/{{_id}}/deleteComment" id="delete-comment"> Delete</a></p>
+              {{!-- NOTE FOR KAUSHAL: below id is comment id, you can get the user's id from comment id from the function I made in 
+              posts.js which is getByCommentId and from that you can get post and also user id which you can use to redirect my profile to appropriate profile --}}
+                <p><a href = "/myProfile/{{_id}}"> {{userFirstName}} {{userLastName}}</a> : {{comment}}<a href="/post/{{_id}}/deleteComment" id="delete-comment"> Delete</a></p>
                 {{!-- <script>
                   let deleteComment = document.getElementById("delete-link");
                   deleteComment.addEventListener("click", function(event) {
