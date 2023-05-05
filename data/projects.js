@@ -38,6 +38,7 @@ export const create = async (
     clientId: clientId,
     status: status,
     assignedToId: assignedToId,
+    prospects: [],      // people who have shown interest for user to choose who they want for the project 
     createdAt: date.toISOString()
   };
 

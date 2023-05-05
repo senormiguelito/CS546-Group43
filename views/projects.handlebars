@@ -1,0 +1,14 @@
+{{#if isAuthenticated}}
+<h1>Here, you can view all projects you have been involved in!</h1>
+<h1>Providers</h1>
+    
+    {{#each userList}}
+        <div class="projects">
+            <h2>{{firstName}} {{lastName}}</h2>
+            <p>{{location_state}}</p>
+            <p>{{location_zip_code}}</p>
+            <p><a href="/projects/{{_id}}">View {{firstname}}'s Profile</a></p>
+        </div>
+    {{/each}}
+    <p>{{error}}</p>
+<li><a href="/" id="auth">Back</a></li>

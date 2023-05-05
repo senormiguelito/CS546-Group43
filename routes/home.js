@@ -44,16 +44,16 @@ router.route("/provideList").get(async (req, res) => {
   }
 });
 
-router.route("/seekers").get(async (req, res) => {
-  try {
-    const userList = await userData.getUsersByRole("seeker");
-    // console.log(userList)
-    res.render("seekerList", { userList: userList });
-  } catch (e) {
-    res.render("seekerList", { error: e });
-    // return res.status(400).render("error", { error: e });
-  }
-});
+// router.route("/seekers").get(async (req, res) => {
+//   try {
+//     const userList = await userData.getUsersByRole("seeker");
+//     // console.log(userList)
+//     res.render("seekerList", { userList: userList });
+//   } catch (e) {
+//     res.render("seekerList", { error: e });
+//     // return res.status(400).render("error", { error: e });
+//   }
+// });
 
 router.route("/messages").get(async (req, res) => {
   const userSession = req.session.user.userSessionData;
@@ -88,23 +88,26 @@ router.route("/messages").get(async (req, res) => {
     }
   })
 
-  router.route("/profile/:userId").get(async (req, res) => {
-    // access a profile page
-    let errorMessage = '';
-    try {
-      if (req.session.user) {
-        const userId = userSessionData._id.toString();
-        const userID = req.params.userId;               // pick this or the above
-        const user = await userData.getUser(userId);
-        res.render('profile', { user });
-      } else {
-        res.redirect('/login');   // must be logged in to interact with posts
-      }
-    } catch (e) {
-      console.log(e);
-      res.status(500).render('error', { errorMessage: "Internal Server Error" });
+
+  // moved the following and implemented in /users.js:
   
-    }
-  });
+  // router.route("/profile/:userId").get(async (req, res) => {
+  //   // access a profile page
+  //   let errorMessage = '';
+  //   try {
+  //     if (req.session.user) {
+  //       const userId = userSessionData._id.toString();
+  //       const userID = req.params.userId;               // pick this or the above
+  //       const user = await userData.getUser(userId);
+  //       res.render('profile', { user });
+  //     } else {
+  //       res.redirect('/login');   // must be logged in to interact with posts
+  //     }
+  //   } catch (e) {
+  //     console.log(e);
+  //     res.status(500).render('error', { errorMessage: "Internal Server Error" });
+  
+  //   }
+  // });
 
 export default router;

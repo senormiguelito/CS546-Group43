@@ -1,0 +1,20 @@
+<div class="container">
+    <h1>{{user.firstName}}'s Profile</h1>
+    
+    <div class="profile-details">
+     <div class="profile-img-box"> 
+        <img src="/public/images/No_Image_Available.jpg" alt="User photo">
+      </div>
+      <div class="user-details">
+        <p>Name: {{user.firstName}} {{user.lastName}}</p>
+        <p>Email: {{user.emailAddress}}</p>
+        <p>Phone Number: {{user.phoneNumber}}</p>
+        <p>Role: {{user.role}}</p>
+        <p>Location: {{user.location_city}}, {{user.location_state}} {{user.location_zip_code}}</p>
+        <p>Categories: {{user.categories}}</p>
+        <p>Bio: {{user.bio}}</p>
+        <p>Reviews: {{user.reviews}}</p>
+        <p>Projects: {{user.projects}}</p>
+        <p>Joining Date: {{user.joiningDate}}</p>  
+      </div>
+    </div>

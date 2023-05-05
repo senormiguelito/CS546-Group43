@@ -173,4 +173,58 @@ router.route("/logout").get(async (req, res) => {
 });
 
 
+router.route("/seekers").get(async (req, res) => {
+  try {
+    const userList = await userData.getUsersByRole("seeker");
+    res.render("seekerList", { userList: userList });   // handlebars [age]
+  } catch (e) {
+    res.render("seekerList", { error: e });
+    // return res.status(400).render("error", { error: e });
+  }
+});
+
+router.route("/profile/:userId").get(async (req, res) => {
+  // access a profile page
+  let message = '';
+  let userId = req.params.userId;
+  try {
+    if (!userId) throw new Error("no userId specified");
+    h.checkId(userId);
+  } catch (e) {
+    return res.status(400).redirect('/home', { error: e });
+  }
+  try {
+    if (req.session.user) {
+
+      const user = await userData.getUser(userId);
+      let profileToAccessById = user._id.toString();
+      profileToAccessById = profileToAccessById.trim();
+
+      // console.log(req.session.user.userID.toString());
+      // console.log(req.session.user.userSessionData._id.toString());
+
+      let currentUserId = req.session.user.userID.toString();
+      currentUserId = currentUserId.trim();
+
+      if (!user) throw new Error("User profile was not found");
+      
+      if (currentUserId === profileToAccessById) {    //if this user clicks on view profile and its their profile:
+        console.log("yippeeeee");
+        const sessionObj = req.session.user.userSessionData;
+        const userID = req.session.user.userID;
+//        res.status(200).render("myprofile", { user: user, message: message });
+        res.status(200).render("myprofile", { title: "Profile", userID, sessionObj });
+        // res.render("myprofile", { title: "Profile", userID, sessionObj });
+      }
+      message = "We've acquired the target\n";
+      res.status(200).render('profile', { user: user, message: message });    // now we can see just what tha hell is goin on
+    } else {
+      res.redirect('/login');   // must be logged in to interact with posts
+    }
+  } catch (e) {
+    return res.status(404).render('error', { error: e });
+  }
+});
+
+
 export default router;

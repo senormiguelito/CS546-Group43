@@ -1,11 +1,11 @@
 <h1>Welcome to Your Home Page!</h1>
 <p class="error" id="success">{{#if Message}}{{Message}}{{/if}}</p>
     <p class="about">Check out our latest job posts:</p>
-    <a href="/providers" class="see-all">See All Job Providers</a>
+    <a href="/home/provideList" class="see-all">See All Job Providers</a>
     <br>
-    <a href="/post/newPost/createPost" class="create-post">Want to get something done?</a>
+    <a href="/post/newPost/createPost" class="create-post">Create a job posting!</a>
     <br>
-    <a href="/post/createJob" class="create-job">Want a job?</a>
+    {{!<a href="/post/createJob" class="create-job">Want a job?</a>}} {{!We will use this as a way to create a project when both parties are interested.. doesn't belong there}}
     <br>
     <div class="post-list-container">
       {{#each posts}}
@@ -26,7 +26,7 @@
 
 
 </div>
-<br>
+{{!<br>
 <a href="/home/provideList" class="see-all">See All Job Providers</a>
-<br>
+<br>}}
 {{!-- <a href="/login" class="see-all">login/sigup</a> --}}

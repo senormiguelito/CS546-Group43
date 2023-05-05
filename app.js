@@ -38,16 +38,6 @@ app.use(
     },
   })
 );
-/*
-// input sanitization against XSS attacks (project requirement)
-// not sure how to actually implement
-
-const sanitizeReqBody = (req, res, next) => {
-  const sanitizedBody = xss(req.body);
-  req.body = sanitizedBody;
-  next();
-};
-*/
 
 // middleware functions will be here but in the end will do it.
 
@@ -83,6 +73,14 @@ app.use("/home/messages", (req, res, next) => {
     return res.redirect("/login");
   }
 });
+
+app.use("/myProjects", (req, res, next) => {
+  if (req.session.user) {
+    next();
+  } else {
+    return res.redirect("/login");
+  }
+})
 
 app.use("/home/myprofile", (req, res, next) => {
   if (req.session.user) {
@@ -124,6 +122,22 @@ app.use("/login", (req, res, next) => {
     }
   } else if (!req.session.user) {
     next();
+  }
+});
+
+app.use("/seekers", (req, res, next) => {
+  if (req.session.user) {
+    next();
+  } else {
+    return res.redirect("/login");
+  }
+});
+
+app.use("/profile", (req, res, next) => {
+  if (req.session.user) {
+    next();
+  } else {
+    return res.redirect("/login");
   }
 });
 

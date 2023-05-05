@@ -1,12 +1,12 @@
-
-<h1>Providers</h1>
-    
+<h1>Providers!</h1>
+    <h2>Click on a user's profile to learn more about them!</h2>
     {{#each userList}}
         <div class="provider">
             <h2>{{firstName}} {{lastName}}</h2>
-            <p>{{location_state}}</p>
-            <p><a href="/provider/{{_id}}">View</a></p>
+            <p>{{location_city}}, {{location_state}}</p>
+            <p><a href="/profile/{{_id}}">View {{firstName}}'s profile!</a></p>
         </div>
     {{/each}}
+    
     <p>{{error}}</p>
 <li><a href="/" id="auth">Back</a></li>
