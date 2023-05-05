@@ -213,7 +213,7 @@ router.route("/profile/:userId").get(async (req, res) => {
         const sessionObj = req.session.user.userSessionData;
         const userID = req.session.user.userID;
 //        res.status(200).render("myprofile", { user: user, message: message });
-        res.status(200).render("myprofile", { title: "Profile", userID, sessionObj });
+        res.status(200).render("profile", { title: "Profile", userID, sessionObj });
         // res.render("myprofile", { title: "Profile", userID, sessionObj });
       }
       message = "We've acquired the target\n";

@@ -1,0 +1,39 @@
+
+<div class="container">
+    <h1>Edit Your Profile</h1>
+    
+    <div class="profile-details">
+     <div class="profile-img-box"> 
+        <img src="/public/images/No_Image_Available.jpg" alt="User photo">
+      </div>
+      <div class="result">
+        <form id="myprofile-edit" action="/home/myprofile/{{userID}}/edit" method="POST">
+        <h2>Role: {{sessionObj.role}}</h2>
+        {{#if Error}} <p class="error">{{Error}}</p>{{/if}}
+        <div id="error" role="alert" hidden></div>
+        <label for="firstNameInput">First Name<span class="required">*</span></label>
+        <input type="text" name="firstName" id="firstNameInput" value="{{sessionObj.firstName}}">
+        <label for="firstNameInput">Last Name<span class="required">*</span></label>
+        <input type="text" name="lastName" id="lastNameInput" value="{{sessionObj.lastName}}">
+        <label for="bio">Bio</label>
+        <textarea id="bioInput" name="bio">{{sessionObj.bio}}</textarea>
+        <label for="dob">Date of Birth<span class="required">*</span></label>
+          <input type="date" class="form-control" id="dob" name="dob" value="{{sessionObj.dob}}" required>
+        <label for="emailAddressInput">Email Address<span class="required">*</span></label>
+        <input type="email" id="emailAddressInput" name="email" value="{{sessionObj.emailAddress}}">
+        <label for="phoneNumberInput">Phone Number<span class="required">*</span></label>
+        <input type="tel" id="phoneNumberInput" name="phoneNumber" value="{{sessionObj.phoneNumber}}">
+        <label for="zipInput">Zip Code<span class="required">*</span></label>
+        <input type="tel" id="zipInput" name="zip" maxlength="5" value="{{sessionObj.location_zip_code}}">
+        <label for="cityInput">City<span class="required">*</span></label>
+        <input type="text" name="city" id="cityInput" value="{{sessionObj.location_city}}">
+        <label for="stateInput">State<span class="required">*</span></label>
+        <input type="text" name="state" id="stateInput" value="{{sessionObj.location_state}}">
+        <label for="categoriesInput">Categories (One or more, up to four):</label>
+        <input type="text" id="categoryInput" list="category-options" placeholder="Enter a category">
+        <div class="category-container"></div>
+        <button type="button" id="addCategoryButton">Add</button>
+        <button type="submit">Save Changes</button>
+</form>
+      </div>
+    </div>
