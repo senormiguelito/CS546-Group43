@@ -150,7 +150,7 @@ app.use('/projects', (req, res, next) => {
   }
 });
 
-//please add your route name if you add any in in futer, like /home/seekerpage/addpost
+//please add your route name if you add any in futer, like /home/seekerpage/addpost
 // app.use("/yournewroute", (req, res, next) => {
 //   if (req.session.user) {
 //     next();

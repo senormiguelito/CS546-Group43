@@ -44,6 +44,42 @@ const checkphone = (phone) => {
     return `Please enter your phone number in the proper displayed format`;
 };
 
+const checkzipcode = (zip) => {
+  checkvalid(zip, "Zip");
+
+  const zipRegex = /^\d{5}(?:[-\s]\d{4})?$/;
+  if (typeof zip !== "string")
+    return "Location: zip code should be of type string";
+  zip = zip.trim();
+  if (zip === "") return "Location: zip code can not be an empty field";
+  if (!zipRegex.test(zip)) return `Please enter a valid 5 digit zip code`;
+};
+
+const checkcity = (city) => {
+  checkvalid(city, "City");
+  if (typeof city !== "string") return "Location: city must be of type string";
+  city = city.trim();
+  if (city === "") return "Location: city can not be an empty field";
+  for (let i in city) {
+    if (typeof city[i] === "number")
+      return `Location: city should not contain numbers`;
+  }
+};
+
+const checkstate = (state) => {
+  checkvalid(state, "State");
+  if (typeof state !== "string")
+    return "Location: state must be of type string";
+  state = state.trim();
+  if (state === "") return "Location: state can not be an empty field";
+  for (let i in state) {
+    if (typeof state[i] === "number")
+      return `Location: state should not contain numbers`;
+  }
+  if (state.length !== 2) return "Location: state must be exactly 2 letters";
+  state = state.toUpperCase(); // no inconsistencies
+};
+
 const checkpassword = (password) => {
   const hasUpperCase = /[A-Z]/;
   const hasNumber = /\d/;
@@ -80,30 +116,47 @@ const checkAge = () => {
   }
 };
 
-const form = document.getElementById("signup-form");
+const checkbio = (bio) => {
+  if (typeof bio !== "string") return `Bio must be of type string`;
+  bio = bio.trim();
+  if (bio.length > 5000)
+    return `You can not submit a bio longer than 5000 characters`;
+  //  if (bio === "") return("You can't submit an empty bio!");
+};
+
+const checkCategories = (categories) => {
+  if (!categories) return "categories not provided";
+  // double check with categories, how we want it input as, when taking in the 'getUsersByCategory' func
+  if (!Array.isArray(categories)) return "Update: categories must be an array";
+  if (categories.length < 1)
+    return "Update: you must supply at least 1 category";
+  for (let i in categories) {
+    const letterPattern = /^[a-zA-Z]+$/;
+    categories[i] = categories[i].trim();
+    if (!letterPattern.test(categories[i])) {
+      return `catagories must contain only alphabets from js `;
+    }
+  }
+};
+
+const signupForm = document.getElementById("signup-form");
 const loginForm = document.getElementById("login-form");
+const editprofileForm = document.getElementById("myprofile-edit");
 const resetButton = document.getElementById("reset-button");
 const firstname = document.getElementById("firstNameInput");
 // console.log(firstname);
 const lastname = document.getElementById("lastNameInput");
-const password = document.getElementById("passwordInput");
-const confirmpassword = document.getElementById("confirmPasswordInput");
+const bio = document.getElementById("bioInput");
 const emailaddress = document.getElementById("emailAddressInput");
 const phone = document.getElementById("phoneNumberInput");
 const role = document.getElementById("roleInput");
-
+const password = document.getElementById("passwordInput");
 const errorDiv = document.getElementById("error");
-const successElement = document.querySelector("#success");
+const categoryInput = document.getElementById("categoryInput");
+const addCategoryButton = document.getElementById("addCategoryButton");
+const categoryList = document.getElementById("categoryList");
 
-// console.log(successElement);
-if (successElement) {
-  // console.log("entered into p tag clear session");
-  const successMessage = successElement.textContent;
-  if (successMessage) {
-    // Clear the sessionStorage
-    sessionStorage.clear();
-  }
-}
+const categories = [];
 
 const inputs = document.querySelectorAll("#signup-form input");
 
@@ -126,7 +179,7 @@ function restoreFormData() {
 if (resetButton) {
   resetButton.addEventListener("click", () => {
     // Reset the form to its initial state
-    form.reset();
+    signupForm.reset();
     // console.log("hiiiiiii");
     // Clear the sessionStorage
     sessionStorage.clear();
@@ -188,20 +241,25 @@ if (zip) {
   });
 }
 
+const formatPhoneNumber = () => {
+  // console.log("calling the format the number function");
+  const cleaned = phone.value.replace(/\D/g, "");
+  const tenOnly = cleaned.slice(0, 10);
+  const match = tenOnly.match(/^(\d{3})(\d{3})(\d{4})$/);
+  if (match) {
+    phone.value = "(" + match[1] + ") " + match[2] + "-" + match[3];
+  } else {
+    phone.value = tenOnly;
+  }
+};
+
 if (phone) {
-  phone.addEventListener("input", () => {
-    const cleaned = phone.value.replace(/\D/g, "");
-    const tenOnly = cleaned.slice(0, 10);
-    const match = tenOnly.match(/^(\d{3})(\d{3})(\d{4})$/);
-    if (match) {
-      phone.value = "(" + match[1] + ") " + match[2] + "-" + match[3];
-    } else {
-      phone.value = tenOnly;
-    }
-  });
+  // console.log(phone.value);
+  phone.addEventListener("input", formatPhoneNumber);
+  formatPhoneNumber();
 }
-if (form) {
-  form.addEventListener("submit", (event) => {
+if (signupForm) {
+  signupForm.addEventListener("submit", (event) => {
     event.preventDefault();
     errorDiv.hidden = true;
     let error;
@@ -228,7 +286,7 @@ if (form) {
       window.history.replaceState({}, document.title, "?status=400");
       return;
     } else {
-      form.submit();
+      signupForm.submit();
     }
   });
 }
@@ -256,6 +314,7 @@ if (loginForm) {
   });
 }
 
+<<<<<<< HEAD
 var modal = document.getElementById("modal");
 
 		var closeBtn = document.getElementsByClassName("close")[0];
@@ -272,3 +331,174 @@ var modal = document.getElementById("modal");
 			modal.style.display = "none";
 		});
 
+=======
+if (editprofileForm) {
+  editprofileForm.addEventListener("submit", (event) => {
+    event.preventDefault();
+    errorDiv.hidden = true;
+    let error;
+
+    error = checkfirstname(firstname.value);
+    error = checklastname(lastname.value);
+    error = checkAge();
+    error = checkbio(bio.value);
+    error = checkemail(emailaddress.value);
+    error = checkphone(phone.value);
+    error = checkCategories(categories);
+    error = checkzipcode(zip.value);
+    error = checkcity(city.value);
+    error = checkstate(state.value);
+
+    if (error) {
+      errorDiv.hidden = false;
+      errorDiv.textContent = error;
+      window.history.replaceState({}, document.title, "?status=400");
+    } else {
+      editprofileForm.submit();
+    }
+  });
+}
+
+const ListOfcategories = [
+  "Electrician",
+  "Plumber",
+  "Carpenter",
+  "Welder",
+  "Mechanic",
+  "Painter",
+  "Mason",
+  "Landscaper",
+  "HVAC technician",
+  "Roofing contractor",
+  "Flooring specialist",
+  "Pest control specialist",
+  "Cleaner",
+  "Interior designer",
+  "Architect",
+  "General contractor",
+  "Handyman",
+  "Pool technician",
+  "Security system technician",
+  "Audio-visual technician",
+];
+
+const categoryOptions = document.createElement("datalist");
+categoryOptions.setAttribute("id", "category-options");
+for (let i = 0; i < ListOfcategories.length; i++) {
+  const option = document.createElement("option");
+  option.value = ListOfcategories[i];
+  categoryOptions.appendChild(option);
+}
+document.body.appendChild(categoryOptions);
+if (categoryInput) {
+  categoryInput.addEventListener("input", () => {
+    const inputVal = categoryInput.value;
+    const options = categoryOptions.getElementsByTagName("option");
+
+    for (let i = 0; i < options.length; i++) {
+      const optionVal = options[i].value.toLowerCase();
+      if (optionVal.includes(inputVal.toLowerCase())) {
+        options[i].hidden = false;
+      } else {
+        options[i].hidden = true;
+      }
+    }
+  });
+}
+
+// add event listener to the button to add a category
+if (addCategoryButton) {
+  addCategoryButton.addEventListener("click", () => {
+    errorDiv.hidden = true;
+    console.log("YES YOU CLICKED ADD BUTTON");
+
+    const category = categoryInput.value.trim();
+    const options = categoryOptions.getElementsByTagName("option");
+    let error;
+
+    let isValidCategory = false;
+    for (let i = 0; i < options.length; i++) {
+      if (options[i].value === category) {
+        isValidCategory = true;
+        break;
+      }
+    }
+    if (!isValidCategory) {
+      error = `you can not enter this category : "${category}", you are only allowed to select from the option`;
+    }
+    const letterPattern = /^[a-z A-Z]+$/;
+    if (!letterPattern.test(category)) {
+      if (category.trim() == "") error = `can not add empty category`;
+      else error = `Numbers are not allowed in : "${category}"`;
+    }
+    if (categories.includes(category)) {
+      error = `You can not enter same categories again`;
+    }
+    if (!error) {
+      // check if the category is not empty and not already in the list
+      if (category) {
+        // check if there are less than 4 categories in the list
+        if (categories.length < 4) {
+          categories.push(category);
+          // create a new category element and append it to the list
+          const categoryElement = document.createElement("div");
+          categoryElement.classList.add("category-box");
+          const categoryNameElem = document.createElement("span");
+          categoryNameElem.classList.add("category-name");
+          categoryNameElem.textContent = category;
+          categoryElement.appendChild(categoryNameElem);
+
+          // delete the category
+          const deleteButton = document.createElement("span");
+          deleteButton.classList.add("delete-button");
+          deleteButton.textContent = "x";
+          deleteButton.addEventListener("click", () => {
+            const categoryIndex = categories.indexOf(category);
+            if (categoryIndex > -1) {
+              categories.splice(categoryIndex, 1);
+            }
+            categoryElement.remove();
+          });
+          categoryElement.appendChild(deleteButton);
+          const categoryContainer = document.querySelector(
+            ".category-container"
+          );
+          categoryContainer.appendChild(categoryElement);
+          // clear the input field
+          categoryInput.value = "";
+        } else {
+          error = "You can only select up to 4 categories";
+        }
+      }
+    }
+    if (error) {
+      errorDiv.hidden = false;
+      errorDiv.textContent = error;
+      window.history.replaceState({}, document.title, "?status=400");
+    }
+  });
+}
+
+// // populate the list with existing categories from the session data
+// if (sessionObj.categories) {
+//   categories = sessionObj.categories;
+//   categories.forEach((category) => {
+//     const categoryElement = document.createElement("div");
+//     categoryElement.classList.add("category");
+//     categoryElement.textContent = category;
+//     categoryList.appendChild(categoryElement);
+//   });
+// }
+
+// const successElement = document.querySelector("#success");
+
+// // console.log(successElement);
+// if (successElement) {
+//   // console.log("entered into p tag clear session");
+//   const successMessage = successElement.textContent;
+//   if (successMessage) {
+//     // Clear the sessionStorage
+//     sessionStorage.clear();
+//   }
+// }
+>>>>>>> refs/remotes/origin/main
