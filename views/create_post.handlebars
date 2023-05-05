@@ -3,24 +3,37 @@
     {{!-- title, description, location, categories, budget, images --}}
     <div class="result">
         <form id="create-post-form" method="POST" action="/post/createPost">
-        <label for="titleInput">Title:</label>
+        <label for="titleInput">Title<span class="required">*</span>:</label>
         <input type="text" name="titleInput" id="titleInput">
         <br>
-        <label for="descriptionInput">Description:</label>
+        <label for="descriptionInput">Description<span class="required">*</span>:</label>
         <input type="text" name="descriptionInput" id="descriptionInput">
         <br>
-        <label for="locationInput">Location:</label>
+        <label for="budgetInput">Budget<span class="required">*</span>:</label>
+        <input type="text" name="budgetInput" id="budgetInput">
+        {{!-- <label for="locationInput">Location:</label>
         <input type="text" name="locationInput" id="locationInput">
+        <br> --}}
         <br>
+        <label for="roleInput">Role<span class="required">*</span>:</label>
+        <select name="roleInput" id="roleInput">
+            <option value="provider">Service Provider</option>
+            <option value="seeker">Service Seeker</option>
+        </select>
         <div>
-            <label for="categoriesInput">Category</label>
+            <label for="categoriesInput">Categories (One or more, up to four)<span class="required">*</span>:</label>
             <input type="text" name="categoriesInput[]" id="categoriesInput">
-            <button type="button" onclick="addCategory()">Add Category</button>
+            <input type="text" name="categoriesInput[]" id="categoriesInput">
+            <input type="text" name="categoriesInput[]" id="categoriesInput">
+            <input type="text" name="categoriesInput[]" id="categoriesInput">
+             <br>
+                <label for="Address">Location<span class="required">*</span>:</label>
+                <input class="addr" type="text" name="zipInput" id="zipInput"  maxlength="5" placeholder="zipcode" >
+                <input class="addr" type="text" name="cityInput" id="cityInput" >
+                <input class="addr" type="text" name="stateInput" id="stateInput">
+            <br>
         </div>
         
-        <br>
-        <label for="budgetInput">Budget:</label>
-        <input type="text" name="budgetInput" id="budgetInput">
         <br>
         <button type="submit">Create</button>
 

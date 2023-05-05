@@ -1,43 +1,50 @@
 import { posts } from "../config/mongoCollections.js";
 import {ObjectId} from 'mongodb';
+import session from "express-session";
 let d1 = new Date();
 import * as h from "../helpers.js";
 
-export const create = async ( title, description, location_city, location_state, location_zip_code, categories, budget, images) => {
-  // h.checkTitle(title);
-  // h.checkDescription(description);
-  // h.checkcity(location_city);
-  // h.checkstate(location_state);
-  // h.checkzipcode(location_zip_code);
-  // h.checkCategories(categories);
-  // h.checkbudget(budget);
-  
-  let seekerId = new ObjectId("64529868ae63cfc5d091c394").toString();
+export const create = async (userId, title, description, budget, role, categories, location_zip_code, location_city, location_state, images) => {
+  // title, description, budget, role, categories, zip, city, state
+  h.checkTitle(title);
+  h.checkDescription(description);
+  h.checkcity(location_city);
+  h.checkstate(location_state);
+  h.checkzipcode(location_zip_code);
+  h.checkCategories(categories);
+  h.checkbudget(budget);
+  console.log("In create post data ")
+  // console.log(req,"req")
+  // console.log(req.Session.user.userTd,"sessionId")
+  // let seekerId = new ObjectId("64529868ae63cfc5d091c394").toString();
+  // console.log(userId)
 
-  if (seekerId.trim().length === 0) throw 'invalid id';
-  if (!ObjectId.isValid(seekerId)) throw 'Invalid seekerId';
+  if (userId.trim().length === 0) throw 'invalid id';
+  if (!ObjectId.isValid(userId)) throw 'Invalid seekerId';
 
   //needs to check if images have valid img type
 
   // double check on providerId/seekerId!!!
   // providerId = providerId.trim();
-  seekerId = seekerId.trim();
+  userId = userId.trim();
   title = title.trim();
   description = description.trim();
   // location_city = location_city.trim();
   // location_state = location_state.trim();
   // location_zip_code = location_zip_code.trim();
 
+  // title, description, budget, role, categories, zip, city, state
+  
   const newPostsInfo = {
-    seekerId: seekerId,
+    userId: userId,
     title: title,
     description: description,
-    // location_city: location_city,
-    // location_state: location_state,
-    // location_zip_code: location_zip_code,
-    categories: categories,
     budget: budget,
-    role: "seeker", // double check on this!
+    role: role, 
+    categories: categories,
+    location_city: location_city,
+    location_state: location_state,
+    location_zip_code: location_zip_code,
     createdOrUpdatedAt: d1.toISOString(),
     images: []
   };
