@@ -8,9 +8,16 @@
   <div class = "messagePage">
   <div class="messageSection">
   {{#each messages}}
-    <div class="message" id = "message">
+  
+    <div class="message" id = "message" onclick="ClickMessage(this)">
+      {{#if sender}}
+        <p> message to {{recieverId}}</p>
+
+      {{else}}
         <p> message from {{senderId}}</p>
-        <p id = "desc" hidden>{{message}}</p>
+      {{/if}}
+
+        <p id = "desc" >{{message}}</p>
         <p>{{timeStamp}}</p>
     </div>
     {{/each}}

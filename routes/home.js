@@ -112,8 +112,16 @@ router
     const userSession = req.session.user.userSessionData;
     // console.log(userSession)
     try {
-      const messages = await messageData.getMessages(userSession._id);
-      // console.log(messages);
+      let messages = await messageData.getMessages(userSession._id);
+      for (let i = 0; i < messages.length; i++) {
+        if (messages[i].senderId == userSession._id) {
+          messages[i].sender = true;
+        } else {
+          messages[i].sender = false;
+        }
+      }
+
+      console.log(messages);
 
       res.render("dmList", { title: "messages", messages: messages });
     } catch (e) {
@@ -136,7 +144,8 @@ router
         message
       );
       // res.redirect("/messages");
-      return res.render("dmList", { title: "messages"});
+        // return res.status(200).json({ message: "Message sent successfully" });
+        return res.redirect("/home/messages");
     }
     catch (e) {
       console.log(e);

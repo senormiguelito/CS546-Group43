@@ -17,4 +17,21 @@
         <p>Projects: {{user.projects}}</p>
         <p>Joining Date: {{user.joiningDate}}</p>  
       </div>
+      <a href="#modal">Contact</a>
+	
+	<!-- Create the modal with input box and send button -->
+	<div id="modal" class="modal">
+		<div class="modal-content">
+			<span class="close">&times;</span>
+			<h2>Contact</h2>
+      <form method = "POST" action ='/home/messages/'>
+        <input type="text" placeholder="Enter your message" name = "message" id = "message"><br><br>
+        {{!-- sending ID as a hidden field --}}
+        <input type="hidden" name = "recieverId" id = "recieverId" value = "{{user._id}}">
+        <input type="submit" value="Send" id = "send-btn">
+      </form>
+			
+			{{!-- <button id="send-btn">Send</button> --}}
+		</div>
+	</div>
     </div>

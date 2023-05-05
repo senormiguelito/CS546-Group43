@@ -314,7 +314,6 @@ if (loginForm) {
   });
 }
 
-<<<<<<< HEAD
 var modal = document.getElementById("modal");
 
 		var closeBtn = document.getElementsByClassName("close")[0];
@@ -331,7 +330,6 @@ var modal = document.getElementById("modal");
 			modal.style.display = "none";
 		});
 
-=======
 if (editprofileForm) {
   editprofileForm.addEventListener("submit", (event) => {
     event.preventDefault();
@@ -501,4 +499,8 @@ if (addCategoryButton) {
 //     sessionStorage.clear();
 //   }
 // }
->>>>>>> refs/remotes/origin/main
+
+
+
+
+
