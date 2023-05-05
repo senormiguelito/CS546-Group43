@@ -144,7 +144,8 @@ router
       return res.status(404).render("error", { error: e });
     }
   })
-  .route('/projects/:projectId').put(async (req, res) => {
+  //.route('/projects/:projectId')
+  .put(async (req, res) => {
     // to update project title/description/status
     const projectInfo = req.body;
     let projectId = req.params.projectId;

@@ -67,8 +67,7 @@ const create = async (
     if (!insertInfo.acknowledged || !insertInfo.insertedId)
       throw 'Could not send direct message';
     insertInfo._id = insertInfo.insertedId.toString();
-    const newDirectMessage = await get(insertInfo.insertedId.toString());
-    return newDirectMessage;
+    return insertInfo;
   };
 
 

@@ -75,18 +75,19 @@ router.route("/messages").get(async (req, res) => {
   .post(async (req, res) => {
     const userSession = req.session.user.userSessionData;
     const sender = userSession._id;
-    const reciever = req.body.reciever;
+    const reciever = req.body.recieverId;
     const message = req.body.message;
     try {
       const newMessage = await messageData.sendMessage(sender, reciever, message);
       // res.redirect("/messages");
-      console.log("message sent");
+      return res.render("dmList", { title: "messages"});
     }
     catch (e) {
       console.log(e);
-      // return res.status(400).render("error", { error: e });
-    }
-  })
+      return res.status(400).render("error", { error: e });
+
+    } 
+  });
 
 
   // moved the following and implemented in /users.js:

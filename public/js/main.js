@@ -255,3 +255,20 @@ if (loginForm) {
     }
   });
 }
+
+var modal = document.getElementById("modal");
+
+		var closeBtn = document.getElementsByClassName("close")[0];
+
+		document.querySelector("a[href='#modal']").addEventListener("click", function() {
+			modal.style.display = "block";
+		});
+
+		closeBtn.addEventListener("click", function() {
+			modal.style.display = "none";
+		});
+
+		document.getElementById("send-btn").addEventListener("click", function() {
+			modal.style.display = "none";
+		});
+

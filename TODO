@@ -140,3 +140,11 @@ Need to defend against XSS attacks with inputs
 mongo makes it very easy to use geolocation to filter results based on the area.
 Come see him he'll show you his snippet from back when using it.
 Documentation is OJ Simpleton
+
+
+
+
+
+
+## random errors: 
+1. Deleting comments is showing error and redriectingf to a different page. 

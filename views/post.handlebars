@@ -2,7 +2,7 @@
 <h1>Welcome to Our post Page!</h1>
     <p class="about">Check out our latest job posts:</p>
     <div class="post-list-container">
-        <div class="post-list-box"';">
+        <div class="post-list-box">
         <div class="post-list-img-box"><img src="../public/images/No_Image_Available.jpg" alt="Post 1 Image"></div>
         <h2>{{post.title}}</h2>
         <p>{{post.description}}</p>
@@ -40,7 +40,24 @@
 <br>
 <a href="map" class="see-all">map</a>
 <br>
-<a href="contact" class="see-all">contact</a>
+<a href="#modal">Contact</a>
+	
+	<!-- Create the modal with input box and send button -->
+	<div id="modal" class="modal">
+		<div class="modal-content">
+			<span class="close">&times;</span>
+			<h2>Contact</h2>
+      <form method = "POST" action ='/home/messages/'>
+        <input type="text" placeholder="Enter your message" name = "message" id = "message"><br><br>
+        {{!-- sending ID as a hidden field --}}
+        <input type="hidden" name = "recieverId" id = "recieverId" value = "{{post.seekerId}}">
+        <input type="submit" value="Send" id = "send-btn">
+      </form>
+			
+			{{!-- <button id="send-btn">Send</button> --}}
+		</div>
+	</div>
+
 <br>
 <a href="/providers" class="see-all">See All Job Providers</a>
 <br>
