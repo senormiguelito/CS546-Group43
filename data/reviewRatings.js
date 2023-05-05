@@ -11,6 +11,7 @@ export const create = async (
   projectId, // project being reviewed
   rating,
   comment
+  // createdAt  --> not sure needs to be passed in
 ) => {
   h.checkValidUserID(userId);
   h.checkValidRevieweeId(revieweeId);

@@ -34,11 +34,11 @@
     <option value="provider">Job Provider</option>
     <option value="seeker">Job Seeker</option>
   </select>
-   <br>
+  <br>
   <label for="Address">Address<span class="required">*</span>:</label>
-  <input class="addr" type="text" name="zip" id="zipInput"  maxlength="5" placeholder="zipcode" >
-  <input class="addr" type="text" name="city" id="cityInput" >
-  <input class="addr" type="text" name="state" id="stateInput">
+  <input class="addr" type="text" name="city" id="cityInput" placeholder="City">
+  <input class="addr" type="text" name="state" id="stateInput" minlength="2" maxlength="2" placeholder="State">
+  <input class="addr" type="text" name="zip" id="zipInput" maxlength="5" placeholder="Zip Code">
   <br>
   <br>
   
@@ -47,12 +47,4 @@
   <button type="button" id="reset-button">Reset</button>
 </form>
 </div>
-<p><a href="/login">Already have an account? Click here to log-in</a></p>
-
-{{!
-example of using type 'date': 
-<label for="start">Start date:</label>
-
-<input type="date" id="start" name="trip-start"
-       value="2018-07-22"
-       min="2018-01-01" max="2018-12-31">}}
+<p><a href="/login">Already have an account? Click here to log-in!</a></p>

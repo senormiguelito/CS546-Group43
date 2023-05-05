@@ -7,6 +7,7 @@ import postRoutes from "./post.js"
 const constructorMethod = (app) => {
   app.use("/", userRoutes);
   app.use("/home", homeRoutes);
+  app.use("/posts", postRoutes);
   app.use("/api", allRoutes);
   app.use("/post", postRoutes);
   // app.use("/home", homeRoutes);

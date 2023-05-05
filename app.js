@@ -5,7 +5,8 @@ import { dirname } from "path";
 import exphbs from "express-handlebars";
 import session from "express-session";
 import helmet from "helmet";
-
+import xss from "xss";    // testing input sanitization -> defends xss attacks
+let date = new Date().toUTCString();
 const app = express();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -37,6 +38,16 @@ app.use(
     },
   })
 );
+/*
+// input sanitization against XSS attacks (project requirement)
+// not sure how to actually implement
+
+const sanitizeReqBody = (req, res, next) => {
+  const sanitizedBody = xss(req.body);
+  req.body = sanitizedBody;
+  next();
+};
+*/
 
 // middleware functions will be here but in the end will do it.
 
@@ -48,13 +59,23 @@ app.use("/home", (req, res, next) => {
     return res.redirect("/login");
   }
 });
-app.use("/home/provideList", (req, res, next) => {
+
+app.use("/posts", (req, res, next) => {
   if (req.session.user) {
     next();
   } else {
     return res.redirect("/login");
   }
 });
+
+app.use("/home/providerList", (req, res, next) => {
+  if (req.session.user) {
+    next();
+  } else {
+    return res.redirect("/login");
+  }
+});
+
 app.use("/home/messages", (req, res, next) => {
   if (req.session.user) {
     next();
@@ -103,6 +124,15 @@ app.use("/login", (req, res, next) => {
     }
   } else if (!req.session.user) {
     next();
+  }
+});
+
+app.use('/projects', (req, res, next) => {
+  if (req.session.user) {
+    next();
+  } else {
+    return res.status(403).render("error", { title: "Error", unauthorizedAccess: true });
+    // return res.redirect("/login");
   }
 });
 

@@ -19,7 +19,7 @@ router
         const checkregister = req.session.user.justRegistered;
         if (checkregister) {
           const userName = req.session.user.firstName;
-          const message = `Hurray! ${userName} you have registered successfully.`;
+          const message = `Hurray! ${userName}, you have registered successfully! Please log in to access our website.`;
           res.render("login", {
             isHide: true,
             title: "Login",
@@ -65,11 +65,11 @@ router
             userSessionData,
             authentication: true,
           };
-          res.redirect("/home/myprofile");
+          res.redirect("/home/myprofile");    // nice!
         }
       } else {
         res.status(400).render("login", {
-          Error: "sorry, user not authenticated",
+          Error: "sorry, you are not authenticated",
           layout: "main",
           isHide: true,
         });
@@ -166,7 +166,7 @@ router.route("/logout").get(async (req, res) => {
   //code here for GET
   try {
     req.session.destroy();
-    res.status(200).redirect("/");
+    res.status(200).redirect("/");      // add a message to confirm that you have been logged out
   } catch (e) {
     res.status(400).render("error", { Error: e });
   }

@@ -247,9 +247,15 @@ export const checkbudget = (budget) => {
   budget = parseInt(budget);
   if (typeof budget !== 'number') throw new Error('budget should be a valid number');
   if (budget <= 0) throw new Error('Budget can not be a negative number!');
-}
+};
 
-
+export const checkstatus = (status) => {
+  isvalid(status, "Project Status");
+  status = status.trim();
+  status = status.toLowerCase();
+  if (status !== "not started" && status !== "in progress" && status !== "finished")
+    throw new Error('Invalid project status specified. Only "not started", "in progress" or "finished" are allowed.');
+};
 
 export const getJoiningDate = () => {
   let date = new Date(); // get current date

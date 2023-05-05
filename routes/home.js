@@ -1,7 +1,7 @@
 import { postData } from "../data/index.js";
+import { userData } from "../data/index.js";
 import { Router } from "express";
 import { messageData } from "../data/index.js";
-import {userData} from "../data/index.js";
 const router = Router();
 
 router.route("/").get(async (req, res) => {
@@ -12,9 +12,10 @@ router.route("/").get(async (req, res) => {
     let message = "";
     if (req.session.user) {
       const userSession = req.session.user.userSessionData;
-      message = `Hey ${userSession.firstName},This is your user ID : ${req.session.user.userID}`;
+      message = `Hey ${userSession.firstName}, this is your user ID: ${req.session.user.userID}`;
     } else {
       message = `hey you entered without login!!!, how???`;
+      res.redirect('/login'); // talk with Kaushal for clarification
     }
 
     res.render("home", { posts: posts, Message: message });
@@ -54,7 +55,6 @@ router.route("/seekers").get(async (req, res) => {
   }
 });
 
-
  // needs to change method from get to delete
  router.route("/:commentId/deleteComment").get(async (req, res) => {
   try {
@@ -75,14 +75,16 @@ router.route("/seekers").get(async (req, res) => {
   }
 }); 
 
-router.route("/post/createPost").get(async (req, res) => {
-  try {
-    res.render("create_post");
+// router.route("/post/createPost").get(async (req, res) => {
+//   try {
+
     
-  } catch (e) {
-    return res.status(400).render("error", { error: e });
-  }
-}); 
+//     res.render("create_post");
+    
+//   } catch (e) {
+//     return res.status(400).render("error", { error: e });
+//   }
+// }); 
 
 router.route("/post/createPost").post(async (req, res) => {
   try {
@@ -102,7 +104,7 @@ router.route("/post/createPost").post(async (req, res) => {
 
 router.route("/post/createJob").get(async (req, res) => {
   try {
-    
+    // job is created when both users involved agree to it. Will create the job object
     res.render("create_job");
   } catch (e) {
     return res.status(400).render("error", { error: e });
@@ -126,23 +128,39 @@ router.route("/messages").get(async (req, res) => {
   // console.log(messages);
   // res.render("dmList", { title: "messages", messages: messages });
 })
-.post(async (req, res) => {
-  const userSession = req.session.user.userSessionData;
-  const sender = userSession._id;
-  const reciever = req.body.reciever;
-  const message = req.body.message;
-  try {
-    const newMessage = await messageData.sendMessage(sender, reciever, message);
-    // res.redirect("/messages");
-    console.log("message sent")
-  }
-  catch (e) {
-    console.log(e);
-    // return res.status(400).render("error", { error: e });
-  }
-})
+  .post(async (req, res) => {
+    const userSession = req.session.user.userSessionData;
+    const sender = userSession._id;
+    const reciever = req.body.reciever;
+    const message = req.body.message;
+    try {
+      const newMessage = await messageData.sendMessage(sender, reciever, message);
+      // res.redirect("/messages");
+      console.log("message sent");
+    }
+    catch (e) {
+      console.log(e);
+      // return res.status(400).render("error", { error: e });
+    }
+  })
 
-
-
+  router.route("/profile/:userId").get(async (req, res) => {
+    // access a profile page
+    let errorMessage = '';
+    try {
+      if (req.session.user) {
+        const userId = userSessionData._id.toString();
+        const userID = req.params.userId;               // pick this or the above
+        const user = await userData.getUser(userId);
+        res.render('profile', { user });
+      } else {
+        res.redirect('/login');   // must be logged in to interact with posts
+      }
+    } catch (e) {
+      console.log(e);
+      res.status(500).render('error', { errorMessage: "Internal Server Error" });
+  
+    }
+  });
 
 export default router;
