@@ -13,6 +13,22 @@
             </select>
             <button type="submit" id="find">Find</button>
             </form>
+
+             {{#each posts}}
+        {{!-- <div class="post-list-box" onclick="location.href='/{{_id}}';"> --}}
+        <div class="post-list-box" data-id="{{_id}}">
+        <div class="post-list-img-box"><img src="../public/images/No_Image_Available.jpg" alt="Post 1 Image"></div>
+        {{!-- <p>{{_id}} id</p> --}}
+        <h2>{{title}}</h2>
+        <p>{{description}}</p>
+        </div>
+         
+      {{/each}}
+      {{#if comment}}
+            <div class="post-comment">
+            <p>comment : {{comment}}</p>
+          </div>
+        {{/if}}
       </div>
     <br>
     <a href="/post/newPost/createPost" class="create-post">Create a job posting!</a>
