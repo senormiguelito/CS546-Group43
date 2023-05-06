@@ -7,9 +7,11 @@ const router = Router();
 
 router.route("/").get(async (req, res) => {
   try {
-    let posts = await postData.getAll();
+    // let posts = await postData.getAll();
     // console.log(posts.title, posts.description)
-    // console.log(posts)
+    let role = req.session.user.userSessionData.role
+    // console.log()
+    if(!role) throw 'YO! how come you logged in without providing role?'
     let message = "";
     if (req.session.user) {
       const userSession = req.session.user.userSessionData;
@@ -18,7 +20,14 @@ router.route("/").get(async (req, res) => {
       message = `hey you entered without login!!!, how???`;
       res.redirect("/login"); // talk with Kaushal for clarification
     }
-
+    let posts = undefined
+    if(role === 'seeker') {
+      posts = await postData.getByRole("provider")
+    }
+    if(role === 'provider') {
+      posts = await postData.getByRole("seeker")
+    }
+    if(!posts) throw 'OOPS! could not find posts!'
     res.render("home", { posts: posts, Message: message });
   } catch (e) {
     return res.status(400).render("home", { error: e });

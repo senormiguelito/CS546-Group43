@@ -60,11 +60,28 @@ router.route("/createPost").post(async (req, res) => {
     if (!newPost) throw "could not create new post";
     //   console.log("new post")
     //   console.log(newPost)
-    res.redirect("/");
-  } catch (e) {
-    return res.status(400).render("404", { error: e });
-  }
-});
+      res.redirect('/')
+    } catch (e) {
+      return res.status(400).render("404", { error: e });
+    }
+  }); 
+  
+
+  router.route('/filter').post(async (req, res) =>{
+    console.log(req.params,req.body)
+    let role = req.body.filter
+    console.log("in filter route")
+    if(role === 'all'){
+      let posts = await postData.getAll()
+      return res.render('home',{posts:posts})
+    }
+    else{
+      let posts = await postData.getByRole(role) 
+      return res.render("home", { posts: posts });
+    }
+    
+  })
+
 
 router.route("/:postId").get(async (req, res) => {
   try {

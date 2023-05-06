@@ -178,3 +178,32 @@ export const getByCommentId = async (id) => {
   // post._id = post._id.toString()
   return post;
 };
+
+export const getByRole = async (role) => {
+
+  // h.checkId(id);
+  // id = id.trim();
+  console.log("in get by role data")
+  const postsCollection = await posts();
+  let postList = await postsCollection.find({}).toArray();
+  postList = postList.map((element) => {
+    // console.log(element.role, role)
+    if(element.role === role){
+      element._id = element._id.toString();
+      return element;
+    }
+  });
+  if (!postList) throw 'Could not get all posts'; 
+  postList = postList.filter(function( element ) {
+    return element !== undefined;
+  });
+  console.log(postList,"postList")
+  return postList;
+
+  // const postsCollection = await posts();
+  // const post = await postsCollection.find({role: role});
+  // if (!post) throw 'No post found in the database with that id';
+  // post._id = post._id.toString()
+
+  // return post;
+};
