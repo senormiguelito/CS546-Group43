@@ -172,6 +172,14 @@ imgInput.addEventListener("change", () => {
   });
 });
 
+const createPostForm = document.getElementById("create-post-form");
+
+// Listen for the form's "load" event
+createPostForm.addEventListener("load", () => {
+  // Clear the session storage
+  sessionStorage.clear();
+});
+
 const inputs = document.querySelectorAll("#signup-form input");
 
 inputs.forEach((input) => {
@@ -432,6 +440,7 @@ const addintohiddnediv = () => {
       newarr.push(element.textContent); // Get data from div tags and store in array
       console.log("--------" + newarr);
     });
+    newarr = newarr.split(",").map((s) => s.trim().replace(/"/g, ""));
   } else {
     newarr = [];
   }
@@ -461,38 +470,7 @@ const mainbox = document.getElementById("category-container");
 if (mainbox) {
   mainbox.addEventListener("change", addintohiddnediv);
 }
-// const categoryElements = document.querySelectorAll(".category-name");
 
-// const addold = () => {
-//   categoryElements.forEach((element) => {
-//     categories.push(element.textContent);
-//     divDataInput.value = element.textContent;
-//     console.log("yes this is categories:" + element.textContent);
-//     // Get data from div tags and store in array
-//   });
-//   console.log("------------------------------------------");
-//   // divDataInput.value = JSON.stringify(categories);
-// };
-
-// const deleteButton = document.createElement("span");
-// const categoryElements = document.querySelectorAll(".category-name");
-// const divfordelete = document.getElementById("category-box");
-// if (deleteButton) {
-//   deleteButton.addEventListener("click", () => {
-//     console.log(categories);
-//     categoryElements.forEach((element) => {
-//       categories.push(element.textContent);
-//       // Get data from div tags and store in array
-//     });
-//     // const categoryIndex = categories.indexOf(deleteButton);
-//     const categoryIndex = categories.indexOf(categoryElements.value);
-//     if (categoryIndex > -1) {
-//       categories.splice(categoryIndex, 1);
-//     }
-//     categoryElements.remove();
-//   });
-//   divfordelete.appendChild(deleteButton);
-// }
 // add event listener to the button to add a category
 if (addCategoryButton) {
   addCategoryButton.addEventListener("click", () => {
@@ -569,26 +547,3 @@ if (addCategoryButton) {
 }
 
 window.addEventListener("change", addintohiddnediv); // on window change anything
-
-// // populate the list with existing categories from the session data
-// if (sessionObj.categories) {
-//   categories = sessionObj.categories;
-//   categories.forEach((category) => {
-//     const categoryElement = document.createElement("div");
-//     categoryElement.classList.add("category");
-//     categoryElement.textContent = category;
-//     categoryList.appendChild(categoryElement);
-//   });
-// }
-
-// const successElement = document.querySelector("#success");
-
-// // console.log(successElement);
-// if (successElement) {
-//   // console.log("entered into p tag clear session");
-//   const successMessage = successElement.textContent;
-//   if (successMessage) {
-//     // Clear the sessionStorage
-//     sessionStorage.clear();
-//   }
-// }

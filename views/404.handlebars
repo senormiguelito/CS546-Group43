@@ -263,11 +263,13 @@
         <div class="col-md-6 align-self-center">
           <h1>404</h1>
           <h2>UH OH! You're lost.</h2>
+          {{#if Error}}<h3>This error sent by server : {{Error}}</h3>{{/if}}
           <p>The page you are looking for does not exist.
             How you got here is a mystery. But you can click the button below
             to go back to the homepage.
-            {{Error}} 
+             
           </p>
+
           {{!-- <button href="/" class="btn btn-primary">HOME</button> --}}
           <button class="btn btn-primary">
             <a href="/" >Home</a>

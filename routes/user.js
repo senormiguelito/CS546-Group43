@@ -1,9 +1,8 @@
 import { Router } from "express";
 const router = Router();
 import * as h from "../helpers.js";
-import { userData } from "../data/index.js";
+import { postData, userData } from "../data/index.js";
 import xss from "xss";
-
 
 router.route("/").get(async (req, res) => {
   if (req.session.user) {
@@ -67,7 +66,7 @@ router
             userSessionData,
             authentication: true,
           };
-          res.redirect("/home/myprofile");    // nice!
+          res.redirect("/home/myprofile"); // nice!
         }
       } else {
         res.status(400).render("login", {
@@ -168,17 +167,16 @@ router.route("/logout").get(async (req, res) => {
   //code here for GET
   try {
     req.session.destroy();
-    res.status(200).redirect("/");      // add a message to confirm that you have been logged out
+    res.status(200).redirect("/"); // add a message to confirm that you have been logged out
   } catch (e) {
     res.status(400).render("error", { Error: e });
   }
 });
 
-
 router.route("/seekers").get(async (req, res) => {
   try {
     const userList = await userData.getUsersByRole("seeker");
-    res.render("seekerList", { userList: userList });   // handlebars [age]
+    res.render("seekerList", { userList: userList }); // handlebars [age]
   } catch (e) {
     res.render("seekerList", { error: e });
     // return res.status(400).render("error", { error: e });
@@ -187,16 +185,19 @@ router.route("/seekers").get(async (req, res) => {
 
 router.route("/profile/:userId").get(async (req, res) => {
   // access a profile page
-  let userId = req.params.userId;
+  const commentId = req.params.userId;
+  const post = await postData.getByCommentId(commentId);
+ //6455c77bddd0e46d4dd9af88 need this id over here
+  console.log(post.userId);
+  const userId = post.userId;
   try {
     if (!userId) throw new Error("no userId specified");
     h.checkId(userId);
   } catch (e) {
-    return res.status(400).redirect('/home', { error: e });
+    return res.status(400).redirect("/home");
   }
   try {
     if (req.session.user) {
-
       const user = await userData.getUser(userId);
       let profileToAccessById = user._id.toString();
       profileToAccessById = profileToAccessById.trim();
@@ -209,18 +210,18 @@ router.route("/profile/:userId").get(async (req, res) => {
 
       if (!user) throw new Error("User profile was not found");
 
-      if (currentUserId === profileToAccessById) {    //if this user clicks on view profile and its their profile:
+      if (currentUserId === profileToAccessById) {
+        //if this user clicks on view profile and its their profile:
         return res.redirect("/home/myprofile");
       }
       res.status(200).render("profile", { title: "Profile", user: user });
       // res.status(200).render('profile', { user: user });    // now we can see just what tha hell is goin on
     } else {
-      res.redirect('/login');   // must be logged in to interact with posts
+      res.redirect("/login"); // must be logged in to interact with posts
     }
   } catch (e) {
-    return res.status(404).render('error', { error: e });
+    return res.status(404).render("error", { error: e });
   }
 });
-
 
 export default router;
