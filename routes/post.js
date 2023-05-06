@@ -8,9 +8,8 @@ const router = Router();
 router.route("/").get(async (req, res) => {
   try {
     let posts = await postData.getAll();
-    console.log("in create post")
-    res.render("myPost", { posts: posts});
-    
+    console.log("in create post");
+    res.render("myPost", { posts: posts });
   } catch (e) {
     return res.status(400).render("404", { error: e });
   }

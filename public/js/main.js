@@ -143,6 +143,8 @@ const checkCategories = (categories) => {
 
 const signupForm = document.getElementById("signup-form");
 const loginForm = document.getElementById("login-form");
+
+const commentForm = document.getElementById("comment-form");
 const editprofileForm = document.getElementById("myprofile-edit");
 const resetButton = document.getElementById("reset-button");
 const firstname = document.getElementById("firstNameInput");

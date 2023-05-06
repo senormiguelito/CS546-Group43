@@ -253,7 +253,8 @@ export const checkbudget = (budget) => {
   if (!budget) throw new Error("no budget provided");
   budget = parseInt(budget);
   if (typeof budget !== "number")
-    throw new Error("budget should be a valid number");
+    throw new Error("budget should be a valid number"); // it was allowing NaN's
+  if (!budget) throw new Error("budget can only be in numbers!"); // so had to add this
   if (budget <= 0) throw new Error("Budget can not be a negative number!");
 };
 
