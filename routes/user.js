@@ -2,6 +2,8 @@ import { Router } from "express";
 const router = Router();
 import * as h from "../helpers.js";
 import { userData } from "../data/index.js";
+import xss from "xss";
+
 
 router.route("/").get(async (req, res) => {
   if (req.session.user) {
@@ -48,8 +50,8 @@ router
   })
   .post(async (req, res) => {
     //code here for POST
-    const emailAddress = req.body.emailAddressInput;
-    const password = req.body.passwordInput;
+    const emailAddress = xss(req.body.emailAddressInput);
+    const password = xss(req.body.passwordInput);
     try {
       h.checkemail(emailAddress);
       h.checkpassword(password);
@@ -96,19 +98,19 @@ router
   })
   .post(async (req, res) => {
     //code here for POST
-    const firstName = req.body.firstName;
-    const lastName = req.body.lastName;
-    const DOB = req.body.dob;
-    const emailAddress = req.body.email;
+    const firstName = xss(req.body.firstName);
+    const lastName = xss(req.body.lastName);
+    const DOB = xss(req.body.dob);
+    const emailAddress = xss(req.body.email);
     // console.log(req.body.phoneNumber);
-    const phone = req.body.phoneNumber;
+    const phone = xss(req.body.phoneNumber);
     // console.log(phone);
-    const password = req.body.password;
-    const confirmpassword = req.body.confirmPassword;
-    const role = req.body.role;
-    const zip = req.body.zip;
-    const city = req.body.city;
-    const state = req.body.state;
+    const password = xss(req.body.password);
+    const confirmpassword = xss(req.body.confirmPassword);
+    const role = xss(req.body.role);
+    const zip = xss(req.body.zip);
+    const city = xss(req.body.city);
+    const state = xss(req.body.state);
     // console.log("harshil", phone + "-" + firstName);
     try {
       h.checkfirstname(firstName);
@@ -185,7 +187,6 @@ router.route("/seekers").get(async (req, res) => {
 
 router.route("/profile/:userId").get(async (req, res) => {
   // access a profile page
-  let message = '';
   let userId = req.params.userId;
   try {
     if (!userId) throw new Error("no userId specified");
@@ -207,17 +208,12 @@ router.route("/profile/:userId").get(async (req, res) => {
       currentUserId = currentUserId.trim();
 
       if (!user) throw new Error("User profile was not found");
-      
+
       if (currentUserId === profileToAccessById) {    //if this user clicks on view profile and its their profile:
-        console.log("yippeeeee");
-        const sessionObj = req.session.user.userSessionData;
-        const userID = req.session.user.userID;
-//        res.status(200).render("myprofile", { user: user, message: message });
-        res.status(200).render("profile", { title: "Profile", userID, sessionObj });
-        // res.render("myprofile", { title: "Profile", userID, sessionObj });
+        return res.redirect("/home/myprofile");
       }
-      message = "We've acquired the target\n";
-      res.status(200).render('profile', { user: user, message: message });    // now we can see just what tha hell is goin on
+      res.status(200).render("profile", { title: "Profile", user: user });
+      // res.status(200).render('profile', { user: user });    // now we can see just what tha hell is goin on
     } else {
       res.redirect('/login');   // must be logged in to interact with posts
     }

@@ -4,62 +4,76 @@ import { postData, userData } from "./index.js";
 import * as h from "../helpers.js";
 
 
-const create = async (userId, postId, comment) => {
+export const create = async (userId, postId, comment) => {
 
-    h.checkValid(userId)
-    h.checkId(postId)
+  h.checkValid(userId);
+  h.checkId(postId);
+  h.checkComment(comment);
 
-    if(!comment) throw 'please enter comment!'
-    if(comment.trim().length === 0) throw 'please enter non-empty comment!'
-    userId = userId.trim()
-    comment = comment.trim()
-    postId = postId.trim()
+  userId = userId.trim();
+  comment = comment.trim();
+  postId = postId.trim();
 
-    let post = await postData.get(postId)
-    if(!post) throw "we don't have post with that Id"
-    const postsCollection = await posts()
-    
-    let user = await userData.getUser(userId)
-    if(!user) throw 'we can not find user for that post'
+  if(!comment) throw 'please enter comment!';
+  if(comment.length === 0) throw 'please enter non-empty comment!';
 
-
-    const newComment = {
-        _id: new ObjectId(),
-        userId:userId,
-        userFirstName:user.firstName,
-        userLastName:user.lastName,
-        comment:comment
-    }
   
-    const newPost = await postsCollection.updateOne({_id: new ObjectId(postId)} , {$push :{comments:newComment}})
-    if (newPost.modifiedCount === 0) throw "no comments added"
+  let post = await postData.get(postId);
+  if (!post) throw "we don't have post with that Id";
+  const postsCollection = await posts();
+    
+  let user = await userData.getUser(userId);
+  if (!user) throw 'we can not find user for that post';
+
+
+  const newComment = {
+    _id: new ObjectId(),
+    userId: userId,
+    userFirstName: user.firstName,
+    userLastName: user.lastName,
+    comment: comment
+  };
+  
+  const newPost = await postsCollection.updateOne({ _id: new ObjectId(postId) }, { $push: { comments: newComment } });
+  if (newPost.modifiedCount === 0) throw "no comments added";
     // console.log(newPost,"new comment")
-    return comment
+  return comment;
 }
 
-const getAll = async (postId) => {
+export const getAll = async (postId) => {
 
-    h.checkId(postId)
+  h.checkId(postId);
+
+  let commentList = [];
   
-    let commentList = []
-    
-    let post = undefined
-    try{
-      post = await postData.get(postId)
-    }catch(e){
-      throw "band doesn't exist with that bandId"
-    }
-    if(post.comments){
-      post.comments.forEach(element => {
-        element._id = element._id.toString()
-        commentList.push(element)
-      });
-    }
-    
-    return commentList;
-  };
+  let post = undefined;
+  try{
+    post = await postData.get(postId);
+  } catch (e) {
+    throw "that comment doesn't exist in our database";
+  }
 
-  const remove = async (userId, commentId) => {
+  if(post.comments){
+    post.comments.forEach(comment => {
+      comment._id = comment._id.toString();
+      commentList.push(comment);
+    });
+  }
+  
+  return commentList;
+};
+
+export const getUserByCommentId = async (commentId) => {
+  h.checkId(commentId);
+  const userCollection = await user();
+
+  const user = await userCollection.findOne({ 'comment._id': ObjectId(commentId), });
+  if (!user) throw new Error("Comment was not found attached to any user in the database");
+  
+  return user;
+};
+
+  export const remove = async (userId, commentId) => {
 
     h.checkValid(userId)
     h.checkId(commentId)
@@ -107,6 +121,3 @@ const getAll = async (postId) => {
     
     
   };
-
-
-export {create,getAll,remove}
