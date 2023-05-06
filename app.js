@@ -5,7 +5,8 @@ import { dirname } from "path";
 import exphbs from "express-handlebars";
 import session from "express-session";
 import helmet from "helmet";
-import xss from "xss";    // testing input sanitization -> defends xss attacks
+import flash from "connect-flash";
+import xss from "xss"; // testing input sanitization -> defends xss attacks
 let date = new Date().toUTCString();
 const app = express();
 const __filename = fileURLToPath(import.meta.url);
@@ -22,23 +23,31 @@ app.set("view engine", "handlebars");
 app.use(
   session({
     name: "AuthCookie",
-    // user: {},  //bc kaushal put in the routes, -kaushal: no we don't need to declare it over here, after req.session."any name you want to add", so you can use multiple session, like req.session.user, req.session.post, etc.
     secret: "some secret string!",
     resave: false,
     saveUninitialized: false,
   })
 );
 
-app.use(
-  helmet.contentSecurityPolicy({
-    directives: {
-      "default-src": ["'self'"],
-      "script-src": ["'self'", "api.zippopotam.us"], // i used outside resource for get city and state name by zipcode and to allow that i have to use helmet, otherwise it was throwing an error.
-      "connect-src": ["'self'", "api.zippopotam.us"],
-    },
-  })
-);
+app.use((req, res, next) => {
+  res.setHeader(
+    "Content-Security-Policy",
+    "script-src 'self' cdn.jsdelivr.net"
+  );
+  next();
+});
 
+// app.use(
+//   helmet.contentSecurityPolicy({
+//     directives: {
+//       "default-src": ["'self'"],
+//       "script-src": ["'self'", "api.zippopotam.us"], // i used outside resource for get city and state name by zipcode and to allow that i have to use helmet, otherwise it was throwing an error.
+//       "connect-src": ["'self'", "api.zippopotam.us"],
+//     },
+//   })
+// );
+
+app.use(flash());
 // middleware functions will be here but in the end will do it.
 
 // 1. redirect to login
@@ -46,7 +55,11 @@ app.use("/home", (req, res, next) => {
   if (req.session.user) {
     next();
   } else {
-    return res.redirect("/login");
+    return res.status(403).render("error", {
+      title: "Error",
+      unauthorizedAccess: true,
+      isHide: true,
+    });
   }
 });
 
@@ -54,7 +67,11 @@ app.use("/posts", (req, res, next) => {
   if (req.session.user) {
     next();
   } else {
-    return res.redirect("/login");
+    return res.status(403).render("error", {
+      title: "Error",
+      unauthorizedAccess: true,
+      isHide: true,
+    });
   }
 });
 
@@ -62,7 +79,11 @@ app.use("/home/providerList", (req, res, next) => {
   if (req.session.user) {
     next();
   } else {
-    return res.redirect("/login");
+    return res.status(403).render("error", {
+      title: "Error",
+      unauthorizedAccess: true,
+      isHide: true,
+    });
   }
 });
 
@@ -70,7 +91,23 @@ app.use("/home/messages", (req, res, next) => {
   if (req.session.user) {
     next();
   } else {
-    return res.redirect("/login");
+    return res.status(403).render("error", {
+      title: "Error",
+      unauthorizedAccess: true,
+      isHide: true,
+    });
+  }
+});
+
+app.use("/post/myPosts", (req, res, next) => {
+  if (req.session.user) {
+    next();
+  } else {
+    return res.status(403).render("error", {
+      title: "Error",
+      unauthorizedAccess: true,
+      isHide: true
+    });
   }
 });
 
@@ -78,15 +115,23 @@ app.use("/myProjects", (req, res, next) => {
   if (req.session.user) {
     next();
   } else {
-    return res.redirect("/login");
+    return res.status(403).render("error", {
+      title: "Error",
+      unauthorizedAccess: true,
+      isHide: true,
+    });
   }
-})
+});
 
 app.use("/home/myprofile", (req, res, next) => {
   if (req.session.user) {
     next();
   } else {
-    return res.redirect("/login");
+    return res.status(403).render("error", {
+      title: "Error",
+      unauthorizedAccess: true,
+      isHide: true,
+    });
   }
 });
 
@@ -94,7 +139,11 @@ app.use("/logout", (req, res, next) => {
   if (req.session.user) {
     next();
   } else {
-    return res.redirect("/login");
+    return res.status(403).render("error", {
+      title: "Error",
+      unauthorizedAccess: true,
+      isHide: true,
+    });
   }
 });
 
@@ -129,7 +178,11 @@ app.use("/seekers", (req, res, next) => {
   if (req.session.user) {
     next();
   } else {
-    return res.redirect("/login");
+    return res.status(403).render("error", {
+      title: "Error",
+      unauthorizedAccess: true,
+      isHide: true,
+    });
   }
 });
 
@@ -137,19 +190,62 @@ app.use("/profile", (req, res, next) => {
   if (req.session.user) {
     next();
   } else {
-    return res.redirect("/login");
+    return res.status(403).render("error", {
+      title: "Error",
+      unauthorizedAccess: true,
+      isHide: true,
+    });
   }
 });
 
-app.use('/projects', (req, res, next) => {
+app.use("/projects", (req, res, next) => {
   if (req.session.user) {
     next();
   } else {
-    return res.status(403).render("error", { title: "Error", unauthorizedAccess: true });
+    return res.status(403).render("error", {
+      title: "Error",
+      unauthorizedAccess: true,
+      isHide: true,
+    }); //it's so cool that we are using error page if user tries to access any routes without login.
     // return res.redirect("/login");
   }
 });
 
+app.use("/api", (req, res, next) => {
+  if (req.session.user) {
+    next();
+  } else {
+    return res.status(403).render("error", {
+      title: "Error",
+      unauthorizedAccess: true,
+      isHide: true,
+    });
+  }
+});
+
+app.use("/post", (req, res, next) => {
+  if (req.session.user) {
+    next();
+  } else {
+    return res.status(403).render("error", {
+      title: "Error",
+      unauthorizedAccess: true,
+      isHide: true,
+    });
+  }
+});
+
+app.use("/projects", (req, res, next) => {
+  if (req.session.user) {
+    next();
+  } else {
+    return res.status(403).render("error", {
+      title: "Error",
+      unauthorizedAccess: true,
+      isHide: true,
+    });
+  }
+});
 //please add your route name if you add any in futer, like /home/seekerpage/addpost
 // app.use("/yournewroute", (req, res, next) => {
 //   if (req.session.user) {

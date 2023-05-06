@@ -3,6 +3,7 @@ import {ObjectId} from 'mongodb';
 import session from "express-session";
 let d1 = new Date();
 import * as h from "../helpers.js";
+const postsCollection = await posts();
 
 export const create = async (userId, title, description, budget, role, categories, location_zip_code, location_city, location_state, images) => {
   // title, description, budget, role, categories, zip, city, state
@@ -15,13 +16,10 @@ export const create = async (userId, title, description, budget, role, categorie
   // h.checkCategories(categories);
   h.checkbudget(budget);
   console.log("In create post data ")
- 
-
-
 
   //needs to check if images have valid img type
 
- 
+
   userId = userId.trim();
   title = title.trim();
   description = description.trim();
@@ -42,22 +40,22 @@ export const create = async (userId, title, description, budget, role, categorie
     location_state: location_state,
     location_zip_code: location_zip_code,
     createdOrUpdatedAt: d1.toISOString(),
-    images: []
+    images: [],
+    prospects: []   // Empty prospects array --> User interaction will push that user into the prospects array. 
+                    // When poster decides on whos the right fit, select that prospect from the drop down ---> this will create the 'project'
   };
   
-  const postsCollection = await posts();
   const insertInfo = await postsCollection.insertOne(newPostsInfo);
   if (!insertInfo.acknowledged || !insertInfo.insertedId) throw 'Could not add post';
   insertInfo._id = insertInfo.insertedId.toString();
   const newPost = await get(insertInfo.insertedId.toString());
-  
-  return newPost;
+
+  return {newPost, insertedPost: true};
 };
 
 export const getAll = async () => {
 
   // console.log("inside data>posts>getAll");
-  const postsCollection = await posts();
   let postList = await postsCollection.find({}).toArray();
   postList = postList.map((element) => {
     element._id = element._id.toString();
@@ -67,10 +65,28 @@ export const getAll = async () => {
   return postList;
 };
 
+export const getAllPostsByUser = async (userId) => {
+  h.checkId(userId);
+
+  if (!ObjectId.isValid(userId)) throw new Error("invalid userId");
+  userId = userId.trim();
+
+  let posts = await postsCollection.find({ userId: new ObjectId(userId) }).toArray(); //gets all post with the userId parameter in
+  console.log(posts);
+  if (!posts) {
+    return [];
+  } else {
+    posts = posts.map((post) => {
+      post._id = post._id.toString();
+      return post;
+    });
+    // return posts;
+  }
+};
+
 export const get = async (id) => {  // (postId)
   h.checkId(id);
   id = id.trim();
-  const postsCollection = await posts();
   const post = await postsCollection.findOne({_id: new ObjectId(id)});
   if (!post) throw 'No post found in the database with that id';
   post._id = post._id.toString()
@@ -83,7 +99,6 @@ export const remove = async (id) => { // (postId)
   id = id.trim();
   let result = {};
   
-  const postsCollection = await posts()
   const deletionInfo = await postsCollection.findOneAndDelete({ _id: new ObjectId(id) });
   
   if (deletionInfo.lastErrorObject.n === 0) throw `Could not delete post with id of ${id}`;
@@ -105,6 +120,27 @@ export const update = async (postId, seekerId, title, description, location_city
   h.checkCategories(categories);
   h.checkbudget(budget);
 
+  //this is different than helper function. don't delete it.
+  if (!categories) throw new Error("categories not provided");
+        
+  if (!Array.isArray(categories))
+    throw new Error("Update: categories must be an array");
+    
+  const filteredCategories = categories.filter(element => {
+    return element !== '';
+  });
+  
+  if (filteredCategories.length < 1)
+    throw new Error("Update: you must supply at least 1 category");
+  for (let i in filteredCategories) {
+    if (typeof filteredCategories[i] !== "string")
+      throw new Error("Update: each category must be a string");
+    filteredCategories[i] = filteredCategories[i].trim();
+    for (let j in filteredCategories[i]) {
+      if (typeof filteredCategories[i][j] === "number")
+      throw new Error("Update: invalid category response");
+    }
+  }
   //needs to check if images have valid img type
 
   postId = postId.trim();
@@ -115,7 +151,6 @@ export const update = async (postId, seekerId, title, description, location_city
   location_state = location_state.trim();
   location_zip_code = location_zip_code.trim();
 
-  const postsCollection = await posts();
   let oldPost = await get(postId);
 
   if (oldPost.seekerId !== seekerId) throw "You can only update a post which you've created";
@@ -130,7 +165,7 @@ export const update = async (postId, seekerId, title, description, location_city
     location_city: location_city,
     location_state: location_state,
     location_zip_code: location_zip_code,
-    categories: categories,
+    categories: filteredCategories,
     budget: budget,
     createdOrUpdatedAt: d1.toISOString(),
     images: []
@@ -148,12 +183,40 @@ export const update = async (postId, seekerId, title, description, location_city
 
 export const getByCommentId = async (id) => {
 
-  h.checkId(id)
-  id = id.trim()
-  const postsCollection = await posts();
+  h.checkId(id);
+  id = id.trim();
   const post = await postsCollection.findOne({comments :{ $elemMatch: {_id : new ObjectId(id) }}});
  
   if (!post) throw 'No band with that id';
   // post._id = post._id.toString()
   return post;
+};
+
+export const getByRole = async (role) => {
+
+  // h.checkId(id);
+  // id = id.trim();
+  console.log("in get by role data")
+
+  let postList = await postsCollection.find({}).toArray();
+  postList = postList.map((element) => {
+    // console.log(element.role, role)
+    if(element.role === role){
+      element._id = element._id.toString();
+      return element;
+    }
+  });
+  if (!postList) throw 'Could not get all posts'; 
+  postList = postList.filter(function( element ) {
+    return element !== undefined;
+  });
+//  console.log(postList, "postList");
+  return postList;
+
+  // const postsCollection = await posts();
+  // const post = await postsCollection.find({role: role});
+  // if (!post) throw 'No post found in the database with that id';
+  // post._id = post._id.toString()
+
+  // return post;
 };

@@ -1,0 +1,26 @@
+<div class="me-mb-3">
+    <a href="/post/newPost/createPost" class="btn btn-primary">Create a job posting!</a>
+
+</div>
+<br></br>
+<div class="container">
+    <div class="row">
+        <div class="col-sm-3 ">
+            {{#each posts}}
+            <div class="card" style="width: 18rem;" data-id="{{_id}}">
+                <img src="{{imageData}}" class="card-img-top" alt="...">
+                <div class="card-body">
+                    <h2>{{title}}</h2>
+                    <p class="card-text">{{description}}</p>
+                </div>
+            </div>
+            {{/each}}
+            {{#if comment}}
+            <div class="post-comment">
+                <p>comment : {{comment}}</p>
+            </div>
+            {{/if}}
+        </div>
+    </div>
+</div>
+

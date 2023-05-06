@@ -125,22 +125,26 @@ const checkbio = (bio) => {
 };
 
 const checkCategories = (categories) => {
-  if (!categories) return "categories not provided";
-  // double check with categories, how we want it input as, when taking in the 'getUsersByCategory' func
-  if (!Array.isArray(categories)) return "Update: categories must be an array";
-  if (categories.length < 1)
-    return "Update: you must supply at least 1 category";
-  for (let i in categories) {
-    const letterPattern = /^[a-zA-Z]+$/;
-    categories[i] = categories[i].trim();
-    if (!letterPattern.test(categories[i])) {
-      return `catagories must contain only alphabets from js `;
+  if (categories) {
+    // double check with categories, how we want it input as, when taking in the 'getUsersByCategory' func
+    if (!Array.isArray(categories))
+      return "Update: categories must be an array";
+    if (categories.length < 1)
+      return "Update: you must supply at least 1 category";
+    for (let i in categories) {
+      const letterPattern = /^[a-zA-Z]+$/;
+      categories[i] = categories[i].trim();
+      if (!letterPattern.test(categories[i])) {
+        return `catagories must contain only alphabets from js `;
+      }
     }
   }
 };
 
 const signupForm = document.getElementById("signup-form");
 const loginForm = document.getElementById("login-form");
+
+const commentForm = document.getElementById("comment-form");
 const editprofileForm = document.getElementById("myprofile-edit");
 const resetButton = document.getElementById("reset-button");
 const firstname = document.getElementById("firstNameInput");
@@ -151,12 +155,22 @@ const emailaddress = document.getElementById("emailAddressInput");
 const phone = document.getElementById("phoneNumberInput");
 const role = document.getElementById("roleInput");
 const password = document.getElementById("passwordInput");
+const confirmpassword = document.getElementById("confirmPasswordInput");
 const errorDiv = document.getElementById("error");
 const categoryInput = document.getElementById("categoryInput");
 const addCategoryButton = document.getElementById("addCategoryButton");
 const categoryList = document.getElementById("categoryList");
-
 const categories = [];
+const img = document.querySelector("#myImage");
+const imgInput = document.querySelector("#myImageInput");
+
+imgInput.addEventListener("change", () => {
+  let reader = new FileReader();
+  reader.readAsDataURL(imgInput.files[0]);
+  reader.addEventListener("load", () => {
+    img.src = reader.result;
+  });
+});
 
 const inputs = document.querySelectorAll("#signup-form input");
 
@@ -258,6 +272,7 @@ if (phone) {
   phone.addEventListener("input", formatPhoneNumber);
   formatPhoneNumber();
 }
+
 if (signupForm) {
   signupForm.addEventListener("submit", (event) => {
     event.preventDefault();
@@ -314,22 +329,23 @@ if (loginForm) {
   });
 }
 
-var modal = document.getElementById("modal");
+const modal = document.getElementById("modal");
+const closeBtn = document.getElementsByClassName("close")[0];
+if (modal) {
+  document
+    .querySelector("a[href='#modal']")
+    .addEventListener("click", function () {
+      modal.style.display = "block";
+    });
 
-		var closeBtn = document.getElementsByClassName("close")[0];
+  closeBtn.addEventListener("click", function () {
+    modal.style.display = "none";
+  });
 
-		document.querySelector("a[href='#modal']").addEventListener("click", function() {
-			modal.style.display = "block";
-		});
-
-		closeBtn.addEventListener("click", function() {
-			modal.style.display = "none";
-		});
-
-		document.getElementById("send-btn").addEventListener("click", function() {
-			modal.style.display = "none";
-		});
-
+  document.getElementById("send-btn").addEventListener("click", function () {
+    modal.style.display = "none";
+  });
+}
 if (editprofileForm) {
   editprofileForm.addEventListener("submit", (event) => {
     event.preventDefault();
@@ -404,6 +420,79 @@ if (categoryInput) {
   });
 }
 
+//delete categories
+
+const divfordelete = document.getElementById("category-box");
+const divDataInput = document.getElementById("categorydata");
+const addintohiddnediv = () => {
+  const AllName = document.querySelectorAll(".category-name");
+  let newarr = [];
+  if (!AllName == 0) {
+    AllName.forEach((element) => {
+      newarr.push(element.textContent); // Get data from div tags and store in array
+      console.log("--------" + newarr);
+    });
+  } else {
+    newarr = [];
+  }
+  // Set hidden input field value to the data array
+  for (let i in newarr)
+    if (newarr[i] !== "") {
+      console.log(newarr[i]);
+      divDataInput.value = newarr;
+      // if (!categories.includes(categories[i])) {
+      //   divDataInput.value += `"${categories[i]}",`;
+      // }
+      console.log(newarr);
+    }
+};
+
+const deleteButtons = document.querySelectorAll(".delete-button");
+if (deleteButtons) {
+  deleteButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      // get the parent div element and remove it from the DOM
+      button.parentNode.remove();
+    });
+    button.addEventListener("click", addintohiddnediv);
+  });
+}
+const mainbox = document.getElementById("category-container");
+if (mainbox) {
+  mainbox.addEventListener("change", addintohiddnediv);
+}
+// const categoryElements = document.querySelectorAll(".category-name");
+
+// const addold = () => {
+//   categoryElements.forEach((element) => {
+//     categories.push(element.textContent);
+//     divDataInput.value = element.textContent;
+//     console.log("yes this is categories:" + element.textContent);
+//     // Get data from div tags and store in array
+//   });
+//   console.log("------------------------------------------");
+//   // divDataInput.value = JSON.stringify(categories);
+// };
+
+// const deleteButton = document.createElement("span");
+// const categoryElements = document.querySelectorAll(".category-name");
+// const divfordelete = document.getElementById("category-box");
+// if (deleteButton) {
+//   deleteButton.addEventListener("click", () => {
+//     console.log(categories);
+//     categoryElements.forEach((element) => {
+//       categories.push(element.textContent);
+//       // Get data from div tags and store in array
+//     });
+//     // const categoryIndex = categories.indexOf(deleteButton);
+//     const categoryIndex = categories.indexOf(categoryElements.value);
+//     if (categoryIndex > -1) {
+//       categories.splice(categoryIndex, 1);
+//     }
+//     categoryElements.remove();
+//   });
+//   divfordelete.appendChild(deleteButton);
+// }
 // add event listener to the button to add a category
 if (addCategoryButton) {
   addCategoryButton.addEventListener("click", () => {
@@ -411,6 +500,7 @@ if (addCategoryButton) {
     console.log("YES YOU CLICKED ADD BUTTON");
 
     const category = categoryInput.value.trim();
+
     const options = categoryOptions.getElementsByTagName("option");
     let error;
 
@@ -439,31 +529,32 @@ if (addCategoryButton) {
         if (categories.length < 4) {
           categories.push(category);
           // create a new category element and append it to the list
-          const categoryElement = document.createElement("div");
-          categoryElement.classList.add("category-box");
-          const categoryNameElem = document.createElement("span");
-          categoryNameElem.classList.add("category-name");
-          categoryNameElem.textContent = category;
-          categoryElement.appendChild(categoryNameElem);
+          const divBox = document.createElement("div");
+          divBox.classList.add("category-box"); //<div class="category-box">
+          const spanName = document.createElement("span");
+          spanName.classList.add("category-name"); //<span class="category-name">
+          spanName.textContent = category;
+          divBox.appendChild(spanName);
 
           // delete the category
-          const deleteButton = document.createElement("span");
-          deleteButton.classList.add("delete-button");
-          deleteButton.textContent = "x";
-          deleteButton.addEventListener("click", () => {
+          const spanDelete = document.createElement("span");
+          spanDelete.classList.add("delete-button"); // <span class="delete-button">
+          spanDelete.textContent = "x";
+          spanDelete.addEventListener("click", () => {
             const categoryIndex = categories.indexOf(category);
             if (categoryIndex > -1) {
               categories.splice(categoryIndex, 1);
             }
-            categoryElement.remove();
+            divBox.remove();
+            addintohiddnediv();
           });
-          categoryElement.appendChild(deleteButton);
+          divBox.appendChild(spanDelete);
           const categoryContainer = document.querySelector(
             ".category-container"
           );
-          categoryContainer.appendChild(categoryElement);
-          // clear the input field
-          categoryInput.value = "";
+          categoryContainer.appendChild(divBox);
+          categoryInput.value = ""; // clear the input field
+          addintohiddnediv();
         } else {
           error = "You can only select up to 4 categories";
         }
@@ -476,6 +567,8 @@ if (addCategoryButton) {
     }
   });
 }
+
+window.addEventListener("change", addintohiddnediv); // on window change anything
 
 // // populate the list with existing categories from the session data
 // if (sessionObj.categories) {
@@ -499,8 +592,3 @@ if (addCategoryButton) {
 //     sessionStorage.clear();
 //   }
 // }
-
-
-
-
-

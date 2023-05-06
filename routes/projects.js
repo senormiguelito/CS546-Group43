@@ -4,6 +4,7 @@ import { userData } from "../data/index.js";
 import { projectData } from "../data/index.js";
 import { ObjectId } from "mongodb";
 import * as h from "../helpers.js";
+import xss from "xss";            // -------------> we need to wrap every req.body.... with xss(req.body....) <------------------------ 
 
 router
   .route("/:userId") // getAll projects involved from this userId
@@ -21,7 +22,7 @@ router
     try {
       const projects = await projectData.getAll(userId);
       if (projects == null)
-        throw new Error("No projects involved with this user!");
+        throw "No projects involved with this user!";
       message = "Here are your projects! Good work";
       return res
         .status(200)
@@ -34,7 +35,7 @@ router
     const clientId = req.params.clientId;
     const assignedToId = req.params.assignedToId;
 
-    const projectInfo = req.body;
+    const projectInfo = xss(req.body);
     try {
       // h.checkId(clientId);
       // h.checkId(assignedToId);
@@ -139,9 +140,7 @@ router
   });
 
 router
-  .route("/projects/:projectId")
-  .get(async (req, res) => {
-    // get projectById
+  .route('/projects/:projectId').get(async (req, res) => {  // get projectById
     let message = "";
     let projectId = req.params.projectId;
     try {
@@ -164,10 +163,9 @@ router
       return res.status(404).render("error", { error: e });
     }
   })
-  //.route('/projects/:projectId')
-  .put(async (req, res) => {
+  .put(async (req, res) => {    // fixed router.route reference error
     // to update project title/description/status
-    const projectInfo = req.body;
+    const projectInfo = xss(req.body);
     let projectId = req.params.projectId;
     let message = "";
     try {
