@@ -23,31 +23,29 @@ app.set("view engine", "handlebars");
 app.use(
   session({
     name: "AuthCookie",
-    // user: {},  //bc kaushal put in the routes, -kaushal: no we don't need to declare it over here, after req.session."any name you want to add", so you can use multiple session, like req.session.user, req.session.post, etc.
     secret: "some secret string!",
     resave: false,
     saveUninitialized: false,
   })
 );
 
-app.use(
-  helmet.contentSecurityPolicy({
-    directives: {
-      "default-src": ["'self'"],
-      "script-src": ["'self'", "api.zippopotam.us"], // i used outside resource for get city and state name by zipcode and to allow that i have to use helmet, otherwise it was throwing an error.
-      "connect-src": ["'self'", "api.zippopotam.us"],
-    },
-  })
-);
-app.use(
-  helmet.contentSecurityPolicy({
-    directives: {
-      "default-src": ["'self'"],
-      "script-src": ["'self'", "api.zippopotam.us"], // i used outside resource for get city and state name by zipcode and to allow that i have to use helmet, otherwise it was throwing an error.
-      "connect-src": ["'self'", "api.zippopotam.us"],
-    },
-  })
-);
+app.use((req, res, next) => {
+  res.setHeader(
+    "Content-Security-Policy",
+    "script-src 'self' cdn.jsdelivr.net"
+  );
+  next();
+});
+
+// app.use(
+//   helmet.contentSecurityPolicy({
+//     directives: {
+//       "default-src": ["'self'"],
+//       "script-src": ["'self'", "api.zippopotam.us"], // i used outside resource for get city and state name by zipcode and to allow that i have to use helmet, otherwise it was throwing an error.
+//       "connect-src": ["'self'", "api.zippopotam.us"],
+//     },
+//   })
+// );
 
 app.use(flash());
 // middleware functions will be here but in the end will do it.

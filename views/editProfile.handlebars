@@ -3,15 +3,31 @@
     <h1>Edit Your Profile</h1>
     
     <div class="profile-details">
-     {{!-- <div class="profile-img-box"> 
-        <img src="/public/images/No_Image_Available.jpg" alt="User photo">
-      </div> --}}
+     <div class="profile-img-box"> 
+        {{#if objectUser.imageData}}
+                    <img
+                      src={{objectUser.imageData}}
+                      class="img-radius"
+                      id="myImage"
+                      alt="User-Profile-Image"
+                      width="200"
+                      height="200"
+                    />
+                  {{else}}
+                    <img
+                      src="/public/images/image-1683329589802.jpg"
+                      class="card-img-top"
+                      alt="..."
+                    />
+                  {{/if}}
+      </div>
       <div class="result">
         <form id="myprofile-edit" action="/home/myprofile/{{userID}}/edit" method="POST" enctype="multipart/form-data">
         <h2>Role: {{objectUser.role}}</h2>
-        {{#if Error}} <p class="error">{{Error}}</p>{{/if}}
-        <div id="error" role="alert" hidden></div>
-        <input type="file" id="image" name="image" multiple id="input-files" class="form-control-file border" /><br>
+        {{#if Error}} <p class="alert alert-danger">{{Error}}</p>{{/if}}
+        {{#if Message}}<p class="alert alert-success" id="success">{{Message}}</p>{{/if}}
+        <div id="error" class="alert alert-danger" role="alert" hidden></div>
+        <input type="file" id="myImageInput" name="image" multiple class="form-control-file border"/><br>
         <label for="firstNameInput">First Name<span class="required">*</span></label>
         <input type="text" name="firstName" id="firstNameInput" value="{{objectUser.firstName}}">
         <label for="firstNameInput">Last Name<span class="required">*</span></label>

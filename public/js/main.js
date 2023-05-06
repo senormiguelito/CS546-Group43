@@ -161,6 +161,16 @@ const categoryInput = document.getElementById("categoryInput");
 const addCategoryButton = document.getElementById("addCategoryButton");
 const categoryList = document.getElementById("categoryList");
 const categories = [];
+const img = document.querySelector("#myImage");
+const imgInput = document.querySelector("#myImageInput");
+
+imgInput.addEventListener("change", () => {
+  let reader = new FileReader();
+  reader.readAsDataURL(imgInput.files[0]);
+  reader.addEventListener("load", () => {
+    img.src = reader.result;
+  });
+});
 
 const inputs = document.querySelectorAll("#signup-form input");
 
@@ -296,28 +306,6 @@ if (signupForm) {
   });
 }
 
-// const rememberMeCheckbox = document.getElementById("rememberMe");
-// // Load saved credentials from localStorage, if available
-// if (rememberMeCheckbox) {
-//   if (localStorage.getItem("rememberMe")) {
-//     rememberMeCheckbox.checked = true;
-//     emailaddress.value = localStorage.getItem("emailAddressInput");
-//     password.value = localStorage.getItem("passwordInput");
-//   }
-
-//   // Save credentials to localStorage when "Remember Me" checkbox is checked
-//   rememberMeCheckbox.addEventListener("change", () => {
-//     if (rememberMeCheckbox.checked) {
-//       localStorage.setItem("rememberMe", true);
-//       localStorage.setItem("emailAddressInput", emailaddress.value);
-//       localStorage.setItem("passwordInput", password.value);
-//     } else {
-//       localStorage.removeItem("rememberMe");
-//       localStorage.removeItem("emailAddressInput");
-//       localStorage.removeItem("passwordInput");
-//     }
-//   });
-// }
 if (loginForm) {
   loginForm.addEventListener("submit", (event) => {
     event.preventDefault();
@@ -412,7 +400,6 @@ const categoryOptions = document.createElement("datalist");
 categoryOptions.setAttribute("id", "category-options");
 for (let i = 0; i < ListOfcategories.length; i++) {
   const option = document.createElement("option");
-  option.setAttribute("id", "addCategoryButton");
   option.value = ListOfcategories[i];
   categoryOptions.appendChild(option);
 }
@@ -436,43 +423,57 @@ if (categoryInput) {
 //delete categories
 
 const divfordelete = document.getElementById("category-box");
-// add click event listener to each delete button
+const divDataInput = document.getElementById("categorydata");
+const addintohiddnediv = () => {
+  const AllName = document.querySelectorAll(".category-name");
+  let newarr = [];
+  if (!AllName == 0) {
+    AllName.forEach((element) => {
+      newarr.push(element.textContent); // Get data from div tags and store in array
+      console.log("--------" + newarr);
+    });
+  } else {
+    newarr = [];
+  }
+  // Set hidden input field value to the data array
+  for (let i in newarr)
+    if (newarr[i] !== "") {
+      console.log(newarr[i]);
+      divDataInput.value = newarr;
+      // if (!categories.includes(categories[i])) {
+      //   divDataInput.value += `"${categories[i]}",`;
+      // }
+      console.log(newarr);
+    }
+};
 
 const deleteButtons = document.querySelectorAll(".delete-button");
-
-// Add event listener to each delete button
 if (deleteButtons) {
-  deleteButtons.forEach((button, index) => {
+  deleteButtons.forEach((button) => {
     button.addEventListener("click", () => {
-      // Get the category name from the category box
-      const categoryName =
-        button.parentNode.querySelector(".category-name").textContent;
-      const index = categories.indexOf(categoryName);
-      // Remove the category from the categories array
-      if (index !== -1) {
-        categories.splice(index, 1);
-      }
-      console.log("count:" + categories.length);
-      // Remove the category box from the DOM
+      // get the parent div element and remove it from the DOM
       button.parentNode.remove();
     });
+    button.addEventListener("click", addintohiddnediv);
   });
 }
-
-const categoryElements = document.querySelectorAll(".category-name");
-const divDataInput = document.getElementById("categorydata");
-
-if (divDataInput) {
-  divDataInput.addEventListener("change", () => {
-    categoryElements.forEach((element) => {
-      categories.push(element.textContent);
-      console.log("yes this is categories:" + element.textContent);
-      // Get data from div tags and store in array
-    });
-    console.log("yes this is categories:" + categories.length);
-    divDataInput.value = JSON.stringify(categories);
-  });
+const mainbox = document.getElementById("category-container");
+if (mainbox) {
+  mainbox.addEventListener("change", addintohiddnediv);
 }
+// const categoryElements = document.querySelectorAll(".category-name");
+
+// const addold = () => {
+//   categoryElements.forEach((element) => {
+//     categories.push(element.textContent);
+//     divDataInput.value = element.textContent;
+//     console.log("yes this is categories:" + element.textContent);
+//     // Get data from div tags and store in array
+//   });
+//   console.log("------------------------------------------");
+//   // divDataInput.value = JSON.stringify(categories);
+// };
+
 // const deleteButton = document.createElement("span");
 // const categoryElements = document.querySelectorAll(".category-name");
 // const divfordelete = document.getElementById("category-box");
@@ -545,6 +546,7 @@ if (addCategoryButton) {
               categories.splice(categoryIndex, 1);
             }
             divBox.remove();
+            addintohiddnediv();
           });
           divBox.appendChild(spanDelete);
           const categoryContainer = document.querySelector(
@@ -552,16 +554,7 @@ if (addCategoryButton) {
           );
           categoryContainer.appendChild(divBox);
           categoryInput.value = ""; // clear the input field
-
-          const categoryElements = document.querySelectorAll(".category-name");
-
-          categoryElements.forEach((element) => {
-            if (!categories.includes(element.textContent)) {
-              categories.push(element.textContent); // Get data from div tags and store in array
-            }
-          });
-          // Set hidden input field value to the data array
-          divDataInput.value = JSON.stringify(categories);
+          addintohiddnediv();
         } else {
           error = "You can only select up to 4 categories";
         }
@@ -574,6 +567,8 @@ if (addCategoryButton) {
     }
   });
 }
+
+window.addEventListener("change", addintohiddnediv); // on window change anything
 
 // // populate the list with existing categories from the session data
 // if (sessionObj.categories) {

@@ -9,9 +9,9 @@ router.route("/").get(async (req, res) => {
   try {
     // let posts = await postData.getAll();
     // console.log(posts.title, posts.description)
-    let role = req.session.user.userSessionData.role
+    let role = req.session.user.userSessionData.role;
     // console.log()
-    if(!role) throw 'YO! how come you logged in without providing role?'
+    if (!role) throw "YO! how come you logged in without providing role?";
     let message = "";
     if (req.session.user) {
       const userSession = req.session.user.userSessionData;
@@ -20,14 +20,14 @@ router.route("/").get(async (req, res) => {
       message = `hey you entered without login!!!, how???`;
       res.redirect("/login"); // talk with Kaushal for clarification
     }
-    let posts = undefined
-    if(role === 'seeker') {
-      posts = await postData.getByRole("provider")
+    let posts = undefined;
+    if (role === "seeker") {
+      posts = await postData.getByRole("provider");
     }
-    if(role === 'provider') {
-      posts = await postData.getByRole("seeker")
+    if (role === "provider") {
+      posts = await postData.getByRole("seeker");
     }
-    if(!posts) throw 'OOPS! could not find posts!'
+    if (!posts) throw "OOPS! could not find posts!";
     res.render("home", { posts: posts, Message: message });
   } catch (e) {
     return res.status(400).render("home", { error: e });
@@ -36,13 +36,30 @@ router.route("/").get(async (req, res) => {
 
 router.route("/myprofile").get(async (req, res) => {
   const userID = req.session.user.userID;
-  if(!userID) throw 'can not find userID'
-  const user = await userData.getUser(userID);
-  if(!user) throw 'can not find user'
-  req.session.user = { userID: userID, userSessionData: user };
-  const objectUser = req.session.user.userSessionData;
-  res.render("myprofile", { title: "Profile", userID, objectUser });
-  
+  try {
+    if (!userID) throw "can not find userID";
+    const user = await userData.getUser(userID);
+    if (!user) throw "can not find user";
+    let Message = "";
+    if (req.session.user.Updated) {
+      Message = "Updated Successfully";
+    }
+    req.session.user = { userID: userID, userSessionData: user };
+    const objectUser = req.session.user.userSessionData;
+    if (Message.trim() == "") {
+      res.render("myprofile", { title: "Profile", userID, objectUser });
+    } else {
+      res.render("myprofile", {
+        title: "Profile",
+        userID,
+        objectUser,
+        Message,
+      });
+    }
+  } catch (e) {
+    const objectUser = req.session.user.userSessionData;
+    res.render("myprofile", { Error: e, title: "Profile", userID, objectUser });
+  }
 });
 
 router.route("/provideList").get(async (req, res) => {
@@ -73,7 +90,7 @@ router
     try {
       const userID = req.session.user.userID;
       const user = await userData.getUser(userID);
-      // req.session.user = { userID: userID, userSessionData: user };//just to update session if user updated
+      req.session.user = { userID: userID, userSessionData: user }; //just to update session if user updated
       const objectUser = req.session.user.userSessionData;
       let notnull = true;
       if (objectUser.categories.length > 0) {
@@ -93,13 +110,16 @@ router
         });
       }
     } catch (e) {
+      const userID = req.session.user.userID;
+      const objectUser = req.session.user.userSessionData;
       res.status(400).render("editprofile", {
         Error: e,
         userID,
-        sessionObj,
+        objectUser,
       });
     }
   })
+
   .post(upload.single("image"), async (req, res) => {
     try {
       const firstName = req.body.firstName;
@@ -114,14 +134,20 @@ router
       const city = req.body.city;
       const state = req.body.state;
       const categories = req.body.categorydata;
-      const imageData =
-        "http://localhost:3000/public/images/" + req.file.filename;
+      let imageData = "";
+      if (req.file) {
+        imageData = "http://localhost:3000/public/images/" + req.file.filename;
+      } else {
+        imageData = "";
+        if (req.session.user.userSessionData) {
+          imageData = req.session.user.userSessionData.imageData;
+        }
+      }
       console.log(imageData);
       const arrCategories = categories
-        .slice(1, -1)
         .split(",")
         .map((s) => s.trim().replace(/"/g, ""));
-      // console.log(arr);
+      console.log(arrCategories);
       // console.log(Array.isArray(arr));
       // console.log(typeof arr);
 
@@ -141,31 +167,10 @@ router
       );
       if (profileUpdated) {
         const userID = req.session.user.userID;
-        const objectUser = req.session.user.userSessionData;
-        res.status(500).render("editprofile", {
-          title: "Edit Profile",
-          Message: "Updated successfully.",
-          userID,
-          objectUser,
-        });
-        if (profileUpdated.notchanged) {
-          const userID = req.session.user.userID;
-          const objectUser = req.session.user.userSessionData;
-          res.status(500).render("editprofile", {
-            title: "Edit Profile",
-            Message: "Not anything changed",
-            userID,
-            objectUser,
-          });
-        }
+        req.session.user = { Updated: true, userID };
+        res.status(200).redirect("/home/myprofile");
       } else {
-        const userID = req.session.user.userID;
-        const objectUser = req.session.user.userSessionData;
-        res.status(500).render("editprofile", {
-          Errro: "Not able to save changes!!",
-          userID,
-          objectUser,
-        });
+        throw `not updated successfully`;
       }
     } catch (e) {
       const userID = req.session.user.userID;

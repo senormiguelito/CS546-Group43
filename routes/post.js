@@ -8,7 +8,7 @@ const router = Router();
 router.route("/").get(async (req, res) => {
   try {
     let posts = await postData.getAll();
-    console.log("in create post");
+    // console.log("in create post");
     res.render("myPost", { posts: posts });
   } catch (e) {
     return res.status(400).render("404", { error: e });
@@ -17,7 +17,7 @@ router.route("/").get(async (req, res) => {
 
 router.route("/newPost/createPost").get(async (req, res) => {
   try {
-    console.log("in create post");
+    // console.log("in create post");
     res.render("create_post");
   } catch (e) {
     return res.status(400).render("404", { error: e });
@@ -60,41 +60,24 @@ router.route("/createPost").post(async (req, res) => {
     if (!newPost) throw "could not create new post";
     //   console.log("new post")
     //   console.log(newPost)
-      res.redirect('/')
-    } catch (e) {
-      return res.status(400).render("404", { error: e });
-    }
-  }); 
-  
+    res.redirect("/");
+  } catch (e) {
+    return res.status(400).render("404", { Error: e });
+  }
+});
 
-  router.route('/filter').post(async (req, res) =>{
-    console.log(req.params,req.body)
-    let role = req.body.filter
-    console.log("in filter route")
-    if(role === 'all'){
-      let posts = await postData.getAll()
-      return res.render('home',{posts:posts})
-    }
-    else{
-      let posts = await postData.getByRole(role) 
-      return res.render("home", { posts: posts });
-    }
-    
-  })
-
-  router.route('/:postId/interested').post(async (req, res) =>{
-    console.log(req.params,req.body)
-    console.log(req.session)
-    let role = req.body.filter
-    let postId = req.params.postId
-    console.log("in interested route")
-    //NOTE to Mikey: you can now create a data function to add this userId or any info. you want to prospect and call that function from here
-    //
-
-    //it is redirecting back to same page so you might feel weather or not something happened
-    return res.redirect(`/post/${postId}`)
-  })
-
+router.route("/filter").post(async (req, res) => {
+  console.log(req.params, req.body);
+  let role = req.body.filter;
+  console.log("in filter route");
+  if (role === "all") {
+    let posts = await postData.getAll();
+    return res.render("home", { posts: posts });
+  } else {
+    let posts = await postData.getByRole(role);
+    return res.render("home", { posts: posts });
+  }
+});
 
 router.route("/:postId").get(async (req, res) => {
   try {
