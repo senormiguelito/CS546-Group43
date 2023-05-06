@@ -36,10 +36,13 @@ router.route("/").get(async (req, res) => {
 
 router.route("/myprofile").get(async (req, res) => {
   const userID = req.session.user.userID;
+  if(!userID) throw 'can not find userID'
   const user = await userData.getUser(userID);
+  if(!user) throw 'can not find user'
   req.session.user = { userID: userID, userSessionData: user };
   const objectUser = req.session.user.userSessionData;
   res.render("myprofile", { title: "Profile", userID, objectUser });
+  
 });
 
 router.route("/provideList").get(async (req, res) => {

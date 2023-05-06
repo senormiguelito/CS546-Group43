@@ -197,7 +197,7 @@ export const getByRole = async (role) => {
   postList = postList.filter(function( element ) {
     return element !== undefined;
   });
-  console.log(postList,"postList")
+  // console.log(postList,"postList")
   return postList;
 
   // const postsCollection = await posts();

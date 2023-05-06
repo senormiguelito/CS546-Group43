@@ -1,6 +1,6 @@
-<h1>Seekers!</h1>
-    <h2>Click on a user's profile to learn more about them!</h2>
-    {{#each userList}}
+{{!-- <h1>Seekers!</h1>
+    <h2>Click on a user's profile to learn more about them!</h2> --}}
+    {{!-- {{#each userList}}
         <div class="seeker">
             <h2>{{firstName}} {{lastName}}</h2>
             <p>{{location_city}}, {{location_state}}</p>
@@ -8,5 +8,36 @@
         </div>
     {{/each}}
 
-    <p>{{error}}</p>
-<li><a href="/" id="auth">Back</a></li>
+    <p>{{error}}</p> --}}
+{{!-- <li><a href="/" id="auth">Back</a></li> --}}
+
+<section id="playgrounds" class="my-4">
+   
+    <div class="container">
+         <h2>Job Seekers</h2>
+
+        <p>{{error}}</p>
+        <div class="row">
+            {{#if userList}}
+                {{#each userList}}
+            <div class="col-sm-3 ">
+                <div class="card" style="width: 18rem;">
+                    {{#if imageData}}
+                    <img src="{{imageData}}" class="card-img-top" alt="...">
+                      {{else}}
+                      <img src="/public/images/No_Image_Available.jpg" class="card-img-top" alt="...">
+                      {{/if}} 
+                    <div class="card-body">
+                        <h2 card-title>{{firstName}} {{lastName}}</h2>
+                            <p class="card-text">{{location_city}}, {{location_state}}</p>
+                            <p><a href="/profile/{{_id}}" class="btn btn-primary">View {{firstName}}'s profile!</a></p>
+                    </div>
+                </div>
+            </div>
+            {{/each}}
+            {{/if}}
+            
+
+        </div>
+    </div>
+</section>

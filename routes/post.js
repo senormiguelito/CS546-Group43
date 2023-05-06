@@ -82,6 +82,19 @@ router.route("/createPost").post(async (req, res) => {
     
   })
 
+  router.route('/:postId/interested').post(async (req, res) =>{
+    console.log(req.params,req.body)
+    console.log(req.session)
+    let role = req.body.filter
+    let postId = req.params.postId
+    console.log("in interested route")
+    //NOTE to Mikey: you can now create a data function to add this userId or any info. you want to prospect and call that function from here
+    //
+
+    //it is redirecting back to same page so you might feel weather or not something happened
+    return res.redirect(`/post/${postId}`)
+  })
+
 
 router.route("/:postId").get(async (req, res) => {
   try {
