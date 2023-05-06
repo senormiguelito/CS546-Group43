@@ -224,12 +224,20 @@ export const checkDescription = (description) => {
     throw new Error("description must no more than 2500 characters");
 };
 export const checkbio = (bio) => {
+  // not calling 'isvalid' because not required? Someone help me out if thats true/false
   if (typeof bio !== "string") throw new Error("Bio must be of type string");
   bio = bio.trim();
   if (bio.length > 5000)
     throw new Error("You can not submit a bio longer than 5000 characters");
   //  if (bio === "") throw new Error("You can't submit an empty bio!");
 };
+
+export const checkComment = (comment) => {
+  isvalid(comment, "comment");
+  if (typeof comment !== "string") throw new Error("Comment must be a string");
+  comment = comment.trim();
+  if (comment.length > 250) throw new Error("Comment must be 250 characters or less!"); // implement maxlength in html
+}
 
 export const checkCategories = (categories) => {
   if (!categories) throw new Error("categories not provided");

@@ -3,6 +3,7 @@ import { userData } from "../data/index.js";
 import { Router } from "express";
 import { messageData } from "../data/index.js";
 import multer from "multer";
+import xss from "xss";
 const router = Router();
 
 router.route("/").get(async (req, res) => {
@@ -102,18 +103,18 @@ router
   })
   .post(upload.single("image"), async (req, res) => {
     try {
-      const firstName = req.body.firstName;
-      const lastName = req.body.lastName;
-      const bio = req.body.bio;
-      const DOB = req.body.dob;
-      const emailAddress = req.body.email;
-      const phone = req.body.phoneNumber;
+      const firstName = xss(req.body.firstName);
+      const lastName = xss(req.body.lastName);
+      const bio = xss(req.body.bio);
+      const DOB = xss(req.body.dob);
+      const emailAddress = xss(req.body.email);
+      const phone = xss(req.body.phoneNumber);
       // const password = req.body.password;   if we want to allow user to change password we can but for right now i am comment this password thing.
       // const confirmpassword = req.body.confirmPassword;
-      const zip = req.body.zip;
-      const city = req.body.city;
-      const state = req.body.state;
-      const categories = req.body.categorydata;
+      const zip = xss(req.body.zip);
+      const city = xss(req.body.city);
+      const state = xss(req.body.state);
+      const categories = xss(req.body.categorydata);
       const imageData =
         "http://localhost:3000/public/images/" + req.file.filename;
       console.log(imageData);
@@ -218,8 +219,8 @@ router
   .post(async (req, res) => {
     const userSession = req.session.user.userSessionData;
     const sender = userSession._id;
-    const reciever = req.body.recieverId;
-    const message = req.body.message;
+    const reciever = xss(req.body.recieverId);
+    const message = xss(req.body.message);
     try {
       const newMessage = await messageData.sendMessage(
         sender,
@@ -255,5 +256,6 @@ router
 
 //   }
 // });
+
 
 export default router;

@@ -3,13 +3,26 @@ import { Router } from "express";
 import { ObjectId } from "mongodb";
 import * as h from "../helpers.js";
 import { messageData } from "../data/index.js";
+import xss from "xss";
 const router = Router();
+
 
 router.route("/").get(async (req, res) => {
   try {
     let posts = await postData.getAll();
-    console.log("in create post");
-    res.render("myPost", { posts: posts });
+       // console.log("in create post");  
+    res.render("post", { posts: posts });
+  } catch (e) {
+    return res.status(400).render("400", { error: e });
+  }
+});
+
+router.route("/myPosts").get(async (req, res) => {
+  try {
+    let userId = req.session.user.userID;
+    let myPosts = await postData.getAllPostsByUser(userId);
+    
+    res.render("myPost", { title: "Here Are All Your Posts!", posts: myPosts });
   } catch (e) {
     return res.status(400).render("404", { error: e });
   }
@@ -27,14 +40,14 @@ router.route("/newPost/createPost").get(async (req, res) => {
 router.route("/createPost").post(async (req, res) => {
   try {
     console.log("in /createPost route");
-    let title = req.body.titleInput;
-    let description = req.body.descriptionInput;
-    let budget = req.body.budgetInput;
-    let role = req.body.roleInput;
-    let categories = req.body.categoriesInput;
-    let zip = req.body.zipInput;
-    let city = req.body.cityInput;
-    let state = req.body.stateInput;
+    let title = xss(req.body.titleInput);
+    let description = xss(req.body.descriptionInput);
+    let budget = xss(req.body.budgetInput);
+    let role = xss(req.body.roleInput);
+    let categories = xss(req.body.categoriesInput);
+    let zip = xss(req.body.zipInput);
+    let city = xss(req.body.cityInput);
+    let state = xss(req.body.stateInput);
     let userId = req.session.user.userID;
 
     h.checkTitle(title);
@@ -57,10 +70,13 @@ router.route("/createPost").post(async (req, res) => {
       city,
       state
     );
-    if (!newPost) throw "could not create new post";
-    //   console.log("new post")
-    //   console.log(newPost)
-      res.redirect('/')
+
+    if (newPost.insertedPost) {
+      res.redirect("/");
+    } else {
+      throw "could not create new post";
+    } 
+      // res.redirect('/')
     } catch (e) {
       return res.status(400).render("404", { error: e });
     }
@@ -69,7 +85,7 @@ router.route("/createPost").post(async (req, res) => {
 
   router.route('/filter').post(async (req, res) =>{
     console.log(req.params,req.body)
-    let role = req.body.filter
+    let role = xss(req.body.filter);
     console.log("in filter route")
     if(role === 'all'){
       let posts = await postData.getAll()

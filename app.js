@@ -101,6 +101,18 @@ app.use("/home/messages", (req, res, next) => {
   }
 });
 
+app.use("/post/myPosts", (req, res, next) => {
+  if (req.session.user) {
+    next();
+  } else {
+    return res.status(403).render("error", {
+      title: "Error",
+      unauthorizedAccess: true,
+      isHide: true
+    });
+  }
+});
+
 app.use("/myProjects", (req, res, next) => {
   if (req.session.user) {
     next();
