@@ -105,6 +105,27 @@ export const update = async (postId, seekerId, title, description, location_city
   h.checkCategories(categories);
   h.checkbudget(budget);
 
+  //this is different than helper function. don't delete it.
+  if (!categories) throw new Error("categories not provided");
+        
+  if (!Array.isArray(categories))
+    throw new Error("Update: categories must be an array");
+    
+  const filteredCategories = categories.filter(element => {
+    return element !== '';
+  });
+  
+  if (filteredCategories.length < 1)
+    throw new Error("Update: you must supply at least 1 category");
+  for (let i in filteredCategories) {
+    if (typeof filteredCategories[i] !== "string")
+      throw new Error("Update: each category must be a string");
+    filteredCategories[i] = filteredCategories[i].trim();
+    for (let j in filteredCategories[i]) {
+      if (typeof filteredCategories[i][j] === "number")
+      throw new Error("Update: invalid category response");
+    }
+  }
   //needs to check if images have valid img type
 
   postId = postId.trim();
@@ -130,7 +151,7 @@ export const update = async (postId, seekerId, title, description, location_city
     location_city: location_city,
     location_state: location_state,
     location_zip_code: location_zip_code,
-    categories: categories,
+    categories: filteredCategories,
     budget: budget,
     createdOrUpdatedAt: d1.toISOString(),
     images: []

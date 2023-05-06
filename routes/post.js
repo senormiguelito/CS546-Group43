@@ -29,7 +29,30 @@ const router = Router();
         let city = req.body.cityInput;
         let state = req.body.stateInput;
         let userId = req.session.user.userID
+        if(!userId) throw 'You need to login to access all the functions!'
 
+        //this is different than helper function. don't delete it.
+        if (!categories) throw new Error("categories not provided");
+        
+        if (!Array.isArray(categories))
+          throw new Error("Update: categories must be an array");
+          
+        const filteredCategories = categories.filter(element => {
+          return element !== '';
+        });
+        
+        if (filteredCategories.length < 1)
+          throw new Error("Update: you must supply at least 1 category");
+        for (let i in filteredCategories) {
+          if (typeof filteredCategories[i] !== "string")
+            throw new Error("Update: each category must be a string");
+          filteredCategories[i] = filteredCategories[i].trim();
+          for (let j in filteredCategories[i]) {
+            if (typeof filteredCategories[i][j] === "number")
+            throw new Error("Update: invalid category response");
+          }
+        }
+        console.log(filteredCategories)
         h.checkTitle(title)
         h.checkDescription(description)
         h.checkbudget(budget)
@@ -39,7 +62,7 @@ const router = Router();
         h.checkstate(state)
         h.checkId(userId)
       // console.log(title, description, budget, role, categories, zip, city, state)
-      let newPost = await postData.create(userId, title, description, budget, role, categories, zip, city, state)
+      let newPost = await postData.create(userId, title, description, budget, role, filteredCategories, zip, city, state)
       if(!newPost) throw 'could not create new post'
     //   console.log("new post")
     //   console.log(newPost)
@@ -49,6 +72,10 @@ const router = Router();
     }
   }); 
   
+
+  // router.route('/filter').get(async (req, res) =>{
+
+  // })
 
 
   router.route("/:postId").get(async (req, res) => {
@@ -81,8 +108,10 @@ router.route('/:postId/comment').post(async(req, res) => {
         let postId = req.params.postId
         h.checkId(userId)
         h.checkId(postId)
+        
        
         if(!comm) throw 'please enter comment!'
+        if(typeof comm !== 'string') throw 'comment should be of string value'
         if(comm.trim().length === 0) throw 'please enter non-empty comment!'
         
         postId = postId.trim()

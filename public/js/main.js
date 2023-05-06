@@ -141,6 +141,8 @@ const checkCategories = (categories) => {
 
 const signupForm = document.getElementById("signup-form");
 const loginForm = document.getElementById("login-form");
+
+const commentForm = document.getElementById("comment-form");
 const editprofileForm = document.getElementById("myprofile-edit");
 const resetButton = document.getElementById("reset-button");
 const firstname = document.getElementById("firstNameInput");
@@ -313,6 +315,30 @@ if (loginForm) {
     }
   });
 }
+
+// not working
+// if (commentForm) {
+
+//   commentForm.addEventListener("submit", (event) => {
+//     event.preventDefault();
+//     console.log("in js>main")
+//     let error;
+//     errorDiv.hidden = true;
+//     try{
+//       const comment = document.getElementById("postCommentInput").value
+//       if(!comment) throw 'please enter comment!'
+//       if(typeof comment !== 'string') throw 'comment should be of string value'
+//       console.log(comment)
+//       if(comment.trim().length === 0) throw 'please enter non-empty comment!'
+//     }catch(error){
+//       errorDiv.hidden = false;
+//       errorDiv.textContent = error;
+//       window.history.replaceState({}, document.title, "?status=400");
+//     }
+//     commentForm.submit();
+    
+//   });
+// }
 
 var modal = document.getElementById("modal");
 
