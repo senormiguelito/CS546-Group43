@@ -12,7 +12,7 @@ const constructorMethod = (app) => {
   app.use("/post", postRoutes);
 
   app.use("*", (req, res) => {
-    res.status(404).render("404", { error: `Page Not found` });
+    res.status(404).render("404", { Error: `Page Not found`, isHide: true });
   });
 };
 

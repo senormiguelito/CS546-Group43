@@ -1,11 +1,92 @@
-<div class="container">
-    <h1>{{user.firstName}}'s Profile</h1>
-    
-    <div class="profile-details">
-     <div class="profile-img-box"> 
-        <img src="/public/images/No_Image_Available.jpg" alt="User photo">
+<div class="page-content page-container" id="page-content">
+    <div class="padding">
+      <div class="">
+        <div class="">
+          <div class="card user-card-full">
+            <div class="row m-l-0 m-r-0">
+              <div class="col-sm-4 bg-c-lite-green user-profile">
+                <div class="card-block text-center text-white">
+                  <div class="m-b-25">
+                    <img src={{user.imageData}} class="img-radius"
+                      alt="User-Profile-Image"  width="200" height="200">
+                  </div>
+                  <h6 class="f-w-600">{{user.firstName}} {{user.lastName}}</h6>
+                  <p>{{user.role}}</p>
+                  <i class=" mdi mdi-square-edit-outline feather icon-edit m-t-10 f-16"></i>
+                </div>
+              </div>
+              <div class="col-sm-8">
+                <div class="card-block">
+                  <h6 class="m-b-20 p-b-5 b-b-default f-w-600">Information</h6>
+                  <div class="row">
+                    <div class="col-sm-3">
+                      <h5 class="m-b-10 f-w-600">Name:</h5>
+                      <h6 class="text-muted f-w-400">{{user.firstName}} {{user.lastName}}</h6>
+                    </div>
+                    <div class="col-sm-3">
+                      <h5 class="m-b-10 f-w-600">Email:</h5>
+                      <h6 class="text-muted f-w-400">{{user.emailAddress}}</h6>
+                    </div>
+                   
+                    <div class="col-sm-3">
+                      <h5 class="m-b-10 f-w-600">Phone Number:</h5>
+                      <h6 class="text-muted f-w-400">{{user.phoneNumber}}</h6>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="card-block">
+                  <h6 class="m-b-20 p-b-5 b-b-default f-w-600"></h6>
+                  <div class="row">
+                    <div class="col-sm-3">
+                      <h5 class="m-b-10 f-w-600">Role:</h5>
+                      <h6 class="text-muted f-w-400">{{user.role}}</h6>
+                    </div>
+                    <div class="col-sm-3">
+                      <h5 class="m-b-10 f-w-600">Bio</h5>
+                      <h6 class="text-muted f-w-400">{{user.bio}}</h6>
+                    </div>
+                    <div class="col-sm-3">
+                      <h5 class="m-b-10 f-w-600">Joining Date:</h5>
+                      <h6 class="text-muted f-w-400">{{user.joiningDate}}</h6>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="card-block">
+                  <h6 class="m-b-20 p-b-5 b-b-default f-w-600">Location</h6>
+                  <div class="row">
+                    <div class="col-sm-3">
+                      <h5 class="m-b-10 f-w-600">City:</h5>
+                      <h6 class="text-muted f-w-400">{{user.location_city}}</h6>
+                    </div>
+                    <div class="col-sm-3">
+                      <h5 class="m-b-10 f-w-600">State:</h5>
+                      <h6 class="text-muted f-w-400">{{user.location_state}}</h6>
+                    </div>
+                    <div class="col-sm-3">
+                      <h5 class="m-b-10 f-w-600">Zipcode:</h5>
+                      <h6 class="text-muted f-w-400">{{user.location_zip_code}}</h6>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="card-block">
+                  <h6 class="m-b-20 p-b-5 b-b-default f-w-600">Categories</h6>
+                  <div class="row">
+                    <div class="col-sm-3">
+                      <h5 class="m-b-10 f-w-600"></h5>
+                      <h6 class="text-muted f-w-400">{{user.categories}}</h6>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="user-details">
+      {{!-- <div class="user-details">
         <p>Name: {{user.firstName}} {{user.lastName}}</p>
         <p>Email: {{user.emailAddress}}</p>
         <p>Phone Number: {{user.phoneNumber}}</p>
@@ -16,7 +97,7 @@
         <p>Reviews: {{user.reviews}}</p>
         <p>Projects: {{user.projects}}</p>
         <p>Joining Date: {{user.joiningDate}}</p>  
-      </div>
+      </div> --}}
       <a href="#modal">Contact</a>
 	
 	<!-- Create the modal with input box and send button -->
@@ -35,3 +116,5 @@
 		</div>
 	</div>
     </div>
+    </div>
+  </div>

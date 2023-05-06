@@ -31,7 +31,8 @@ export const checklastname = (name) => {
   checkname(name, "LastName");
 };
 
-export const checkDOB = (date_of_birth) => {    // thoroughly inspect this
+export const checkDOB = (date_of_birth) => {
+  // thoroughly inspect this
   const [year, month, day] = date_of_birth
     .split("-")
     .map((str) => parseInt(str)); // parse each sub-string and convert into an integer
@@ -144,7 +145,7 @@ export const checkstate = (state) => {
   }
   if (state.length !== 2)
     throw new Error("Location: state must be exactly 2 letters");
-  state = state.toUpperCase();  // no inconsistencies
+  state = state.toUpperCase(); // no inconsistencies
 };
 
 export const checkRating = (rating) => {
@@ -156,10 +157,12 @@ export const checkRating = (rating) => {
 
 export const checkValid = (userId) => {
   isvalid(userId, "userId");
-  if (typeof userId !== "string") throw new Error("userId must be of type string");
+  if (typeof userId !== "string")
+    throw new Error("userId must be of type string");
   userId = userId.trim();
   if (userId === "") throw new Error("userId must not be an empty field");
-  if (!ObjectId.isValid(userId)) throw new Error("userId is not a valid ObjectId");
+  if (!ObjectId.isValid(userId))
+    throw new Error("userId is not a valid ObjectId");
 };
 
 export const checkId = (id) => {
@@ -206,16 +209,20 @@ export const checkTitle = (title) => {
   isvalid(title, "title");
   if (typeof title != "string") throw new Error("Title must be a string");
   title = title.trim();
-  if (title.length > 200) throw new Error("Title must be no more than 200 characters");
+  if (title.length > 200)
+    throw new Error("Title must be no more than 200 characters");
   if (title.trim() === "") throw new Error("Title must be supplied!");
-}
+};
 export const checkDescription = (description) => {
   isvalid(description, "description");
-  if (typeof description !== "string") throw new Error("description must be a string");
+  if (typeof description !== "string")
+    throw new Error("description must be a string");
   description = description.trim();
-  if (description.trim() === "") throw new Error("description must not be empty");
-  if (description.length > 2500) throw new Error("description must no more than 2500 characters");
-}
+  if (description.trim() === "")
+    throw new Error("description must not be empty");
+  if (description.length > 2500)
+    throw new Error("description must no more than 2500 characters");
+};
 export const checkbio = (bio) => {
   if (typeof bio !== "string") throw new Error("Bio must be of type string");
   bio = bio.trim();
@@ -232,8 +239,8 @@ export const checkCategories = (categories) => {
   if (categories.length < 1)
     throw new Error("Update: you must supply at least 1 category");
   for (let i in categories) {
-    if (typeof categories[i] !== "string" || categories[i].trim() === "")
-      throw new Error("Update: each category must be a non-empty string");
+    if (typeof categories[i] !== "string")
+      throw new Error("Update: each category must be a string");
     categories[i] = categories[i].trim();
     for (let j in categories[i]) {
       if (typeof categories[i][j] === "number")
@@ -245,16 +252,23 @@ export const checkCategories = (categories) => {
 export const checkbudget = (budget) => {
   if (!budget) throw new Error("no budget provided");
   budget = parseInt(budget);
-  if (typeof budget !== 'number') throw new Error('budget should be a valid number');
-  if (budget <= 0) throw new Error('Budget can not be a negative number!');
+  if (typeof budget !== "number")
+    throw new Error("budget should be a valid number");
+  if (budget <= 0) throw new Error("Budget can not be a negative number!");
 };
 
 export const checkstatus = (status) => {
   isvalid(status, "Project Status");
   status = status.trim();
   status = status.toLowerCase();
-  if (status !== "not started" && status !== "in progress" && status !== "finished")
-    throw new Error('Invalid project status specified. Only "not started", "in progress" or "finished" are allowed.');
+  if (
+    status !== "not started" &&
+    status !== "in progress" &&
+    status !== "finished"
+  )
+    throw new Error(
+      'Invalid project status specified. Only "not started", "in progress" or "finished" are allowed.'
+    );
 };
 
 export const getJoiningDate = () => {
@@ -265,4 +279,3 @@ export const getJoiningDate = () => {
   let joinedDate = `${year}-${month}-${day}`; // format date as "YYYY-MM-DD"
   return joinedDate;
 };
-

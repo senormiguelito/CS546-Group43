@@ -5,29 +5,4 @@
     <br>
     <a href="/post/newPost/createPost" class="create-post">Create a job posting!</a>
     <br>
-    {{!<a href="/post/createJob" class="create-job">Want a job?</a>}} {{!We will use this as a way to create a project when both parties are interested.. doesn't belong there}}
-    <br>
-    <div class="post-list-container">
-      {{#each posts}}
-        {{!-- <div class="post-list-box" onclick="location.href='/{{_id}}';"> --}}
-        <div class="post-list-box" data-id="{{_id}}">
-        <div class="post-list-img-box"><img src="../public/images/No_Image_Available.jpg" alt="Post 1 Image"></div>
-        {{!-- <p>{{_id}} id</p> --}}
-        <h2>{{title}}</h2>
-        <p>{{description}}</p>
-        </div>
-  
-         
-      {{/each}}
-      {{#if comment}}
-            <div class="post-comment">
-            <p>comment : {{comment}}</p>
-          </div>
-        {{/if}}
-
-
-</div>
-{{!<br>
-<a href="/home/provideList" class="see-all">See All Job Providers</a>
-<br>}}
-{{!-- <a href="/login" class="see-all">login/sigup</a> --}}
+    

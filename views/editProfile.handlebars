@@ -3,35 +3,46 @@
     <h1>Edit Your Profile</h1>
     
     <div class="profile-details">
-     <div class="profile-img-box"> 
+     {{!-- <div class="profile-img-box"> 
         <img src="/public/images/No_Image_Available.jpg" alt="User photo">
-      </div>
+      </div> --}}
       <div class="result">
-        <form id="myprofile-edit" action="/home/myprofile/{{userID}}/edit" method="POST">
-        <h2>Role: {{sessionObj.role}}</h2>
+        <form id="myprofile-edit" action="/home/myprofile/{{userID}}/edit" method="POST" enctype="multipart/form-data">
+        <h2>Role: {{objectUser.role}}</h2>
         {{#if Error}} <p class="error">{{Error}}</p>{{/if}}
         <div id="error" role="alert" hidden></div>
+        <input type="file" id="image" name="image" multiple id="input-files" class="form-control-file border" /><br>
         <label for="firstNameInput">First Name<span class="required">*</span></label>
-        <input type="text" name="firstName" id="firstNameInput" value="{{sessionObj.firstName}}">
+        <input type="text" name="firstName" id="firstNameInput" value="{{objectUser.firstName}}">
         <label for="firstNameInput">Last Name<span class="required">*</span></label>
-        <input type="text" name="lastName" id="lastNameInput" value="{{sessionObj.lastName}}">
+        <input type="text" name="lastName" id="lastNameInput" value="{{objectUser.lastName}}">
         <label for="bio">Bio</label>
-        <textarea id="bioInput" name="bio">{{sessionObj.bio}}</textarea>
+        <textarea id="bioInput" name="bio">{{objectUser.bio}}</textarea>
         <label for="dob">Date of Birth<span class="required">*</span></label>
-          <input type="date" class="form-control" id="dob" name="dob" value="{{sessionObj.dob}}" required>
+          <input type="date" class="form-control" id="dob" name="dob" value="{{objectUser.dob}}" required>
         <label for="emailAddressInput">Email Address<span class="required">*</span></label>
-        <input type="email" id="emailAddressInput" name="email" value="{{sessionObj.emailAddress}}">
+        <input type="email" id="emailAddressInput" name="email" value="{{objectUser.emailAddress}}">
         <label for="phoneNumberInput">Phone Number<span class="required">*</span></label>
-        <input type="tel" id="phoneNumberInput" name="phoneNumber" value="{{sessionObj.phoneNumber}}">
+        <input type="tel" id="phoneNumberInput" name="phoneNumber" value="{{objectUser.phoneNumber}}">
         <label for="zipInput">Zip Code<span class="required">*</span></label>
-        <input type="tel" id="zipInput" name="zip" maxlength="5" value="{{sessionObj.location_zip_code}}">
+        <input type="tel" id="zipInput" name="zip" maxlength="5" value="{{objectUser.location_zip_code}}">
         <label for="cityInput">City<span class="required">*</span></label>
-        <input type="text" name="city" id="cityInput" value="{{sessionObj.location_city}}">
+        <input type="text" name="city" id="cityInput" value="{{objectUser.location_city}}">
         <label for="stateInput">State<span class="required">*</span></label>
-        <input type="text" name="state" id="stateInput" value="{{sessionObj.location_state}}">
+        <input type="text" name="state" id="stateInput" value="{{objectUser.location_state}}">
         <label for="categoriesInput">Categories (One or more, up to four):</label>
         <input type="text" id="categoryInput" list="category-options" placeholder="Enter a category">
-        <div class="category-container"></div>
+        <div class="category-container">
+          {{#if notnull}}
+          {{#each objectUser.categories}}
+          <div class="category-box">
+          <span class="category-name">{{this}}</span>
+          <span class="delete-button">x</span>
+          </div>
+          {{/each}}
+          {{/if}}
+        </div>
+        <input type="hidden" name="categorydata" id="categorydata">
         <button type="button" id="addCategoryButton">Add</button>
         <button type="submit">Save Changes</button>
 </form>

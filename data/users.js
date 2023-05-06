@@ -73,6 +73,7 @@ export const create = async (
       reviews: [],
       projects: [],
       joiningDate: joiningDate,
+      imageData:"",
     };
 
     const insertIntoDB = await userCollection.insertOne(userInsert);
@@ -244,43 +245,49 @@ export const update = async (
   firstName,
   lastName,
   emailAddress,
-  password,
+  // password,
+  date_of_birth,
   phoneNumber,
   location_city,
   location_state,
   location_zip_code,
   categories,
-  bio
+  bio,
+  imageData
 ) => {
-  
   h.checkfirstname(firstName);
   h.checklastname(lastName);
   h.checkemail(emailAddress);
-  h.checkpassword(password);
+  // h.checkpassword(password);
+  h.checkDOB(date_of_birth);
   h.checkphone(phoneNumber);
   // h.checkrole(role);
   h.checkcity(location_city);
   h.checkstate(location_state);
   h.checkzipcode(location_zip_code);
-  h.checkbio(bio);
-  h.checkCategories(categories);
+  bio = bio.trim();
+  if (bio) {
+    h.checkbio(bio);
+  }
+
+  // if (categories) {
+  //   h.checkCategories(categories);
+  //   for (let i in categories) {
+  //     categories[i] = categories[i].trim();
+  //   }
+  // }
 
   firstName = firstName.trim();
   lastName = lastName.trim();
-  username = username.trim();
-  emailAddress = emailAddress.trim();
-  emailAddress = emailAddress.toLowerCase();
-  phoneNumber = phoneNumber.trim();
-  location_city = location_city.trim(); // Fun fact: there are US cities with a length of 1 character, so we don't need to test for min length!
-  location_state = location_state.trim(); // should we make a drop down?
+  emailAddress = emailAddress.trim().toLowerCase();
+  phoneNumber = phoneNumber.replace(/[- ()]/g, "").trim();
+  date_of_birth = date_of_birth.trim();
   location_zip_code = location_zip_code.trim();
-  bio = bio.trim();
-  for (let i in categories) {
-    categories[i] = categories[i].trim();
-  }
+  location_city = location_city.trim();
+  location_state = location_state.toUpperCase().trim();
 
-  const hashLen = 16;
-  const hashPassword = await bcrypt.hash(password, hashLen);
+  // const hashLen = 16;
+  // const hashPassword = await bcrypt.hash(password, hashLen);
 
   // role = role.trim();
 
@@ -288,31 +295,22 @@ export const update = async (
 
   // Again, here we can and should do CSS styling to preview desired input for user
 
-  if (bio === "") throw new Error("Bio must not be empty");
-
   // categories
 
   const updateUserInfo = {
     // only include in here the stuff that makes sense for the user to update
+    // password: hashPassword,
+    // emailAddress: emailAddress,
     firstName: firstName,
     lastName: lastName,
-    emailAddress: emailAddress,
-    password: hashPassword,
     phoneNumber: phoneNumber,
     location_city: location_city,
     location_state: location_state,
     location_zip_code: location_zip_code,
-    categories: categories,
     bio: bio,
+    categories: categories,
+    imageData :imageData,
   };
-  // check if updated email already exists!
-  const existingEmail = await userCollection.findOne({
-    emailAddress: emailAddress,
-  });
-  if (existingEmail)
-    throw new Error(
-      "There is already a user with this email address in our database"
-    );
 
   // refer to lab 6 albums.js for rating updating , and all this stuff too
 
@@ -325,7 +323,7 @@ export const update = async (
     const updatedTrue = await userCollection.findOne({ _id: new ObjectId(id) });
     return updatedTrue;
   } else {
-    throw new Error("Update: user was not upated");
+    return { notchanged: true };
   }
 };
 

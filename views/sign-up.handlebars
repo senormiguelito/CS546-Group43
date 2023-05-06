@@ -1,50 +1,68 @@
+<section class="vh-100">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-lg-6 px-0 d-none d-sm-block">
+        <div class="sticky-top">
+          <img src="../public/images/image1.jpg" alt="Login image" class="w-100 vh-100"
+            style="object-fit: cover; object-position: left;">
+        </div>
+      </div>
+      <div class="col-lg-6 text-black">
+        <header>
+          <h1>Registration Page</h1>
+        </header>
+        {{#if Error}}<p class="alert alert-danger">{{Error}}</p>{{/if}}
+        <div id="error" class="alert alert-danger" hidden></div>
+        <div class="result">
+          <form id="signup-form" method="POST" action="/signup">
+            <label for="firstNameInput">First Name<span class="required">*</span>: </label>
+            <input type="text" name="firstName" id="firstNameInput">
+            <br>
+            <label for="lastNameInput">Last Name<span class="required">*</span>:</label>
+            <input type="text" name="lastName" id="lastNameInput">
+            <br>
+            <label for="dob">Date of Birth<span class="required">*</span>:</label>
+            <input type="date" id="dob" name="dob" required>
+            <br>
+            <label for="emailAddressInput">Email Address<span class="required">*</span>:</label>
+            <input type="email" name="email" id="emailAddressInput">
+            <br>
+            <label for="phoneNumberInput">Phone Number<span class="required">*</span>:</label>
+            <input type="tel" name="phoneNumber" id="phoneNumberInput">
+            <br>
+            <label for="passwordInput">
+              Password<span class="required">*</span>:<span class="info-button"
+                title="Password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one special character like (@#$%^&*!/.,;-`~) and one number"></span></label>
+            <input type="password" name="password" id="passwordInput">
+            <br>
+            <label for="confirmPasswordInput">Confirm Password<span class="required">*</span>:</label>
+            <input type="password" name="confirmPassword" id="confirmPasswordInput">
 
-<header>
-  <h1>Registration Page</h1>
-</header>
-{{#if Error}}<p class="error">{{Error}}</p>{{/if}}
-<div id="error" role="alert" hidden></div>
-<div class="result">
-<form id="signup-form" method="POST" action="/signup">
-  <label for="firstNameInput">First Name<span class="required">*</span>: </label>
-  <input type="text" name="firstName" id="firstNameInput">
-  <br>
-  <label for="lastNameInput">Last Name<span class="required">*</span>:</label>
-  <input type="text" name="lastName" id="lastNameInput">
-  <br>
-  <label for="dob">Date of Birth<span class="required">*</span>:</label>
-   <input type="date" id="dob" name="dob" required>
-   <br>
-  <label for="emailAddressInput">Email Address<span class="required">*</span>:</label>
-  <input type="email" name="email" id="emailAddressInput">
-  <br>
-  <label for="phoneNumberInput">Phone Number<span class="required">*</span>:</label>
-  <input type="tel" name="phoneNumber" id="phoneNumberInput">
-  <br>
-  <label for="passwordInput"> 
-  Password<span class="required">*</span>:<span class="info-button" title="Password must be at least 8 characters long and include at least one uppercase letter, one lowercase letter, one special character like (@#$%^&*!/.,;-`~) and one number"></span></label>
-  <input type="password" name="password" id="passwordInput">
-  <br>
-  <label for="confirmPasswordInput">Confirm Password<span class="required">*</span>:</label>
-  <input type="password" name="confirmPassword" id="confirmPasswordInput">
-  
-  <br>
-  <label for="roleInput">Role<span class="required">*</span>:</label>
-  <select name="role" id="roleInput">
-    <option value="provider">Job Provider</option>
-    <option value="seeker">Job Seeker</option>
-  </select>
-  <br>
-  <label for="Address">Where are you located?<span class="required">*</span>:</label>
-  <input class="addr" type="tel" name="zip" id="zipInput" maxlength="5" placeholder="Zip Code"> <!-- I put zip at first because it will auto update city and state, and still if user want to edit the city they can, so please leave zip at first-->
-  <input class="addr" type="text" name="city" id="cityInput" placeholder="City">
-  <input class="addr" type="text" name="state" id="stateInput" minlength="2" maxlength="2" placeholder="State">
-  <br>
-  <br>
-  
-  <br>
-  <button type="submit" id="registerButton">Register</button>
-  <button type="button" id="reset-button">Reset</button>
-</form>
-</div>
-<p><a href="/login">Already have an account? Click here to log-in!</a></p>
+            <br>
+            <label for="roleInput">Role<span class="required">*</span>:</label>
+            <select name="role" id="roleInput">
+              <option value="provider">Job Provider</option>
+              <option value="seeker">Job Seeker</option>
+            </select>
+            <br>
+            <label for="Address">Where are you located?<span class="required">*</span>:</label>
+            <input class="addr" type="tel" name="zip" id="zipInput" maxlength="5" placeholder="Zip Code">
+            <!-- I put zip at first because it will auto update city and state, and still if user want to edit the city they can, so please leave zip at first-->
+            <input class="addr" type="text" name="city" id="cityInput" placeholder="City">
+            <input class="addr" type="text" name="state" id="stateInput" minlength="2" maxlength="2"
+              placeholder="State">
+            <br>
+            <br>
+
+            <br>
+            <button type="submit" id="registerButton">Register</button>
+            <button type="button" id="reset-button">Reset</button>
+          </form>
+        </div>
+        <p><a href="/login">Already have an account? Click here to log-in!</a></p>
+      </div>
+
+
+    </div>
+  </div>
+</section>

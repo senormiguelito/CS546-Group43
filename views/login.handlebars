@@ -1,20 +1,33 @@
+<section class="vh-100">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-sm-6 text-black">
+        <h1 class="login">Login Page</h1>
 
+        <div class="result">
+          <form id="login-form" method="POST" action="/login">
+            <label for="emailAddressInput">Email Address:</label>
+            <input type="email" name="emailAddressInput" id="emailAddressInput">
+            <br>
+            <label for="passwordInput">Password:</label>
+            <input type="password" name="passwordInput" id="passwordInput">
+            <br>
+            <button type="submit">Login</button>
+          </form>
+        </div>
+       
 
-<h1 class="login">Login Page</h1>
-<p class="error">{{#if Error}}{{Error}}{{/if}}</p>
-<p class="message" id="success">{{#if Message}}{{Message}}{{/if}}</p>
-<div class="result">
-<form id="login-form" method="POST" action="/login">
-  <label for="emailAddressInput">Email Address:</label>
-  <input type="email" name="emailAddressInput" id="emailAddressInput">
-  <br>
-  <label for="passwordInput">Password:</label>
-  <input type="password" name="passwordInput" id="passwordInput">
-  <br>
-  <button type="submit">Login</button>
-</form>
-</div>
-<div id="error" hidden></div>
-
-<p>New user?
-<a href="/signup">Click here to register!</a></p>
+        <p>New user?
+          <a href="/signup">Click here to register!</a>
+        </p>
+        {{#if Error}} <p class="alert alert-danger">{{Error}}</p>{{/if}}
+        {{#if Message}}<p class="alert alert-success" id="success">{{Message}}</p>{{/if}}
+        <div id="error" hidden></div>
+      </div>
+      <div class="col-sm-6 px-0 d-none d-sm-block">
+        <img src="../public/images/image1.jpg" alt="Login image" class="w-100 vh-100"
+          style="object-fit: cover; object-position: left;">
+      </div>
+    </div>
+  </div>
+</section>
