@@ -2,6 +2,7 @@ import { ObjectId } from "mongodb";
 import bcrypt from "bcryptjs";
 import * as h from "../helpers.js";
 import { user } from "../config/mongoCollections.js";
+import axios from "axios";
 const userCollection = await user();
 
 export const create = async (
@@ -137,7 +138,7 @@ export const getUserByEmail = async (email) => {  // implementing so that we can
 
 };
 
-export const getUsersByRole = async (role) => {
+export const getUsersBy= async (role) => {
   h.checkrole(role);
   const usersArray = await userCollection.find({ role: role }).toArray();
   usersArray.forEach((user) => {
@@ -325,6 +326,266 @@ export const update = async (
   } else {
     return { notchanged: true };
   }
+};
+
+
+export const sortProvidersByDistance = async (user) => {
+
+
+  let userList = await getAll()
+  if(!userList) throw 'can not find users'
+  let api_key = "eih8KCzAfl0SldyHOyIk2AEDedEJqNGII9yvhW3R9fpjCfLXQsnWpu7qZH0rlUqc"
+  // let zip_code1 = "07307"
+  // let zip_code2 = "07030"
+  // const distanceJson = await axios.get(`https://www.zipcodeapi.com/rest/${api_key}/distance.json/${zip_code1}/${zip_code2}/mile`)
+  // console.log(distanceJson.data.distance)
+  async function getApi(zip_code1,zip_code2){
+    const distanceJson = await axios.get(`https://www.zipcodeapi.com/rest/${api_key}/distance.json/${zip_code1}/${zip_code2}/mile`)
+    return distanceJson
+  }
+  let providerUserList = []
+  if(!Array.isArray(userList)) "no user found!"
+  userList.forEach(element => {
+    if(element.role === 'provider'){
+      providerUserList.push(element)
+    }
+  });
+  
+    // UNCOMMENT WHEN YOU WANT TO TEST. WE ONLY HAVE 50 REQ/HR FOR THIS API
+  // UNCOMMENT WHEN YOU WANT TO TEST. WE ONLY HAVE 50 REQ/HR FOR THIS API
+  // UNCOMMENT WHEN YOU WANT TO TEST. WE ONLY HAVE 50 REQ/HR FOR THIS API
+
+  // for (const iterator of providerUserList) {
+  //   let distance = await getApi(user.location_zip_code,iterator.location_zip_code)
+  //   iterator['distance'] = distance.data.distance
+  // }
+
+  //for testing purpose only
+  let data = [
+    {
+      _id: '644eafe3afe88553fe417559',
+      firstName: 'RushirajProvider',
+      lastName: 'Herma',
+      emailAddress: 'rherma@stevens.edu',
+      password: '$2a$16$7IdIBg3Ev/Qc6JsUHhyoP.ocEXNY//oYXTj2gtSDauV76PZ2xjEBe',
+      role: 'provider',
+      phoneNumber: '9876543210',
+      location_city: 'Hoboken',
+      location_state: 'NJ',
+      location_zip_code: '07307',
+      categories: [],
+      bio: '',
+      reviews: [],
+      projects: [],
+      distance: 0.155
+    },
+    {
+      _id: '644eafe8afe88553fe41755a',
+      firstName: 'RushirajSeeker',
+      lastName: 'Herma',
+      emailAddress: 'rherma1@stevens.edu',
+      password: '$2a$16$oKXh98c4wSwcaq3GwbAVU.YroXDSxw2fKszttSArHlJDgvuBrrbJC',
+      role: 'provider',
+      phoneNumber: '9876543210',
+      location_city: 'Hoboken',
+      location_state: 'NJ',
+      location_zip_code: '07307',
+      categories: [],
+      bio: '',
+      reviews: [],
+      projects: [],
+      distance: 1.155
+    },
+    {
+      _id: '64530059da8ca6e30fe29aed',
+      firstName: 'Rushiraj',
+      lastName: 'Herma',
+      dob: '2000-08-06',
+      emailAddress: 'rherma11@stevens.edu',
+      password: '$2a$16$JPvoh57hK.tI//VqQmbAaOi6vqky0nQesWByDfmEvOZraUABF6qzG',
+      role: 'provider',
+      phoneNumber: '0987654321',
+      location_city: 'Jersey City',
+      location_state: 'NJ',
+      location_zip_code: '07307',
+      categories: [ '' ],
+      bio: '',
+      reviews: [],
+      projects: [],
+      joiningDate: '2023-05-03',
+      imageData: 'http://localhost:3000/public/images/image-1683349163852.jpg',
+      distance: 2.155
+    },
+    {
+      _id: '6453e45b4f63436ed1309cb2',
+      firstName: 'RushirajTest',
+      lastName: 'HermaTest',
+      dob: '2002-06-06',
+      emailAddress: 'rherma.tests@stevens.edu',
+      password: '$2a$16$YQZJOGnUp68q8ZxaodBFgunzrXbvoflYMAAeC0v2EVU.M6bKN7ED6',
+      role: 'provider',
+      phoneNumber: '0987654321',
+      location_city: 'Jersey City',
+      location_state: 'NJ',
+      location_zip_code: '07307',
+      categories: [],
+      bio: '',
+      reviews: [],
+      projects: [],
+      joiningDate: '2023-05-04',
+      distance: 3.155
+    },
+    {
+      _id: '6453e4614f63436ed1309cb3',
+      firstName: 'RushirajTest',
+      lastName: 'HermaTest',
+      dob: '2002-06-06',
+      emailAddress: 'rherma.tests@stevens.edu',
+      password: '$2a$16$qwUGWAirWmldMqrHl2m.H.3HekG.o0oxz7LUURzsO2mYhnVQ6ry5q',
+      role: 'provider',
+      phoneNumber: '0987654321',
+      location_city: 'Jersey City',
+      location_state: 'NJ',
+      location_zip_code: '07307',
+      categories: [],
+      bio: '',
+      reviews: [],
+      projects: [],
+      joiningDate: '2023-05-04',
+      distance: 4.155
+    },
+    {
+      _id: '6455f829f9272cbf44bb79c9',
+      firstName: 'FSeeker',
+      lastName: 'Lseeker',
+      dob: '1991-05-06',
+      emailAddress: 'rherma111@stevens.edu',
+      password: '$2a$16$NCI5RNkh67/677kQPr0o.uk5IZTCaB7WDH3O1o6nWGE/XuaPmkIcy',
+      role: 'provider',
+      phoneNumber: '0987652452',
+      location_city: 'Jersey City',
+      location_state: 'NJ',
+      location_zip_code: '07309',
+      categories: [],
+      bio: '',
+      reviews: [],
+      projects: [],
+      joiningDate: '2023-05-06',
+      imageData: '',
+      distance: 0
+    }
+  ]
+
+  let sortedPosts = providerUserList.sort(
+    (p1, p2) => (p1.distance > p2.distance) ? 1 : (p1.distance < p2.distance) ? -1 : 0);
+
+
+  return sortedPosts
+
+};
+
+export const sortSeekersByDistance = async (user) => {
+
+  let userList = await getAll()
+  if(!userList) throw 'can not find users'
+  let api_key = "eih8KCzAfl0SldyHOyIk2AEDedEJqNGII9yvhW3R9fpjCfLXQsnWpu7qZH0rlUqc"
+  // let zip_code1 = "07307"
+  // let zip_code2 = "07030"
+  // const distanceJson = await axios.get(`https://www.zipcodeapi.com/rest/${api_key}/distance.json/${zip_code1}/${zip_code2}/mile`)
+  // console.log(distanceJson.data.distance)
+  async function getApi(zip_code1,zip_code2){
+    const distanceJson = await axios.get(`https://www.zipcodeapi.com/rest/${api_key}/distance.json/${zip_code1}/${zip_code2}/mile`)
+    return distanceJson
+  }
+  let seekerUserList = []
+  if(!Array.isArray(userList)) "no user found!"
+  userList.forEach(element => {
+    if(element.role === 'seeker'){
+      seekerUserList.push(element)
+    }
+  });
+  // console.log(seekerUserList)
+
+  // UNCOMMENT WHEN YOU WANT TO TEST. WE ONLY HAVE 50 REQ/HR FOR THIS API
+  // UNCOMMENT WHEN YOU WANT TO TEST. WE ONLY HAVE 50 REQ/HR FOR THIS API
+  // UNCOMMENT WHEN YOU WANT TO TEST. WE ONLY HAVE 50 REQ/HR FOR THIS API
+  
+  
+  // for (const iterator of seekerUserList) {
+  //   let distance = await getApi(user.location_zip_code,iterator.location_zip_code)
+  //   iterator['distance'] = distance.data.distance
+  // }
+
+  // console.log("======")
+
+  let sortedPosts = seekerUserList.sort(
+    (p1, p2) => (p1.distance > p2.distance) ? 1 : (p1.distance < p2.distance) ? -1 : 0);
+
+  // console.log(sortedPosts)
+  return sortedPosts
+
+};
+
+export const filterProviderBySearchArea = async (user, searchArea) => {
+
+  let userList = await getAll()
+  if(!userList) throw 'can not find users'
+  let api_key = "eih8KCzAfl0SldyHOyIk2AEDedEJqNGII9yvhW3R9fpjCfLXQsnWpu7qZH0rlUqc"
+
+  async function getApi(zip_code1,radius){
+    const zipCodes = await axios.get(`https://www.zipcodeapi.com/rest/${api_key}/radius.json/${zip_code1}/${radius}/miles?minimal`)
+    return zipCodes
+  }
+  let zipcodes = await getApi(user.location_zip_code,searchArea)
+  let providerUserList = []
+  if(!Array.isArray(userList)) "no user found!"
+  userList.forEach(element => {
+    if(element.role === 'provider'){
+      providerUserList.push(element)
+    }
+  });
+ 
+  let finalList = []
+  providerUserList.forEach(element => {
+    zipcodes.data.zip_codes.forEach(element1 => {
+      if(element.location_zip_code === element1){
+        finalList.push(element)
+      }
+    });
+  });
+
+  return finalList
+};
+
+export const filterSeekerBySearchArea = async (user, searchArea) => {
+
+  let userList = await getAll()
+  if(!userList) throw 'can not find users'
+  let api_key = "eih8KCzAfl0SldyHOyIk2AEDedEJqNGII9yvhW3R9fpjCfLXQsnWpu7qZH0rlUqc"
+
+  async function getApi(zip_code1,radius){
+    const zipCodes = await axios.get(`https://www.zipcodeapi.com/rest/${api_key}/radius.json/${zip_code1}/${radius}/miles?minimal`)
+    return zipCodes
+  }
+  let zipcodes = await getApi(user.location_zip_code,searchArea)
+  let seekerUserList = []
+  if(!Array.isArray(userList)) "no user found!"
+  userList.forEach(element => {
+    if(element.role === 'seeker'){
+      seekerUserList.push(element)
+    }
+  });
+ 
+  let finalList = []
+  seekerUserList.forEach(element => {
+    zipcodes.data.zip_codes.forEach(element1 => {
+      if(element.location_zip_code === element1){
+        finalList.push(element)
+      }
+    });
+  });
+
+  return finalList
 };
 
 // export const checkUser = async (emailAddress, password) => {

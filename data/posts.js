@@ -76,7 +76,7 @@ export const getAll = async () => {
 };
 
 export const getAllPostsByUser = async (userId) => {
-  h.checkId(userId);
+  h.checkValid(userId);
 
   if (!ObjectId.isValid(userId)) throw new Error("invalid userId");
   userId = userId.trim();
@@ -125,28 +125,19 @@ export const remove = async (id) => {
   return result;
 };
 
-export const update = async (
-  postId,
-  seekerId,
-  title,
-  description,
-  location_city,
-  location_state,
-  location_zip_code,
-  categories,
-  budget,
-  images
-) => {
+export const update = async (postId, userId, title, description, location_city, location_state, location_zip_code, categories, budget, images) => {
   h.checkId(postId);
-  h.checkId(seekerId);
+  h.checkValid(userId)
   h.checkTitle(title);
   h.checkDescription(description);
   h.checkcity(location_city);
   h.checkstate(location_state);
   h.checkzipcode(location_zip_code);
-  h.checkCategories(categories);
   h.checkbudget(budget);
 
+
+ 
+  console.log("In create post data ")
   //this is different than helper function. don't delete it.
   if (!categories) throw new Error("categories not provided");
 
@@ -171,17 +162,16 @@ export const update = async (
   //needs to check if images have valid img type
 
   postId = postId.trim();
-  seekerId = seekerId.trim();
+  userId = userId.trim();
   title = title.trim();
   description = description.trim();
   location_city = location_city.trim();
   location_state = location_state.trim();
   location_zip_code = location_zip_code.trim();
-
+  
   let oldPost = await get(postId);
 
-  if (oldPost.seekerId !== seekerId)
-    throw "You can only update a post which you've created";
+  if (oldPost.userId !== userId) throw "You can only update a post which you've created";
   // postId, seekerId, title, description, location, categories, budget, images
   if (
     oldPost.title === title &&
@@ -195,7 +185,7 @@ export const update = async (
     throw "You must change part of the document to submit an update request";
 
   const newPostsInfo = {
-    seekerId: seekerId,
+    userId: userId,
     title: title,
     description: description,
     location_city: location_city,
@@ -211,11 +201,10 @@ export const update = async (
     { _id: new ObjectId(postId) },
     newPostsInfo
   );
-
-  if (newPost.lastErrorObject.n === 0)
-    throw [404, `Could not update the post with id ${id}`];
-
-  return newPost.value;
+    
+  if (newPost.lastErrorObject.n === 0) throw [404, `Could not update the post with id ${postId}`];
+  
+  return newPost.value; 
 };
 
 export const getByCommentId = async (id) => {
@@ -257,3 +246,4 @@ export const getByRole = async (role) => {
 
   // return post;
 };
+

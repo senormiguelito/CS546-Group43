@@ -2,6 +2,7 @@ import { Router } from "express";
 const router = Router();
 import * as h from "../helpers.js";
 import { postData, userData } from "../data/index.js";
+
 import xss from "xss";
 
 router.route("/").get(async (req, res) => {
@@ -175,13 +176,52 @@ router.route("/logout").get(async (req, res) => {
 
 router.route("/seekers").get(async (req, res) => {
   try {
-    const userList = await userData.getUsersByRole("seeker");
-    res.render("seekerList", { userList: userList }); // handlebars [age]
+    // console.log("in seeker")
+    const userList = await userData.getUsersBy("seeker");
+    // console.log(userList)
+    res.render("seekerList", { userList: userList });   // handlebars [age]
   } catch (e) {
     res.render("seekerList", { error: e });
     // return res.status(400).render("error", { error: e });
   }
 });
+
+router.route("/seekers/filterSeekerByDistance").post(async (req, res) => {
+  try {
+    // console.log("in seekersList filter route")
+    // console.log(req.params,req.body)
+    let user = req.session.user.userSessionData
+    let filterBy = req.body.filter
+    let userList = undefined
+    if(filterBy.toLowerCase() === "distance"){
+      userList = await userData.sortSeekersByDistance(user)
+    }
+    // const userList = await userData.getUsersByRole("provider");
+    // console.log(userList)
+    res.status(200).render("seekerlist", { userList: userList });
+  } catch (e) {
+    res.status(400).render("seekerlist", { error: e });
+    // return res.status(400).render("error", { error: e });
+  }
+});
+
+router.route("/seekers/searchArea").post(async (req, res) => {
+  try {
+    // console.log("in seekersList filter route")
+    // console.log(req.params,req.body)
+    let user = req.session.user.userSessionData
+    let searchArea = req.body.searchAreaInput
+    let userList = await userData.filterSeekerBySearchArea(user,searchArea) 
+    
+    // const userList = await userData.getUsersByRole("provider");
+    // console.log(userList)
+    res.status(200).render("seekerlist", { userList: userList });
+  } catch (e) {
+    res.status(400).render("seekerlist", { error: e });
+    // return res.status(400).render("error", { error: e });
+  }
+});
+
 
 router.route("/profile/:userId").get(async (req, res) => {
   // access a profile page
@@ -192,7 +232,7 @@ router.route("/profile/:userId").get(async (req, res) => {
   const userId = post.userId;
   try {
     if (!userId) throw new Error("no userId specified");
-    h.checkId(userId);
+    h.checkValid(userId);
   } catch (e) {
     return res.status(400).redirect("/home");
   }

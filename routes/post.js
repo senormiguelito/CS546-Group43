@@ -50,6 +50,7 @@ const upload = multer({ storage: storage });
 router.route("/createPost").post(upload.single("image"), async (req, res) => {
   try {
     console.log("in /createPost route");
+    console.log(req.body.categoriesInput)
     let title = xss(req.body.titleInput);
     let description = xss(req.body.descriptionInput);
     let budget = xss(req.body.budgetInput);
@@ -81,7 +82,7 @@ router.route("/createPost").post(upload.single("image"), async (req, res) => {
     h.checkzipcode(zip);
     h.checkcity(city);
     h.checkstate(state);
-    h.checkId(userId);
+    h.checkValid(userId);
     // console.log(title, description, budget, role, categories, zip, city, state)
     let newPost = await postData.create(
       userId,

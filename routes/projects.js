@@ -12,7 +12,7 @@ router
     let userId = req.params.userId; // unsure of id-- is it userId or projectId? in this route, if wrong, replace all projectId with userId
     let message = "";
     try {
-      h.checkId(userId);
+      h.checkValid(userId);
       userId = userId.trim(); // might as well
       if (ObjectId.isValid(userId)) throw new Error("invalid userId");
     } catch (e) {

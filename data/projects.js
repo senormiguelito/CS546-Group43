@@ -58,7 +58,7 @@ export const create = async (
 };
 
 export const getAllProjectsByUser = async (userId) => {
-  h.checkId(userId);
+  h.checkValid(userId);
   
   //why not:
   if (!ObjectId.isValid(userId)) throw new Error("invalid userId");

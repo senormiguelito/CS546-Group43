@@ -4,6 +4,25 @@
          <h2>Job Provider</h2>
 
         <p>{{error}}</p>
+
+        <div class="sort-button">
+            <form method="post" action = "/home/provideList/filterByDistance" id="filter-form" >
+            <label>Sort: </label>
+            <select name="filter" id="filterInput">
+              <option value="distance">Distance</option>
+              {{!-- <option value="seeker">Job Seeker</option> --}}
+              <option value="all">Get All</option>
+            </select>
+            <button type="submit" id="find">Find</button>
+            </form>
+        </div>
+        <div class="filter-button">
+            <form method="post" action = "/home/provideList/searchArea" id="filter-form" >
+            <label>Filter using area of search: </label>
+            <input type="text" placeholder = "Eneter search area in miles: "name ="searchAreaInput" id = "searchAreaInput">
+            <button type="submit" id="find">Find</button>
+            </form>
+        </div>
         <div class="row">
             {{#if userList}}
                 {{#each userList}}

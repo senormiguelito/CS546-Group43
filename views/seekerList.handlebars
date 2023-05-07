@@ -17,6 +17,24 @@
          <h2>Job Seekers</h2>
 
         <p>{{error}}</p>
+        <div class="sort-button">
+            <label>Sort: </label>
+            <form method="post" action = "/seekers/filterSeekerByDistance" id="filter-form" >
+            <select name="filter" id="filterInput">
+              <option value="distance">Distance</option>
+              {{!-- <option value="seeker">Job Seeker</option> --}}
+              <option value="all">Get All</option>
+            </select>
+            <button type="submit" id="find">Find</button>
+            </form>
+        </div>
+        <div class="filter-button">
+            <form method="post" action = "/seekers/searchArea" id="filter-form" >
+            <label>Filter using area of search: </label>
+            <input type="text" placeholder = "Eneter search area in miles: "name ="searchAreaInput" id = "searchAreaInput">
+            <button type="submit" id="find">Find</button>
+            </form>
+        </div>
         <div class="row">
             {{#if userList}}
                 {{#each userList}}
