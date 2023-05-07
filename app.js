@@ -198,6 +198,30 @@ app.use("/profile", (req, res, next) => {
   }
 });
 
+app.use("/profile/:userId", (req, res, next) => {
+  if (req.session.user) {
+    next();
+  } else {
+    return res.status(403).render("error", {
+      title: "Error",
+      unauthorizedAccess: true,
+      isHide: true
+    });
+  }
+});
+
+app.use("/user/reviews/:userId", (req, res, next) => {
+  if (req.session.user) {
+    next();
+  } else {
+    return res.status(403).render("error", {
+      title: "Forbidden",
+      unauthorizedAccess: true,
+      isHide: true
+    });
+  }
+});
+
 app.use("/projects", (req, res, next) => {
   if (req.session.user) {
     next();

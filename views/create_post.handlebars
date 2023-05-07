@@ -1,52 +1,102 @@
 <div>
-    <p>POST:</p>
-    {{!-- title, description, location, categories, budget, images --}}
-    <div class="result">
-        <form id="create-post-form" method="POST" action="/post/createPost">
-        <label for="titleInput">Title<span class="required">*</span>:</label>
-        <input type="text" name="titleInput" id="titleInput">
-        <br>
-        <label for="descriptionInput">Description<span class="required">*</span>:</label>
-        {{!-- <input type="textArea" name="descriptionInput" id="descriptionInput"> --}}
-        <textarea name="descriptionInput" id="descriptionInput"></textarea>
-        <br>
-        <label for="budgetInput">Budget<span class="required">*</span>:</label>
-        <input type="text" name="budgetInput" id="budgetInput">
-        {{!-- <label for="locationInput">Location:</label>
+  <h1>Create a POST:</h1>
+  {{! title, description, location, categories, budget, images }}
+  <div class="profile-img-box">
+    <img
+      src="/public/images/No_Image_Available.jpg"
+      class="img-radius"
+      id="myImage"
+      alt="User-Profile-Image"
+      width="200"
+      height="200"
+    />
+  </div>
+  <div class="result">
+    <form id="create-post-form" method="POST" action="/post/createPost">
+    {{#if Error}} <p class="alert alert-danger">{{Error}}</p>{{/if}}
+    {{#if Message}}<p class="alert alert-success" id="success">{{Message}}</p>{{/if}}
+    <div id="error" class="alert alert-danger" role="alert" hidden></div>
+      <input
+        type="file"
+        id="myImageInput"
+        name="image"
+        id="input-files"
+        required
+        class="form-control-file border"
+      /><br />
+      <label for="titleInput">Title<span class="required">*</span>:</label>
+      <input type="text" name="titleInput" id="titleInput" />
+      <br />
+      <label for="descriptionInput">Description<span
+          class="required"
+        >*</span>:</label>
+      {{! <input type="textArea" name="descriptionInput" id="descriptionInput"> }}
+      <textarea name="descriptionInput" id="descriptionInput"></textarea>
+      <br />
+      <label for="budgetInput">Budget<span class="required">*</span>:</label>
+      <input type="text" name="budgetInput" id="budgetInput" />
+      {{! <label for="locationInput">Location:</label>
         <input type="text" name="locationInput" id="locationInput">
-        <br> --}}
-        <br>
-        <label for="roleInput">Role<span class="required">*</span>:</label>
-        <select name="roleInput" id="roleInput">
-            <option value="provider">Service Provider</option>
-            <option value="seeker">Service Seeker</option>
-        </select>
-        <div>
-            <label for="categoriesInput">Categories (One or more, up to four)<span class="required">*</span>:</label>
-            <input type="text" name="categoriesInput[]" id="categoriesInput">
-            <input type="text" name="categoriesInput[]" id="categoriesInput">
-            <input type="text" name="categoriesInput[]" id="categoriesInput">
-            <input type="text" name="categoriesInput[]" id="categoriesInput">
-             <br>
-                <label for="Address">Location<span class="required">*</span>:</label>
-                <input class="addr" type="text" name="zipInput" id="zipInput"  maxlength="5" placeholder="zipcode" >
-                <input class="addr" type="text" name="cityInput" id="cityInput" >
-                <input class="addr" type="text" name="stateInput" id="stateInput">
-            <br>
+        <br> }}
+      <br />
+      <label for="roleInput">Role<span class="required">*</span>:</label>
+      <select name="roleInput" id="roleInput">
+        <option value="provider">Service Provider</option>
+        <option value="seeker">Service Seeker</option>
+      </select>
+      <div>
+        <label for="categoriesInput">Categories<span class="required">*</span>:
+          (One or more, up to four)</label>
+        {{! <input type="text" name="categoriesInput[]" id="categoriesInput" />
+        <input type="text" name="categoriesInput[]" id="categoriesInput" />
+        <input type="text" name="categoriesInput[]" id="categoriesInput" />
+        <input type="text" name="categoriesInput[]" id="categoriesInput" />
+        <br /> }}
+        <input
+          type="text"
+          id="categoryInput"
+          list="category-options"
+          placeholder="Enter a category"
+        />
+        <div class="category-container">
+          {{#if notnull}}
+            {{#each objectUser.categories}}
+              <div class="category-box">
+                <span class="category-name">{{this}}</span>
+                <span class="delete-button">x</span>
+              </div>
+            {{/each}}
+          {{/if}}
         </div>
-        
-        <br>
-        <button type="submit">Create</button>
+        <div class="input-group"></div>
+        <input type="hidden" name="categorydata" id="categorydata" />
+        <div class="input-group-append">
+          <button class="btn btn-sm btn-warning" type="button" id="addCategoryButton">
+            <i class="fas fa-plus"></i>
+          </button>
+          </div>
+        </div>
+        <label for="Address">Location<span class="required">*</span>:</label>
+        <input
+          class="addr"
+          type="text"
+          name="zipInput"
+          id="zipInput"
+          maxlength="5"
+          placeholder="zipcode"
+        />
+        <input class="addr" type="text" name="cityInput" id="cityInput" />
+        <input class="addr" type="text" name="stateInput" id="stateInput" />
+        <br />
+      </div>
 
+      <br />
+      <button type="submit">Create</button>
 
-
-        <script>
-            function addCategory() {
-                const input = document.createElement('input');
-                input.type = 'text';
-                input.name = 'items[]';
-            }
-        </script>
-</form>
-</div>
+      <script>
+        function addCategory() { const input = document.createElement('input');
+        input.type = 'text'; input.name = 'items[]'; }
+      </script>
+    </form>
+  </div>
 </div>

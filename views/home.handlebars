@@ -1,37 +1,99 @@
+<div
+  class="main-banner wow fadeIn"
+  id="top"
+  data-wow-duration="1s"
+  data-wow-delay="0.5s"
+>
+  <div class="container">
+    <div class="row">
+      <div class="col-lg-12">
+        <div class="row">
+          <div class="col-lg-6 align-self-center">
+            <div
+              class="left-content show-up header-text wow fadeInLeft"
+              data-wow-duration="1s"
+              data-wow-delay="1s"
+            >
+              <div class="row">
+                <div class="col-lg-12">
+                  <h6>Trade Bridge</h6>
+                  <h2>How Work Should Work</h2>
+                  <p>Forget the old rules. You can have the best people. Right
+                    now. Right here.</p>
+                </div>
+                <div class="col-lg-12">
+                  <div class="border-first-button scroll-to-section">
+                    <a href="/home/provideList">Job Provider</a>
+
+                  </div>
+
+                  <br />
+                  <div class="border-first-button scroll-to-section">
+                    <a href="/seekers">Job Seeker</a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-6">
+            <div
+              class="right-image wow fadeInRight"
+              data-wow-duration="1s"
+              data-wow-delay="0.5s"
+            >
+              <img src="./public/images/slider-dec.png" alt="" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <h1>Welcome to Your Home Page!</h1>
 <p class="error" id="success">{{#if Message}}{{Message}}{{/if}}</p>
     <p class="about">Check out our latest job posts:</p>
-    <a href="/home/provideList" class="see-all">See All Job Providers</a>
-    <br>
+   
     <a href="/post/newPost/createPost" class="create-post">Create a job posting!</a>
     <br>
-    <div class="filter-button">
-            <h3>Filter: </h3>
-            <form method="post" action = "/post/filter" id="filter-form" >
-            <select name="filter" id="filterInput">
-              <option value="provider">Job Provider</option>
-              <option value="seeker">Job Seeker</option>
-              <option value="all">Get All</option>
-            </select>
-            <button type="submit" id="find">Find</button>
-            </form>
+    -->
+<a href="/post/newPost/createPost" class="create-post">Create a job posting!</a>
 
-             {{#each posts}}
-        {{!-- <div class="post-list-box" onclick="location.href='/{{_id}}';"> --}}
-        <div class="post-list-box" data-id="{{_id}}">
-        <div class="post-list-img-box"><img src="../public/images/No_Image_Available.jpg" alt="Post 1 Image"></div>
-        {{!-- <p>{{_id}} id</p> --}}
-        <h2>{{title}}</h2>
-        <p>{{description}}</p>
-        </div>
-         
-      {{/each}}
-      {{#if comment}}
-            <div class="post-comment">
-            <p>comment : {{comment}}</p>
-          </div>
+<div class="filter-button">
+  <h3>Filter: </h3>
+  <form method="post" action="/post/filter" id="filter-form">
+    <select name="filter" id="filterInput">
+      <option value="provider">Job Provider</option>
+      <option value="seeker">Job Seeker</option>
+      <option value="all">Get All</option>
+    </select>
+    <button type="submit" id="find">Find</button>
+  </form>
+
+  {{#each posts}}
+    {{!-- <div class="post-list-box" onclick="location.href='/{{_id}}';"> --}}
+    <div class="post-list-box" data-id="{{_id}}">
+      <div class="post-list-img-box">
+        {{#if images}}
+          <img src={{images}} alt="Post 1 Image" />
+        {{else}}
+          <img
+            src="../public/images/No_Image_Available.jpg"
+            alt="Post 1 Image"
+          />
         {{/if}}
+
       </div>
-    <br>
-    
-    
+      {{!-- <p>{{_id}} id</p> --}}
+      <h2>{{title}}</h2>
+      <p>{{description}}</p>
+    </div>
+
+  {{/each}}
+  {{#if comment}}
+    <div class="post-comment">
+      <p>comment : {{comment}}</p>
+    </div>
+  {{/if}}
+</div>
+<br />

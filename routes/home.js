@@ -19,11 +19,11 @@ router.route("/").get(async (req, res) => {
       message = `Hey ${userSession.firstName}, this is your user ID: ${req.session.user.userID}`;
     } else {
       message = `hey you entered without login!!!, how???`;
-      res.redirect("/login"); // talk with Kaushal for clarification
+      res.redirect("/login"); 
     }
-    let posts = undefined;
-    if (role === "seeker") {
-      posts = await postData.getByRole("provider");
+    let posts;
+    if(role === 'seeker') {
+      posts = await postData.getByRole("provider")
     }
     if (role === "provider") {
       posts = await postData.getByRole("seeker");
@@ -65,7 +65,8 @@ router.route("/myprofile").get(async (req, res) => {
 
 router.route("/provideList").get(async (req, res) => {
   try {
-    const userList = await userData.getUsersByRole("provider");
+    console.log("in porviderList route")
+    const userList = await userData.getUsersBy("provider");
     // console.log(userList)
     res.status(200).render("providerlist", { userList: userList });
   } catch (e) {
@@ -73,6 +74,45 @@ router.route("/provideList").get(async (req, res) => {
     // return res.status(400).render("error", { error: e });
   }
 });
+
+router.route("/provideList/filterByDistance").post(async (req, res) => {
+  try {
+    // console.log("in porviderList filter route")
+    // console.log(req.params,req.body)
+    let user = req.session.user.userSessionData
+    let filterBy = req.body.filter
+    let userList = undefined
+    if(filterBy.toLowerCase() === "distance"){
+      userList = await userData.sortProvidersByDistance(user)
+    }
+    // const userList = await userData.getUsersByRole("provider");
+    // console.log(userList)
+    res.status(200).render("providerlist", { userList: userList });
+  } catch (e) {
+    res.status(400).render("providerlist", { error: e });
+    // return res.status(400).render("error", { error: e });
+  }
+});
+
+router.route("/provideList/searchArea").post(async (req, res) => {
+  try {
+    // console.log("in porviderList search area filter route")
+    // console.log(req.params,req.body)
+    let user = req.session.user.userSessionData
+    let searchArea = req.body.searchAreaInput
+    let userList = undefined
+    
+    userList = await userData.filterProviderBySearchArea(user,searchArea) 
+    // const userList = await userData.getUsersByRole("provider");
+    // console.log(userList)
+    res.status(200).render("providerlist", { userList: userList });
+  } catch (e) {
+    res.status(400).render("providerlist", { error: e });
+    // return res.status(400).render("error", { error: e });
+  }
+});
+
+
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {

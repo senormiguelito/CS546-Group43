@@ -151,8 +151,8 @@ export const checkstate = (state) => {
 export const checkRating = (rating) => {
   isvalid(rating, "rating");
   if (typeof rating !== "number") throw new Error("rating must be a number");
-  if (rating > 5 || rating < 0)
-    throw new Error("rating can not be less than 0 or greater than 5");
+  if (rating > 5 || rating < 1)
+    throw new Error("rating can not be less than 1 or greater than 5");
 };
 
 export const checkValid = (userId) => {
@@ -287,4 +287,21 @@ export const getJoiningDate = () => {
   let day = date.getDate().toString().padStart(2, "0"); // add leading zero
   let joinedDate = `${year}-${month}-${day}`; // format date as "YYYY-MM-DD"
   return joinedDate;
+};
+
+export const checkprospects = (prospects) => {
+  if (!prospects) throw new Error("prospects not provided");
+  // double check with categories, how we want it input as, when taking in the 'getUsersByCategory' func
+  if (!Array.isArray(prospects))
+    throw new Error("Update: prospects must be an array");
+  
+  for (let i in prospects) {
+    if (typeof prospects[i] !== "string")
+      throw new Error("Update: each prospect must be a string");
+    prospects[i] = prospects[i].trim();
+    for (let j in prospects[i]) {
+      if (typeof prospects[i][j] === "number")
+        throw new Error("Update: invalid prospect response");
+    }
+  }
 };
