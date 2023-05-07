@@ -164,21 +164,25 @@ const categories = [];
 const img = document.querySelector("#myImage");
 const imgInput = document.querySelector("#myImageInput");
 
-imgInput.addEventListener("change", () => {
-  let reader = new FileReader();
-  reader.readAsDataURL(imgInput.files[0]);
-  reader.addEventListener("load", () => {
-    img.src = reader.result;
+if (imgInput) {
+  imgInput.addEventListener("change", () => {
+    let reader = new FileReader();
+    reader.readAsDataURL(imgInput.files[0]);
+    reader.addEventListener("load", () => {
+      img.src = reader.result;
+    });
   });
-});
+}
 
 const createPostForm = document.getElementById("create-post-form");
 
 // Listen for the form's "load" event
-createPostForm.addEventListener("load", () => {
-  // Clear the session storage
-  sessionStorage.clear();
-});
+if (createPostForm) {
+  createPostForm.addEventListener("load", () => {
+    // Clear the session storage
+    sessionStorage.clear();
+  });
+}
 
 const inputs = document.querySelectorAll("#signup-form input");
 

@@ -22,7 +22,7 @@
             <div class="post-comment">
               {{!-- NOTE FOR KAUSHAL: below id is comment id, you can get the user's id from comment id from the function I made in 
               posts.js which is getByCommentId and from that you can get post and also user id which you can use to redirect my profile to appropriate profile --}}
-                <p><a href = "/profile/{{_id}}"> {{userFirstName}} {{userLastName}}</a> : {{comment}}
+                <p><a href = "/comment/profile/{{_id}}"> {{userFirstName}} {{userLastName}}</a> : {{comment}}
                 <a href="/post/{{_id}}/deleteComment" id="delete-comment"> Delete</a>
                 {{!-- <script>
                   let deleteComment = document.getElementById("delete-link");

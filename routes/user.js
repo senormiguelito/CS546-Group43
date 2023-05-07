@@ -180,7 +180,7 @@ router.route("/seekers").get(async (req, res) => {
     // console.log("in seeker")
     const userList = await userData.getUsersBy("seeker");
     // console.log(userList)
-    res.render("seekerList", { userList: userList });   // handlebars [age]
+    res.render("seekerList", { userList: userList }); // handlebars [age]
   } catch (e) {
     res.render("seekerList", { error: e });
     // return res.status(400).render("error", { error: e });
@@ -191,11 +191,11 @@ router.route("/seekers/filterSeekerByDistance").post(async (req, res) => {
   try {
     // console.log("in seekersList filter route")
     // console.log(req.params,req.body)
-    let user = req.session.user.userSessionData
-    let filterBy = req.body.filter
-    let userList = undefined
-    if(filterBy.toLowerCase() === "distance"){
-      userList = await userData.sortSeekersByDistance(user)
+    let user = req.session.user.userSessionData;
+    let filterBy = req.body.filter;
+    let userList = undefined;
+    if (filterBy.toLowerCase() === "distance") {
+      userList = await userData.sortSeekersByDistance(user);
     }
     // const userList = await userData.getUsersByRole("provider");
     // console.log(userList)
@@ -210,10 +210,10 @@ router.route("/seekers/searchArea").post(async (req, res) => {
   try {
     // console.log("in seekersList filter route")
     // console.log(req.params,req.body)
-    let user = req.session.user.userSessionData
-    let searchArea = req.body.searchAreaInput
-    let userList = await userData.filterSeekerBySearchArea(user,searchArea) 
-    
+    let user = req.session.user.userSessionData;
+    let searchArea = req.body.searchAreaInput;
+    let userList = await userData.filterSeekerBySearchArea(user, searchArea);
+
     // const userList = await userData.getUsersByRole("provider");
     // console.log(userList)
     res.status(200).render("seekerlist", { userList: userList });
@@ -222,68 +222,93 @@ router.route("/seekers/searchArea").post(async (req, res) => {
     // return res.status(400).render("error", { error: e });
   }
 });
-
-
 router.route("/profile/:userId").get(async (req, res) => {
   // access a profile page
-  const commentId = req.params.userId;
-  console.log("commentId:")
-  console.log(commentId);
-  const post = await postData.getByCommentId(commentId);
-  // console.log(post);
-  // console.log(commentId);
-  console.log("req.session.user:");
-  console.log(req.session.user);
-  
-  let userId = undefined;
-  post.comments.forEach(element => {
-    if (element._id.toString() === commentId) {
-      userId = element.userId;
-    }
-  });
- //6455c77bddd0e46d4dd9af88 need this id over here
-  // const userId = post.comments.userId;   // user who made commnet
-  console.log("comment userID: ")
+
+  const userId = req.params.userId;
+  console.log(userId);
 
   try {
     if (!userId) throw new Error("no userId specified");
-    console.log(userId);
     h.checkId(userId);
   } catch (e) {
-    console.log("why inside catch?!")
     return res.status(400).redirect("/home");
   }
   try {
     if (req.session.user) {
-      console.log("inside good try/catch");
-      let user = await userData.getUser(userId);  // user who posted the comment
-      // let profileToAccessById = user._id.toString();
-      // profileToAccessById = profileToAccessById.trim();
+      const user = await userData.getUser(userId);
+      let profileToAccessById = user._id.toString();
+      profileToAccessById = profileToAccessById.trim();
+
       // console.log(req.session.user.userID.toString());
       // console.log(req.session.user.userSessionData._id.toString());
-      if (!user) throw new Error("no userId specified");
-      user._id = user._id.toString();
 
-      let currentUserId = req.session.user.userID;
+      let currentUserId = req.session.user.userID.toString();
       currentUserId = currentUserId.trim();
-      console.log("currentUserId:");
-      console.log(currentUserId);
 
-      if (currentUserId === userId) {
+      if (!user) throw new Error("User profile was not found");
+
+      if (currentUserId === profileToAccessById) {
         //if this user clicks on view profile and its their profile:
         return res.redirect("/home/myprofile");
-      } else {
-        console.log("lets NOT go home")
-        console.log(user);
-          res.status(200).render("profile", { title: "Profile", user: user });
-        }
-      } else {
-        res.redirect("/login"); // must be logged in to interact with posts
       }
+      res.status(200).render("profile", { title: "Profile", user: user });
+      // res.status(200).render('profile', { user: user });    // now we can see just what tha hell is goin on
+    } else {
+      res.redirect("/login"); // must be logged in to interact with posts
+    }
   } catch (e) {
     return res.status(404).render("error", { error: e });
   }
 });
 
+router.route("/comment/profile/:commentId").get(async (req, res) => {
+  // access a profile page
+  try {
+    const commentId = req.params.commentId;
+    const post = await postData.getByCommentId(commentId);
+    // console.log("req.session.user:");
+    // console.log(req.session.user);
+
+    let userId = undefined;
+    post.comments.forEach((element) => {
+      if (element._id.toString() === commentId) {
+        userId = element.userId;
+      }
+    });
+
+    try {
+      if (!userId) throw new Error("no userId specified");
+
+      h.checkId(userId);
+    } catch (e) {
+      return res.status(400).redirect("/home");
+    }
+    try {
+      if (req.session.user) {
+        let user = await userData.getUser(userId); // user who posted the comment
+        if (!user) throw new Error("no userId specified");
+        user._id = user._id.toString();
+
+        let currentUserId = req.session.user.userID;
+        currentUserId = currentUserId.trim();
+
+        if (currentUserId === userId) {
+          //if this user clicks on view profile and its their profile:
+          return res.redirect("/home/myprofile");
+        } else {
+          console.log("lets NOT go home");
+          res.status(200).render("profile", { title: "Profile", user: user });
+        }
+      } else {
+        res.redirect("/login"); // must be logged in to interact with posts
+      }
+    } catch (e) {
+      return res.status(404).render("error", { error: e });
+    }
+  } catch (e) {
+    return res.status(404).render("error", { error: e });
+  }
+});
 
 export default router;
