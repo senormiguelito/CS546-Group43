@@ -6,10 +6,29 @@ postListBoxes.forEach((postListBox) => {
   });
 });
 
-const mypostListBoxes = document.querySelectorAll("#myposts");
-mypostListBoxes.forEach((postListBox) => {
-  postListBox.addEventListener("click", () => {
-    const postId = postListBox.getAttribute("data-id");
-    window.location.href = `/post/${postId}`;
+
+const mmodal = document.getElementById("mmodal");
+const closeBtn = document.getElementsByClassName("close")[0];
+
+  document
+    .querySelector("a[href='#mmodal']")
+    .addEventListener("click", function () {
+      console.log('clicked')
+      mmodal.style.display = "block";
+    });
+
+  closeBtn.addEventListener("click", function () {
+    mmodal.style.display = "none";
   });
-});
+
+  document.getElementById("send-btn").addEventListener("click", function () {
+    mmodal.style.display = "none";
+  });
+
+
+  const dropdownContent = document.querySelector(".dropdown-content");
+
+  // Add click event listener to close the dropdown content when the send button is clicked
+  document.getElementById("send-btn").addEventListener("click", function() {
+    dropdownContent.style.display = "none";
+  });

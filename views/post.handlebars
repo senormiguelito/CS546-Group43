@@ -56,11 +56,11 @@
 <br>
 <a href="map" class="see-all">map</a>
 <br>
-<a href="#modal">Contact</a>
+{{!-- <a href="#mmodal">Contact</a>
 	
-	<!-- Create the modal with input box and send button -->
-	<div id="modal" class="modal">
-		<div class="modal-content">
+	<!-- Create the mmodal with input box and send button -->
+	<div id="mmodal" class="mmodal">
+		<div class="mmodal-content">
 			<span class="close">&times;</span>
 			<h2>Contact</h2>
       <form method = "POST" action ='/home/messages/'>
@@ -72,7 +72,18 @@
 			
 			{{!-- <button id="send-btn">Send</button> --}}
 		</div>
-	</div>
+	</div> --}}
+
+  <div class="dropdown">
+  <button class="dropbtn">Reply</button>
+  <div class="dropdown-content">
+     <form method = "POST" action ='/home/messages/'>
+        <input type="text" placeholder="Enter your message" name = "message" id = "message"><br><br>
+        <input type="hidden" name = "recieverId" id = "recieverId" value = "{{senderId}}">
+        <input type="submit" value="Send" id = "send-btn">
+      </form>
+  </div>
+</div>
 
 <footer class="bottom-bar">
   <nav class="navbar navbar-expand-lg bg-body-tertiary">

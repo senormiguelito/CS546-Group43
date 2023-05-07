@@ -421,51 +421,6 @@ if (loginForm) {
   });
 }
 
-// // Get the modal
-// const dltmodal = document.getElementById("myModal");
-// const btn = document.getElementById("myBtn");
-// const span = document.getElementsByClassName("close")[0];
-
-// // When the user clicks the button, open the modal
-// if (dltmodal) {
-//   if (btn) {
-//     btn.onclick = function () {
-//       dltmodal.style.display = "block";
-//     };
-//   }
-
-//   // When the user clicks on <span> (x), close the modal
-//   if (span) {
-//     span.onclick = function () {
-//       dltmodal.style.display = "none";
-//     };
-//   }
-
-//   // When the user clicks anywhere outside of the modal, close it
-//   window.onclick = function (event) {
-//     if (event.target == modal) {
-//       dltmodal.style.display = "none";
-//     }
-//   };
-// }
-
-const modal = document.getElementById("modal");
-const closeBtn = document.getElementsByClassName("close")[0];
-if (modal) {
-  document
-    .querySelector("a[href='#modal']")
-    .addEventListener("click", function () {
-      modal.style.display = "block";
-    });
-
-  closeBtn.addEventListener("click", function () {
-    modal.style.display = "none";
-  });
-
-  document.getElementById("send-btn").addEventListener("click", function () {
-    modal.style.display = "none";
-  });
-}
 if (editprofileForm) {
   editprofileForm.addEventListener("submit", (event) => {
     event.preventDefault();
