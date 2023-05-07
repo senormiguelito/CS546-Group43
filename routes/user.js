@@ -1,8 +1,9 @@
 import { Router } from "express";
 const router = Router();
 import * as h from "../helpers.js";
-import { postData, userData } from "../data/index.js";
-
+import { userData } from "../data/index.js";
+import { postData } from "../data/index.js";
+import { reviewData } from "../data/index.js";
 import xss from "xss";
 
 router.route("/").get(async (req, res) => {
@@ -226,42 +227,63 @@ router.route("/seekers/searchArea").post(async (req, res) => {
 router.route("/profile/:userId").get(async (req, res) => {
   // access a profile page
   const commentId = req.params.userId;
+  console.log("commentId:")
+  console.log(commentId);
   const post = await postData.getByCommentId(commentId);
+  // console.log(post);
+  // console.log(commentId);
+  console.log("req.session.user:");
+  console.log(req.session.user);
+  
+  let userId = undefined;
+  post.comments.forEach(element => {
+    if (element._id.toString() === commentId) {
+      userId = element.userId;
+    }
+  });
  //6455c77bddd0e46d4dd9af88 need this id over here
-  console.log(post.userId);
-  const userId = post.userId;
+  // const userId = post.comments.userId;   // user who made commnet
+  console.log("comment userID: ")
+
   try {
     if (!userId) throw new Error("no userId specified");
-    h.checkValid(userId);
+    console.log(userId);
+    h.checkId(userId);
   } catch (e) {
+    console.log("why inside catch?!")
     return res.status(400).redirect("/home");
   }
   try {
     if (req.session.user) {
-      const user = await userData.getUser(userId);
-      let profileToAccessById = user._id.toString();
-      profileToAccessById = profileToAccessById.trim();
-
+      console.log("inside good try/catch");
+      let user = await userData.getUser(userId);  // user who posted the comment
+      // let profileToAccessById = user._id.toString();
+      // profileToAccessById = profileToAccessById.trim();
       // console.log(req.session.user.userID.toString());
       // console.log(req.session.user.userSessionData._id.toString());
+      if (!user) throw new Error("no userId specified");
+      user._id = user._id.toString();
 
-      let currentUserId = req.session.user.userID.toString();
+      let currentUserId = req.session.user.userID;
       currentUserId = currentUserId.trim();
+      console.log("currentUserId:");
+      console.log(currentUserId);
 
-      if (!user) throw new Error("User profile was not found");
-
-      if (currentUserId === profileToAccessById) {
+      if (currentUserId === userId) {
         //if this user clicks on view profile and its their profile:
         return res.redirect("/home/myprofile");
+      } else {
+        console.log("lets NOT go home")
+        console.log(user);
+          res.status(200).render("profile", { title: "Profile", user: user });
+        }
+      } else {
+        res.redirect("/login"); // must be logged in to interact with posts
       }
-      res.status(200).render("profile", { title: "Profile", user: user });
-      // res.status(200).render('profile', { user: user });    // now we can see just what tha hell is goin on
-    } else {
-      res.redirect("/login"); // must be logged in to interact with posts
-    }
   } catch (e) {
     return res.status(404).render("error", { error: e });
   }
 });
+
 
 export default router;

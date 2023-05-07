@@ -8,6 +8,16 @@
 
 FYI I am going to .gitignore public/images
 
+## Saturday 12:30
+
+Input sanitization is easy. xss wrap every req.body --> BEWARE OF ARRAYS
+
+* xss(req.body) will turn anything inside parentheses into a string
+
+### providerList.handlebars
+
+need to link 
+
 ## Update Friday Night/Saturday morning
 
 New design is badass. Profile & edit profile looks sooo good.

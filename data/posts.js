@@ -125,9 +125,11 @@ export const remove = async (id) => {
   return result;
 };
 
-export const update = async (postId, userId, title, description, location_city, location_state, location_zip_code, categories, budget, images) => {
+export const update = async (postId, userId, title, description, location_city, location_state, location_zip_code, categories, budget, images, prospects) => {
+    //function tweak: changed 'seekerId' param to 'userId'
+  
   h.checkId(postId);
-  h.checkValid(userId)
+  h.checkId(seekerId);
   h.checkTitle(title);
   h.checkDescription(description);
   h.checkcity(location_city);
@@ -135,30 +137,32 @@ export const update = async (postId, userId, title, description, location_city, 
   h.checkzipcode(location_zip_code);
   h.checkbudget(budget);
 
+//  h.checkprospects(prospects);
+
 
  
   console.log("In create post data ")
   //this is different than helper function. don't delete it.
   if (!categories) throw new Error("categories not provided");
-
-  if (!Array.isArray(categories))
-    throw new Error("Update: categories must be an array");
-
-  const filteredCategories = categories.filter((element) => {
-    return element !== "";
-  });
-
-  if (filteredCategories.length < 1)
-    throw new Error("Update: you must supply at least 1 category");
-  for (let i in filteredCategories) {
-    if (typeof filteredCategories[i] !== "string")
-      throw new Error("Update: each category must be a string");
-    filteredCategories[i] = filteredCategories[i].trim();
-    for (let j in filteredCategories[i]) {
-      if (typeof filteredCategories[i][j] === "number")
-        throw new Error("Update: invalid category response");
-    }
-  }
+        
+  // if (!Array.isArray(categories))
+  //   throw new Error("Update: categories must be an array");
+    
+  // const filteredCategories = categories.filter(element => {
+  //   return element !== '';
+  // });
+  
+  // if (filteredCategories.length < 1)
+  //   throw new Error("Update: you must supply at least 1 category");
+  // for (let i in filteredCategories) {
+  //   if (typeof filteredCategories[i] !== "string")
+  //     throw new Error("Update: each category must be a string");
+  //   filteredCategories[i] = filteredCategories[i].trim();
+  //   for (let j in filteredCategories[i]) {
+  //     if (typeof filteredCategories[i][j] === "number")
+  //     throw new Error("Update: invalid category response");
+  //   }
+  // }
   //needs to check if images have valid img type
 
   postId = postId.trim();
@@ -173,16 +177,8 @@ export const update = async (postId, userId, title, description, location_city, 
 
   if (oldPost.userId !== userId) throw "You can only update a post which you've created";
   // postId, seekerId, title, description, location, categories, budget, images
-  if (
-    oldPost.title === title &&
-    oldPost.description === description &&
-    oldPost.location_city === location_city &&
-    oldPost.location_state === location_state &&
-    oldPost.location_zip_code === location_zip_code &&
-    JSON.stringify(oldPost.categories) === JSON.stringify(categories) &&
-    oldPost.budget === budget
-  )
-    throw "You must change part of the document to submit an update request";
+  if (oldPost.title === title && oldPost.description === description && oldPost.location_city === location_city && oldPost.location_state === location_state && oldPost.location_zip_code === location_zip_code && JSON.stringify(oldPost.categories) === JSON.stringify(categories) && oldPost.budget === budget)
+    throw 'You must change something to submit an update request';
 
   const newPostsInfo = {
     userId: userId,
@@ -195,6 +191,7 @@ export const update = async (postId, userId, title, description, location_city, 
     budget: budget,
     createdOrUpdatedAt: d1.toISOString(),
     images: [],
+    prospects: prospects
   };
 
   let newPost = await postsCollection.findOneAndReplace(
@@ -222,7 +219,7 @@ export const getByCommentId = async (id) => {
 export const getByRole = async (role) => {
   // h.checkId(id);
   // id = id.trim();
-  console.log("in get by role data");
+  h.checkrole(role);
 
   let postList = await postsCollection.find({}).toArray();
   postList = postList.map((element) => {
@@ -236,7 +233,7 @@ export const getByRole = async (role) => {
   postList = postList.filter(function (element) {
     return element !== undefined;
   });
-  //  console.log(postList, "postList");
+//  console.log(postList, "postList");
   return postList;
 
   // const postsCollection = await posts();

@@ -16,6 +16,7 @@
         <h2>{{post.title}}</h2>
         <p>{{post.description}}</p>
         </div>
+
       {{#if comms}}
         {{#each comms}}
             <div class="post-comment">
@@ -36,7 +37,7 @@
             </div>
         {{/each}}
         {{/if}}
-
+        <div>{{interestCount}} people are interested in this project!</div>
         <div class="comment-box">
             <form method="post" action = "/post/{{post._id}}/comment" id="comment-form" >
             <label>Add comment</label>
@@ -73,6 +74,13 @@
 		</div>
 	</div>
 
-<br>
-<a href="/providers" class="see-all">See All Job Providers</a>
-<br>
+<footer class="bottom-bar">
+  <nav class="navbar navbar-expand-lg bg-body-tertiary">
+    <div class="container-fluid">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item"><a href="/home/provideList" class="see-all">See All Job Providers</a></li>
+        <li class="nav-item"><a href="/seekers" class="see-all">See All Job Seekers</a></li>
+      </ul>
+    </div>
+  </nav>
+</footer>

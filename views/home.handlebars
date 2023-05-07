@@ -56,16 +56,19 @@
    
     <a href="/post/newPost/createPost" class="create-post">Create a job posting!</a>
     <br>
-    <div class="filter-button">
-            <label>Filter: </label>
-            <form method="post" action = "/post/filter" id="filter-form" >
-            <select name="filter" id="filterInput">
-              <option value="provider">Job Provider</option>
-              <option value="seeker">Job Seeker</option>
-              <option value="all">Get All</option>
-            </select>
-            <button type="submit" id="find">Find</button>
-            </form>
+    -->
+<a href="/post/newPost/createPost" class="create-post">Create a job posting!</a>
+
+<div class="filter-button">
+  <h3>Filter: </h3>
+  <form method="post" action="/post/filter" id="filter-form">
+    <select name="filter" id="filterInput">
+      <option value="provider">Job Provider</option>
+      <option value="seeker">Job Seeker</option>
+      <option value="all">Get All</option>
+    </select>
+    <button type="submit" id="find">Find</button>
+  </form>
 
   {{#each posts}}
     {{!-- <div class="post-list-box" onclick="location.href='/{{_id}}';"> --}}

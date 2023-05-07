@@ -19,11 +19,11 @@ router.route("/").get(async (req, res) => {
       message = `Hey ${userSession.firstName}, this is your user ID: ${req.session.user.userID}`;
     } else {
       message = `hey you entered without login!!!, how???`;
-      res.redirect("/login"); // talk with Kaushal for clarification
+      res.redirect("/login"); 
     }
-    let posts = undefined;
-    if (role === "seeker") {
-      posts = await postData.getByRole("provider");
+    let posts;
+    if(role === 'seeker') {
+      posts = await postData.getByRole("provider")
     }
     if (role === "provider") {
       posts = await postData.getByRole("seeker");

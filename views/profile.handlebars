@@ -12,6 +12,24 @@
                   </div>
                   <h6 class="f-w-600">{{user.firstName}} {{user.lastName}}</h6>
                   <p>{{user.role}}</p>
+                  <div class="profile-contact-container">
+                    <a href="#modal" class="profile-contact-button">Contact</a>
+
+                    <!-- Create the modal with input box and send button -->
+                    <div id="modal" class="modal">
+                      <div class="modal-content">
+                        <span class="close">&times;</span>
+                        <h2>Contact {{user.firstName}}</h2>
+                        <form method="POST" action='/home/messages/'>
+                          <input type="text" placeholder="Enter your message" name="message" id="message"><br><br>
+                          {{!-- sending ID as a hidden field --}}
+                          <input type="hidden" name="recieverId" id="recieverId" value="{{user._id}}">
+                          <input type="submit" value="Send" id="send-btn">
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+
                   <i class=" mdi mdi-square-edit-outline feather icon-edit m-t-10 f-16"></i>
                 </div>
               </div>
@@ -65,7 +83,7 @@
                       <h6 class="text-muted f-w-400">{{user.location_state}}</h6>
                     </div>
                     <div class="col-sm-3">
-                      <h5 class="m-b-10 f-w-600">Zipcode:</h5>
+                      <h5 class="m-b-10 f-w-600">Zip Code:</h5>
                       <h6 class="text-muted f-w-400">{{user.location_zip_code}}</h6>
                     </div>
                   </div>
@@ -81,40 +99,29 @@
                   </div>
                 </div>
 
+                <div class="card-block">
+                  <h6 class="m-b-20 p-b-5 b-b-default f-w-600">Rating and Review</h6>
+                  <form method="POST" action="/user/reviews/{{user.id}}">
+                    <div class="form-group">
+                      <label for="rating">Rating:</label>
+                      <input type="number" class="form-control" id="rating" name="rating" min="1" max="5" maxlength="1" required>
+                    </div>
+                    <div class="form-group">
+                      <label for="review">Review:</label>
+                      <textarea class="form-control" id="review" name="review" rows="3" required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                  </form>
+                </div>
+                <div class="card-block">
+                  <h6 class="m-b-20 p-b-5 b-b-default f-w-600"><a href="/user/reviews/{{user.id}}/allReviews">View All Reviews Left On {{user.firstName}}!</a></h6>
+                  <form method="GET" action="/user/reviews/{{user.id}}/allReviews"></form>
+                </div>
+
               </div>
             </div>
           </div>
         </div>
       </div>
-      {{!-- <div class="user-details">
-        <p>Name: {{user.firstName}} {{user.lastName}}</p>
-        <p>Email: {{user.emailAddress}}</p>
-        <p>Phone Number: {{user.phoneNumber}}</p>
-        <p>Role: {{user.role}}</p>
-        <p>Location: {{user.location_city}}, {{user.location_state}} {{user.location_zip_code}}</p>
-        <p>Categories: {{user.categories}}</p>
-        <p>Bio: {{user.bio}}</p>
-        <p>Reviews: {{user.reviews}}</p>
-        <p>Projects: {{user.projects}}</p>
-        <p>Joining Date: {{user.joiningDate}}</p>  
-      </div> --}}
-      <a href="#modal">Contact</a>
-	
-	<!-- Create the modal with input box and send button -->
-	<div id="modal" class="modal">
-		<div class="modal-content">
-			<span class="close">&times;</span>
-			<h2>Contact</h2>
-      <form method = "POST" action ='/home/messages/'>
-        <input type="text" placeholder="Enter your message" name = "message" id = "message"><br><br>
-        {{!-- sending ID as a hidden field --}}
-        <input type="hidden" name = "recieverId" id = "recieverId" value = "{{user._id}}">
-        <input type="submit" value="Send" id = "send-btn">
-      </form>
-			
-			{{!-- <button id="send-btn">Send</button> --}}
-		</div>
 	</div>
-    </div>
-    </div>
-  </div>
+</div>
