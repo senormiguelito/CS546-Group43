@@ -261,7 +261,7 @@ textarea {
   text-decoration: underline;
 }
 
-.modal {
+.mmodal {
   display: none;
   position: fixed;
   z-index: 1;
@@ -273,7 +273,7 @@ textarea {
   background-color: rgba(0,0,0,0.4);
 }
 
-.modal-content {
+.mmodal-content {
   background-color: white;
   margin: 10% auto;
   padding: 20px;
@@ -465,4 +465,38 @@ p {
 .btn-primary{
   --bs-btn-bg: #f9be45;
   --bs-btn-border-color: #f9be45
+}
+
+
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+.dropdown-content {
+  display: none;
+  position: absolute;
+  min-width: 160px;
+  z-index: 1;
+}
+
+.dropdown-content input {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+}
+
+.dropdown-content button {
+  width: 100%;
+  padding: 8px 16px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+.dropdown:hover .dropdown-content {
+  display: block;
 }

@@ -329,23 +329,7 @@ if (loginForm) {
   });
 }
 
-const modal = document.getElementById("modal");
-const closeBtn = document.getElementsByClassName("close")[0];
-if (modal) {
-  document
-    .querySelector("a[href='#modal']")
-    .addEventListener("click", function () {
-      modal.style.display = "block";
-    });
 
-  closeBtn.addEventListener("click", function () {
-    modal.style.display = "none";
-  });
-
-  document.getElementById("send-btn").addEventListener("click", function () {
-    modal.style.display = "none";
-  });
-}
 if (editprofileForm) {
   editprofileForm.addEventListener("submit", (event) => {
     event.preventDefault();

@@ -86,35 +86,18 @@
           </div>
         </div>
       </div>
-      {{!-- <div class="user-details">
-        <p>Name: {{user.firstName}} {{user.lastName}}</p>
-        <p>Email: {{user.emailAddress}}</p>
-        <p>Phone Number: {{user.phoneNumber}}</p>
-        <p>Role: {{user.role}}</p>
-        <p>Location: {{user.location_city}}, {{user.location_state}} {{user.location_zip_code}}</p>
-        <p>Categories: {{user.categories}}</p>
-        <p>Bio: {{user.bio}}</p>
-        <p>Reviews: {{user.reviews}}</p>
-        <p>Projects: {{user.projects}}</p>
-        <p>Joining Date: {{user.joiningDate}}</p>  
-      </div> --}}
-      <a href="#modal">Contact</a>
-	
-	<!-- Create the modal with input box and send button -->
-	<div id="modal" class="modal">
-		<div class="modal-content">
-			<span class="close">&times;</span>
-			<h2>Contact</h2>
-      <form method = "POST" action ='/home/messages/'>
+      
+
+  <div class="dropdown">
+  <button class="dropbtn">Contact</button>
+  <div class="dropdown-content">
+     <form method = "POST" action ='/home/messages/'>
         <input type="text" placeholder="Enter your message" name = "message" id = "message"><br><br>
-        {{!-- sending ID as a hidden field --}}
-        <input type="hidden" name = "recieverId" id = "recieverId" value = "{{user._id}}">
+        <input type="hidden" name = "recieverId" id = "recieverId" value = "{{senderId}}">
         <input type="submit" value="Send" id = "send-btn">
       </form>
-			
-			{{!-- <button id="send-btn">Send</button> --}}
-		</div>
-	</div>
+  </div>
+</div>
     </div>
     </div>
   </div>
