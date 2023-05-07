@@ -81,17 +81,15 @@ export const getAllPostsByUser = async (userId) => {
   if (!ObjectId.isValid(userId)) throw new Error("invalid userId");
   userId = userId.trim();
 
-  let posts = await postsCollection
-    .find({ userId: new ObjectId(userId) })
-    .toArray(); //gets all post with the userId parameter in
+  let posts = await postsCollection.find({ userId: userId }).toArray(); //gets all post with the userId parameter in
   console.log(posts);
   if (!posts) {
     return [];
   } else {
-    posts = posts.map((post) => {
+    posts.forEach((post) => {
       post._id = post._id.toString();
-      return post;
     });
+    return posts;
     // return posts;
   }
 };
@@ -125,9 +123,21 @@ export const remove = async (id) => {
   return result;
 };
 
-export const update = async (postId, userId, title, description, location_city, location_state, location_zip_code, categories, budget, images, prospects) => {
-    //function tweak: changed 'seekerId' param to 'userId'
-  
+export const update = async (
+  postId,
+  userId,
+  title,
+  description,
+  location_city,
+  location_state,
+  location_zip_code,
+  categories,
+  budget,
+  images,
+  prospects
+) => {
+  //function tweak: changed 'seekerId' param to 'userId'
+
   h.checkId(postId);
   h.checkId(seekerId);
   h.checkTitle(title);
@@ -137,21 +147,19 @@ export const update = async (postId, userId, title, description, location_city, 
   h.checkzipcode(location_zip_code);
   h.checkbudget(budget);
 
-//  h.checkprospects(prospects);
+  //  h.checkprospects(prospects);
 
-
- 
-  console.log("In create post data ")
+  console.log("In create post data ");
   //this is different than helper function. don't delete it.
   if (!categories) throw new Error("categories not provided");
-        
+
   // if (!Array.isArray(categories))
   //   throw new Error("Update: categories must be an array");
-    
+
   // const filteredCategories = categories.filter(element => {
   //   return element !== '';
   // });
-  
+
   // if (filteredCategories.length < 1)
   //   throw new Error("Update: you must supply at least 1 category");
   // for (let i in filteredCategories) {
@@ -172,13 +180,22 @@ export const update = async (postId, userId, title, description, location_city, 
   location_city = location_city.trim();
   location_state = location_state.trim();
   location_zip_code = location_zip_code.trim();
-  
+
   let oldPost = await get(postId);
 
-  if (oldPost.userId !== userId) throw "You can only update a post which you've created";
+  if (oldPost.userId !== userId)
+    throw "You can only update a post which you've created";
   // postId, seekerId, title, description, location, categories, budget, images
-  if (oldPost.title === title && oldPost.description === description && oldPost.location_city === location_city && oldPost.location_state === location_state && oldPost.location_zip_code === location_zip_code && JSON.stringify(oldPost.categories) === JSON.stringify(categories) && oldPost.budget === budget)
-    throw 'You must change something to submit an update request';
+  if (
+    oldPost.title === title &&
+    oldPost.description === description &&
+    oldPost.location_city === location_city &&
+    oldPost.location_state === location_state &&
+    oldPost.location_zip_code === location_zip_code &&
+    JSON.stringify(oldPost.categories) === JSON.stringify(categories) &&
+    oldPost.budget === budget
+  )
+    throw "You must change something to submit an update request";
 
   const newPostsInfo = {
     userId: userId,
@@ -191,17 +208,18 @@ export const update = async (postId, userId, title, description, location_city, 
     budget: budget,
     createdOrUpdatedAt: d1.toISOString(),
     images: [],
-    prospects: prospects
+    prospects: prospects,
   };
 
   let newPost = await postsCollection.findOneAndReplace(
     { _id: new ObjectId(postId) },
     newPostsInfo
   );
-    
-  if (newPost.lastErrorObject.n === 0) throw [404, `Could not update the post with id ${postId}`];
-  
-  return newPost.value; 
+
+  if (newPost.lastErrorObject.n === 0)
+    throw [404, `Could not update the post with id ${postId}`];
+
+  return newPost.value;
 };
 
 export const getByCommentId = async (id) => {
@@ -215,6 +233,18 @@ export const getByCommentId = async (id) => {
   // post._id = post._id.toString()
   return post;
 };
+
+// export const getpostByPostId = async (userId) => {
+//   h.checkId(userId);
+//   id = id.trim();
+//   const post = await postsCollection.findOne({
+//     userId: { $elemMatch: { _id: userId } },
+//   });
+
+//   if (!post) throw "No band with that id";
+//   // post._id = post._id.toString()
+//   return post;
+// };
 
 export const getByRole = async (role) => {
   // h.checkId(id);
@@ -233,7 +263,7 @@ export const getByRole = async (role) => {
   postList = postList.filter(function (element) {
     return element !== undefined;
   });
-//  console.log(postList, "postList");
+  //  console.log(postList, "postList");
   return postList;
 
   // const postsCollection = await posts();
@@ -243,4 +273,3 @@ export const getByRole = async (role) => {
 
   // return post;
 };
-

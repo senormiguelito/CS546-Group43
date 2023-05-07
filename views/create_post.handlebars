@@ -12,7 +12,7 @@
     />
   </div>
   <div class="result">
-    <form id="create-post-form" method="POST" action="/post/createPost">
+    <form id="create-post-form" method="POST" action="/post/createPost" enctype="multipart/form-data">
     {{#if Error}} <p class="alert alert-danger">{{Error}}</p>{{/if}}
     {{#if Message}}<p class="alert alert-success" id="success">{{Message}}</p>{{/if}}
     <div id="error" class="alert alert-danger" role="alert" hidden></div>
@@ -21,9 +21,9 @@
         id="myImageInput"
         name="image"
         id="input-files"
-        required
+        accept=".jpg, .jpeg, .png"
         class="form-control-file border"
-      /><br />
+      /><span class="required">*</span><br />
       <label for="titleInput">Title<span class="required">*</span>:</label>
       <input type="text" name="titleInput" id="titleInput" />
       <br />
@@ -34,7 +34,7 @@
       <textarea name="descriptionInput" id="descriptionInput"></textarea>
       <br />
       <label for="budgetInput">Budget<span class="required">*</span>:</label>
-      <input type="text" name="budgetInput" id="budgetInput" />
+      <input type="text" name="budgetInput" id="budgetInput" pattern="\d*" maxlength="10"/>
       {{! <label for="locationInput">Location:</label>
         <input type="text" name="locationInput" id="locationInput">
         <br> }}
@@ -47,14 +47,10 @@
       <div>
         <label for="categoriesInput">Categories<span class="required">*</span>:
           (One or more, up to four)</label>
-        {{! <input type="text" name="categoriesInput[]" id="categoriesInput" />
-        <input type="text" name="categoriesInput[]" id="categoriesInput" />
-        <input type="text" name="categoriesInput[]" id="categoriesInput" />
-        <input type="text" name="categoriesInput[]" id="categoriesInput" />
-        <br /> }}
         <input
           type="text"
           id="categoryInput"
+          
           list="category-options"
           placeholder="Enter a category"
         />
@@ -92,11 +88,6 @@
 
       <br />
       <button type="submit">Create</button>
-
-      <script>
-        function addCategory() { const input = document.createElement('input');
-        input.type = 'text'; input.name = 'items[]'; }
-      </script>
     </form>
   </div>
 </div>
