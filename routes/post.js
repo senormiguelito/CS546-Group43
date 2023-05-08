@@ -64,7 +64,7 @@ const upload = multer({ storage: storage });
 router.route("/createPost").post(upload.single("image"), async (req, res) => {
   try {
     console.log("in /createPost route");
-    console.log(req.body.categorydata);
+    // console.log(req.body.categorydata);
     let title = xss(req.body.titleInput);
     let description = xss(req.body.descriptionInput);
     let budget = xss(req.body.budgetInput);
@@ -77,16 +77,16 @@ router.route("/createPost").post(upload.single("image"), async (req, res) => {
     const arrCategories = categories
       .split(",")
       .map((s) => s.trim().replace(/"/g, "")); // convert categories from html into array
-    console.log(arrCategories);
+    // console.log(arrCategories);
     let imageData = "";
-    console.log(req.file);
+    // console.log(req.file);
     if (req.file) {
       imageData =
         "http://localhost:3000/public/images/post/" + req.file.filename;
     } else {
       throw "image is not inserted, it is reuired.";
     }
-    console.log(imageData);
+    // console.log(imageData);
 
     h.checkTitle(title);
     h.checkDescription(description);
@@ -182,7 +182,7 @@ router.route("/:postId/interested").post(async (req, res) => {
 });
 
 router.route("/filter").post(async (req, res) => {
-  console.log(req.params, req.body);
+  // console.log(req.params, req.body);
   let role = req.body.filter;
   console.log("in filter route");
   if (role === "all") {

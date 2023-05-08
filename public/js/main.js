@@ -37,11 +37,12 @@ const checkemail = async (email) => {
 
 const checkphone = (phone) => {
   const phoneNumberRegex = /^\d{10}$/;
-  phone = phone.replace(/[-()]/g, "");
+  phone = phone.replace(/[-( )]/g, "");
   phoneNumber = phone.trim();
   // console.log(phoneNumber);
-  if (!phoneNumberRegex.test(phoneNumber))
+  if (!phoneNumberRegex.test(phoneNumber)) {
     throw `Please enter your phone number in the proper displayed format`;
+  }
 };
 
 const checkzipcode = (zip) => {
@@ -126,10 +127,8 @@ const checkCategories = (categories) => {
   if (categories) {
     // double check with categories, how we want it input as, when taking in the 'getUsersByCategory' func
     if (!Array.isArray(categories)) throw "Update: categories must be an array";
-    if (categories.length < 1)
-      throw "Update: you must supply at least 1 category";
     for (let i in categories) {
-      const letterPattern = /^[a-zA-Z]+$/;
+      const letterPattern = /^[a-z A-Z]+$/;
       categories[i] = categories[i].trim();
       if (!letterPattern.test(categories[i])) {
         throw `catagories must contain only alphabets from js `;
@@ -370,20 +369,23 @@ if (signupForm) {
     event.preventDefault();
     errorDiv.hidden = true;
     let error;
+    try {
+      checkfirstname(firstname.value);
+      checklastname(lastname.value);
+      checkemail(emailaddress.value);
+      // console.log(phone.value);
+      checkphone(phone.value);
+      checkpassword(password.value);
+      checkpassword(confirmpassword.value);
+      checkrole(role.value);
 
-    error = checkfirstname(firstname.value);
-    error = checklastname(lastname.value);
-    error = checkemail(emailaddress.value);
-    // console.log(phone.value);
-    error = checkphone(phone.value);
-    error = checkpassword(password.value);
-    error = checkpassword(confirmpassword.value);
-    error = checkrole(role.value);
-
-    error = checkAge();
-    if (password.value !== confirmpassword.value) {
-      // console.log(password.value);
-      error = "Passwords is not matched";
+      checkAge();
+      if (password.value !== confirmpassword.value) {
+        // console.log(password.value);
+        error = "Passwords is not matched";
+      }
+    } catch (e) {
+      error = e;
     }
     // console.log(error);
     if (error) {

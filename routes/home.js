@@ -182,11 +182,11 @@ router
           imageData = req.session.user.userSessionData.imageData;
         }
       }
-      console.log(imageData);
+      // console.log(imageData);
       const arrCategories = categories
         .split(",")
         .map((s) => s.trim().replace(/"/g, "")); // convert categories from html into array
-      console.log(arrCategories);
+      // console.log(arrCategories);
       // console.log(Array.isArray(arr));
       // console.log(typeof arr);
 
@@ -248,7 +248,7 @@ router
         }
       }
 
-      console.log(messages);
+      // console.log(messages);
 
       res.render("dmList", { title: "messages", messages: messages });
     } catch (e) {

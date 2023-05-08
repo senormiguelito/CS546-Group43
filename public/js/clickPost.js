@@ -6,14 +6,13 @@ postListBoxes.forEach((postListBox) => {
   });
 });
 
-
 const mmodal = document.getElementById("mmodal");
 const closeBtn = document.getElementsByClassName("close")[0];
-
+if (mmodal) {
   document
     .querySelector("a[href='#mmodal']")
     .addEventListener("click", function () {
-      console.log('clicked')
+      console.log("clicked");
       mmodal.style.display = "block";
     });
 
@@ -24,11 +23,13 @@ const closeBtn = document.getElementsByClassName("close")[0];
   document.getElementById("send-btn").addEventListener("click", function () {
     mmodal.style.display = "none";
   });
+}
 
+const dropdownContent = document.querySelector(".dropdown-content");
 
-  const dropdownContent = document.querySelector(".dropdown-content");
-
+if (dropdownContent) {
   // Add click event listener to close the dropdown content when the send button is clicked
-  document.getElementById("send-btn").addEventListener("click", function() {
+  document.getElementById("send-btn").addEventListener("click", function () {
     dropdownContent.style.display = "none";
   });
+}
