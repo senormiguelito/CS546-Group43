@@ -22,10 +22,22 @@ router.route("/myPosts").get(async (req, res) => {
   try {
     let userId = req.session.user.userID;
     let myPosts = await postData.getAllPostsByUser(userId);
-
-    res.render("myPost", { title: "Here Are All Your Posts!", posts: myPosts });
+    let Message;
+    if (req.session.successMessage) Message = req.session.successMessage;
+    req.session.successMessage = null; // clear the session variable
+    res.render("myPost", {
+      title: "Here Are All Your Posts!",
+      posts: myPosts,
+      Message,
+    });
   } catch (e) {
-    return res.status(400).render("404", { error: e });
+    let error;
+    if (req.session.errorMessage) {
+      error = req.session.errorMessage;
+      req.session.errorMessage = null;
+    } // clear the session variable
+    else error = e;
+    return res.status(400).render("myPost", { Error: error });
   }
 });
 
@@ -40,10 +52,11 @@ router.route("/newPost/createPost").get(async (req, res) => {
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, "public/images");
+    cb(null, "public/images/post");
   },
   filename: (req, file, cb) => {
-    cb(null, file.fieldname + "-" + Date.now() + ".jpg");
+    const ext = file.originalname.split(".").pop();
+    cb(null, file.fieldname + "-" + Date.now() + "." + ext);
   },
 });
 
@@ -51,12 +64,12 @@ const upload = multer({ storage: storage });
 router.route("/createPost").post(upload.single("image"), async (req, res) => {
   try {
     console.log("in /createPost route");
-    console.log(req.body.categoriesInput)
+    // console.log(req.body.categorydata);
     let title = xss(req.body.titleInput);
     let description = xss(req.body.descriptionInput);
     let budget = xss(req.body.budgetInput);
     let role = xss(req.body.roleInput);
-    let categories = (req.body.categoriesInput);
+    let categories = xss(req.body.categorydata);
     let zip = xss(req.body.zipInput);
     let city = xss(req.body.cityInput);
     let state = xss(req.body.stateInput);
@@ -64,17 +77,16 @@ router.route("/createPost").post(upload.single("image"), async (req, res) => {
     const arrCategories = categories
       .split(",")
       .map((s) => s.trim().replace(/"/g, "")); // convert categories from html into array
-    console.log(arrCategories);
+    // console.log(arrCategories);
     let imageData = "";
+    // console.log(req.file);
     if (req.file) {
-      imageData = "http://localhost:3000/public/images/" + req.file.filename;
+      imageData =
+        "http://localhost:3000/public/images/post/" + req.file.filename;
     } else {
-      imageData = "";
-      if (req.session.user.userSessionData) {
-        imageData = req.session.user.userSessionData.imageData;
-      }
+      throw "image is not inserted, it is reuired.";
     }
-    console.log(imageData);
+    // console.log(imageData);
 
     h.checkTitle(title);
     h.checkDescription(description);
@@ -101,16 +113,15 @@ router.route("/createPost").post(upload.single("image"), async (req, res) => {
     if (newPost.insertedPost) {
       const userID = req.session.user.userID;
       req.session.post = { Created: true, userID };
-      res.status(200).redirect("/");
+      res.status(200).redirect("/post/myposts");
     } else {
       throw "could not create new post";
-    } 
-      // res.redirect('/')
-    } catch (e) {
-      return res.status(400).render("404", { error: e });
     }
-  }); 
-  
+    // res.redirect('/')
+  } catch (e) {
+    return res.status(400).render("create_post", { Error: e });
+  }
+});
 
 // router.route('/filter').post(async (req, res) => {
 //   console.log(req.params, req.body)
@@ -124,55 +135,54 @@ router.route("/createPost").post(upload.single("image"), async (req, res) => {
 //     let posts = await postData.getByRole(role)
 //     return res.render("home", { posts: posts });
 //   }
-    
+
 // });
 
-router.route('/:postId/interested').post(async (req, res) => {
+router.route("/:postId/interested").post(async (req, res) => {
   // console.log(req.params,req.body)
   // console.log(req.session)
   let role = xss(req.body.filter);
-  let postId = (req.params.postId);
+  let postId = req.params.postId;
 
   console.log("in interested route");
   try {
-  let post = await postData.get(postId);
-  console.log(post);
-  if (!post) throw new Error("Post was not found");
-  post.prospects = post.prospects.push({
-  userId: req.session.user._id,
-  firstName: req.session.user.firstName,
-  lastName: req.session.user.lastName,
-  email: req.session.user.emailAddress,
-  userCity: req.session.user.location_city
-  });
+    let post = await postData.get(postId);
+    // console.log(post);
+    if (!post) throw new Error("Post was not found");
+    post.prospects = post.prospects.push({
+      userId: req.session.user._id,
+      firstName: req.session.user.firstName,
+      lastName: req.session.user.lastName,
+      email: req.session.user.emailAddress,
+      userCity: req.session.user.location_city,
+    });
 
-    const updatedPost = await postData.update(postId,
+    const updatedPost = await postData.update(
+      postId,
       post.userId,
       post.title,
       post.description,
       post.location_city,
       post.location_state,
-      post.location_zip_code, 
+      post.location_zip_code,
       post.categories,
       post.budget,
       post.images,
-      post.prospects);
+      post.prospects
+    );
 
-
-
-  //it is redirecting back to same page so you might feel weather or not something happened
+    //it is redirecting back to same page so you might feel weather or not something happened
     if (updatedPost) {
       return res.redirect("/post/postId");
-//      return res.status(200).render("post/postId");
+      //      return res.status(200).render("post/postId");
     }
-    
-    } catch (e) {
+  } catch (e) {
     res.status(400).render("error", { error: e });
-    }
+  }
 });
 
 router.route("/filter").post(async (req, res) => {
-  console.log(req.params, req.body);
+  // console.log(req.params, req.body);
   let role = req.body.filter;
   console.log("in filter route");
   if (role === "all") {
@@ -192,13 +202,17 @@ router.route("/:postId").get(async (req, res) => {
     h.checkId(postId);
     if (!post) throw "could not find post with that id";
     let comms = await postComment.getAll(postId);
-  // okay so need a way to show number of people interested
+    // okay so need a way to show number of people interested
     let interestCount = post.prospects.length;
-  
+
     if (!comms) {
       return res.render("post", { post: post, interestCount: interestCount });
     } else {
-      return res.render("post", { post: post, comms: comms, interestCount: interestCount });
+      return res.render("post", {
+        post: post,
+        comms: comms,
+        interestCount: interestCount,
+      });
     }
   } catch (e) {
     return res.status(400).render("404", { error: e });
@@ -250,6 +264,30 @@ router.route("/:commentId/deleteComment").get(async (req, res) => {
     // res.json(req.params);
   } catch (e) {
     return res.status(400).render("404", { error: e });
+  }
+});
+
+router.route("/:postId/delete").get(async (req, res) => {
+  try {
+    let userId = req.session.user.userID;
+    let postId = xss(req.params.postId);
+
+    h.checkValid(userId);
+    h.checkId(postId);
+    userId = userId.trim();
+    postId = postId.trim();
+    let postByPostId = await postData.get(postId);
+    if (!postByPostId) throw "could not find user with that postId";
+    if (postByPostId.userId !== userId) {
+      throw "userId and postId is not matched";
+    }
+    let deletedPost = await postData.remove(postId);
+    req.session.successMessage = `Post(${deletedPost.postId}) deleted successfully`;
+    if (deletedPost.deleted) return res.redirect(`/post/myposts`);
+    else throw `could not delete this post : ${postId}`;
+  } catch (e) {
+    req.session.errorMessage = `Post(${postId}) is not deleted successfully`;
+    return res.redirect(`/post/myposts`);
   }
 });
 

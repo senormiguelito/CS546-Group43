@@ -1,9 +1,9 @@
 const checkvalid = (value, variable) => {
   if (!value) {
-    return `${variable} is not provided`;
+    throw `${variable} is not provided`;
   }
   if (!value.trim()) {
-    return `Empty spaces are not valid in ${variable}.`;
+    throw `Empty spaces are not valid in ${variable}.`;
   }
 };
 
@@ -11,13 +11,13 @@ const checkname = (Name, varName) => {
   checkvalid(Name, varName);
   const letterPattern = /^[a-zA-Z]+$/;
   if (!letterPattern.test(Name)) {
-    return `${varName} must contain only alphabets from js `;
+    throw `${varName} must contain only alphabets from js `;
   }
 
   const min = 2;
   const max = 25;
   if (Name.length < min || Name.length > max)
-    return `${varName} must have a length between ${min} and ${max} characters`;
+    throw `${varName} must have a length between ${min} and ${max} characters`;
 };
 
 const checkfirstname = (name) => {
@@ -32,16 +32,17 @@ const checkemail = async (email) => {
   checkvalid(email, "Email");
 
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if (!emailRegex.test(email)) return `Not a valid email!!`;
+  if (!emailRegex.test(email)) throw `Not a valid email!!`;
 };
 
 const checkphone = (phone) => {
   const phoneNumberRegex = /^\d{10}$/;
-  phone = phone.replace(/[-()]/g, "");
+  phone = phone.replace(/[-( )]/g, "");
   phoneNumber = phone.trim();
   // console.log(phoneNumber);
-  if (!phoneNumberRegex.test(phoneNumber))
-    return `Please enter your phone number in the proper displayed format`;
+  if (!phoneNumberRegex.test(phoneNumber)) {
+    throw `Please enter your phone number in the proper displayed format`;
+  }
 };
 
 const checkzipcode = (zip) => {
@@ -49,35 +50,33 @@ const checkzipcode = (zip) => {
 
   const zipRegex = /^\d{5}(?:[-\s]\d{4})?$/;
   if (typeof zip !== "string")
-    return "Location: zip code should be of type string";
+    throw "Location: zip code should be of type string";
   zip = zip.trim();
-  if (zip === "") return "Location: zip code can not be an empty field";
-  if (!zipRegex.test(zip)) return `Please enter a valid 5 digit zip code`;
+  if (zip === "") throw "Location: zip code can not be an empty field";
+  if (!zipRegex.test(zip)) throw `Please enter a valid 5 digit zip code`;
 };
 
 const checkcity = (city) => {
   checkvalid(city, "City");
-  if (typeof city !== "string") return "Location: city must be of type string";
+  if (typeof city !== "string") throw "Location: city must be of type string";
   city = city.trim();
-  if (city === "") return "Location: city can not be an empty field";
+  if (city === "") throw "Location: city can not be an empty field";
   for (let i in city) {
     if (typeof city[i] === "number")
-      return `Location: city should not contain numbers`;
+      throw `Location: city should not contain numbers`;
   }
 };
 
 const checkstate = (state) => {
   checkvalid(state, "State");
-  if (typeof state !== "string")
-    return "Location: state must be of type string";
+  if (typeof state !== "string") throw "Location: state must be of type string";
   state = state.trim();
-  if (state === "") return "Location: state can not be an empty field";
+  if (state === "") throw "Location: state can not be an empty field";
   for (let i in state) {
     if (typeof state[i] === "number")
-      return `Location: state should not contain numbers`;
+      throw `Location: state should not contain numbers`;
   }
-  if (state.length !== 2) return "Location: state must be exactly 2 letters";
-  state = state.toUpperCase(); // no inconsistencies
+  if (state.length !== 2) throw "Location: state must be exactly 2 letters";
 };
 
 const checkpassword = (password) => {
@@ -85,14 +84,14 @@ const checkpassword = (password) => {
   const hasNumber = /\d/;
   const hasSpecialChar = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/;
 
-  if (password.trim() !== password) return `Password cannot contain spaces`;
+  if (password.trim() !== password) throw `Password cannot contain spaces`;
   if (!hasUpperCase.test(password))
-    return `Password must contain at least one uppercase letter`;
-  if (password.length < 8) return `Password must be at least 8 characters long`;
+    throw `Password must contain at least one uppercase letter`;
+  if (password.length < 8) throw `Password must be at least 8 characters long`;
   if (!hasNumber.test(password))
-    return `Password must contain at least one number`;
+    throw `Password must contain at least one number`;
   if (!hasSpecialChar.test(password))
-    return `Password must contain at least one special character`;
+    throw `Password must contain at least one special character`;
 };
 
 const checkrole = (role) => {
@@ -101,7 +100,7 @@ const checkrole = (role) => {
   role = role.toLowerCase();
 
   if (role !== "provider" && role !== "seeker") {
-    return 'Invalid role specified. Only "Provider" or "Seeker" are allowed.';
+    throw 'Invalid role specified. Only "Provider" or "Seeker" are allowed.';
   }
 };
 
@@ -112,30 +111,27 @@ const checkAge = () => {
   const ageInYears = age / 1000 / 60 / 60 / 24 / 365;
 
   if (ageInYears < 13) {
-    return "You must be 13 years of age or older to register.";
+    throw "You must be 13 years of age or older to register.";
   }
 };
 
 const checkbio = (bio) => {
-  if (typeof bio !== "string") return `Bio must be of type string`;
+  if (typeof bio !== "string") throw `Bio must be of type string`;
   bio = bio.trim();
   if (bio.length > 5000)
-    return `You can not submit a bio longer than 5000 characters`;
-  //  if (bio === "") return("You can't submit an empty bio!");
+    throw `You can not submit a bio longer than 5000 characters`;
+  //  if (bio === "") throw  (("You can't submit an empty bio!");
 };
 
 const checkCategories = (categories) => {
   if (categories) {
     // double check with categories, how we want it input as, when taking in the 'getUsersByCategory' func
-    if (!Array.isArray(categories))
-      return "Update: categories must be an array";
-    if (categories.length < 1)
-      return "Update: you must supply at least 1 category";
+    if (!Array.isArray(categories)) throw "Update: categories must be an array";
     for (let i in categories) {
-      const letterPattern = /^[a-zA-Z]+$/;
+      const letterPattern = /^[a-z A-Z]+$/;
       categories[i] = categories[i].trim();
       if (!letterPattern.test(categories[i])) {
-        return `catagories must contain only alphabets from js `;
+        throw `catagories must contain only alphabets from js `;
       }
     }
   }
@@ -165,22 +161,105 @@ const img = document.querySelector("#myImage");
 const imgInput = document.querySelector("#myImageInput");
 
 if (imgInput) {
-  imgInput.addEventListener("change", () => {
-    let reader = new FileReader();
-    reader.readAsDataURL(imgInput.files[0]);
-    reader.addEventListener("load", () => {
-      img.src = reader.result;
-    });
+  imgInput.addEventListener("change", (event) => {
+    const file = event.target.files[0];
+    errorDiv.hidden = true;
+    let error;
+    if (!validateImage(file)) {
+      imgInput.value = ""; // clear the input field
+      console.log(file);
+      error = "Only jpg/png/jpeg file types are allowed";
+    }
+    if (error) {
+      errorDiv.hidden = false;
+      errorDiv.textContent = error;
+      window.history.replaceState({}, document.title, "?status=400");
+    } else {
+      let reader = new FileReader();
+      reader.readAsDataURL(imgInput.files[0]);
+      reader.addEventListener("load", () => {
+        img.src = reader.result;
+      });
+    }
   });
 }
+const validateImage = (file) => {
+  const allowedTypes = ["image/jpeg", "image/png"];
+
+  if (!allowedTypes.includes(file.type)) {
+    // the file is not a JPG or PNG image
+    return false;
+  }
+
+  return true;
+};
+
+const checkTitle = (title) => {
+  checkvalid(title, "title");
+  if (typeof title != "string") throw "Title must be a string";
+  title = title.trim();
+  if (title.length > 200) throw "Title must be no more than 200 characters";
+  if (title.trim() === "") throw "Title must be supplied!";
+};
+
+const checkDescription = (description) => {
+  checkvalid(description, "description");
+  if (typeof description !== "string") throw "description must be a string";
+  description = description.trim();
+  if (description.trim() === "") throw "description must not be empty";
+  if (description.length > 2500)
+    throw "description must no more than 2500 characters";
+};
+
+const checkbudget = (budget) => {
+  if (!budget) throw "no budget provided";
+  budget = parseInt(budget);
+  if (typeof budget !== "number") throw "budget should be a valid number"; // it was allowing NaN's
+  if (!budget) throw "budget can only be in numbers!"; // so had to add this
+  if (budget <= 0) throw "Budget can not be a negative number!";
+};
 
 const createPostForm = document.getElementById("create-post-form");
-
-// Listen for the form's "load" event
+const title = document.getElementById("titleInput");
+const description = document.getElementById("descriptionInput");
+const budgetInput = document.getElementById("budgetInput");
+if (budgetInput) {
+  budgetInput.addEventListener("input", (event) => {
+    let inputValue = event.target.value;
+    inputValue = inputValue.replace(/[^0-9]/g, ""); // replace non-numeric characters with empty string
+    event.target.value = inputValue;
+  });
+}
 if (createPostForm) {
-  createPostForm.addEventListener("load", () => {
-    // Clear the session storage
-    sessionStorage.clear();
+  createPostForm.addEventListener("submit", (event) => {
+    event.preventDefault();
+    errorDiv.hidden = true;
+    let error;
+    try {
+      if (!imgInput.files[0]) {
+        throw "image is required field";
+      }
+      checkTitle(title.value);
+      checkDescription(description.value);
+      checkbudget(budgetInput.value);
+      if (!divDataInput.value.trim()) {
+        throw "Category is not provided, please select at least one";
+      }
+      checkzipcode(zip.value);
+      checkcity(city.value);
+      checkstate(state.value);
+      console.log("pass the error check");
+    } catch (e) {
+      error = e;
+    }
+
+    if (error) {
+      errorDiv.hidden = false;
+      errorDiv.textContent = error;
+      window.history.replaceState({}, document.title, "?status=400");
+    } else {
+      createPostForm.submit();
+    }
   });
 }
 
@@ -290,20 +369,23 @@ if (signupForm) {
     event.preventDefault();
     errorDiv.hidden = true;
     let error;
+    try {
+      checkfirstname(firstname.value);
+      checklastname(lastname.value);
+      checkemail(emailaddress.value);
+      // console.log(phone.value);
+      checkphone(phone.value);
+      checkpassword(password.value);
+      checkpassword(confirmpassword.value);
+      checkrole(role.value);
 
-    error = checkfirstname(firstname.value);
-    error = checklastname(lastname.value);
-    error = checkemail(emailaddress.value);
-    // console.log(phone.value);
-    error = checkphone(phone.value);
-    error = checkpassword(password.value);
-    error = checkpassword(confirmpassword.value);
-    error = checkrole(role.value);
-
-    error = checkAge();
-    if (password.value !== confirmpassword.value) {
-      // console.log(password.value);
-      error = "Passwords is not matched";
+      checkAge();
+      if (password.value !== confirmpassword.value) {
+        // console.log(password.value);
+        error = "Passwords is not matched";
+      }
+    } catch (e) {
+      error = e;
     }
     // console.log(error);
     if (error) {
@@ -340,7 +422,6 @@ if (loginForm) {
     }
   });
 }
-
 
 if (editprofileForm) {
   editprofileForm.addEventListener("submit", (event) => {
@@ -420,27 +501,28 @@ if (categoryInput) {
 
 const divfordelete = document.getElementById("category-box");
 const divDataInput = document.getElementById("categorydata");
-const addintohiddnediv = () => {
+const addintohiddendiv = () => {
   const AllName = document.querySelectorAll(".category-name");
   let newarr = [];
   if (!AllName == 0) {
     AllName.forEach((element) => {
       newarr.push(element.textContent); // Get data from div tags and store in array
-      console.log("--------" + newarr);
+      // console.log("--------" + newarr);
     });
-    newarr = newarr.split(",").map((s) => s.trim().replace(/"/g, ""));
+    let newarrstr = newarr.join(",");
+    newarr = newarrstr.split(",").map((s) => s.trim().replace(/"/g, ""));
   } else {
     newarr = [];
   }
   // Set hidden input field value to the data array
   for (let i in newarr)
     if (newarr[i] !== "") {
-      console.log(newarr[i]);
+      // console.log(newarr[i]);
       divDataInput.value = newarr;
       // if (!categories.includes(categories[i])) {
       //   divDataInput.value += `"${categories[i]}",`;
       // }
-      console.log(newarr);
+      // console.log(newarr);
     }
 };
 
@@ -451,12 +533,12 @@ if (deleteButtons) {
       // get the parent div element and remove it from the DOM
       button.parentNode.remove();
     });
-    button.addEventListener("click", addintohiddnediv);
+    button.addEventListener("click", addintohiddendiv);
   });
 }
 const mainbox = document.getElementById("category-container");
 if (mainbox) {
-  mainbox.addEventListener("change", addintohiddnediv);
+  mainbox.addEventListener("change", addintohiddendiv);
 }
 
 // add event listener to the button to add a category
@@ -512,7 +594,7 @@ if (addCategoryButton) {
               categories.splice(categoryIndex, 1);
             }
             divBox.remove();
-            addintohiddnediv();
+            addintohiddendiv();
           });
           divBox.appendChild(spanDelete);
           const categoryContainer = document.querySelector(
@@ -520,7 +602,7 @@ if (addCategoryButton) {
           );
           categoryContainer.appendChild(divBox);
           categoryInput.value = ""; // clear the input field
-          addintohiddnediv();
+          addintohiddendiv();
         } else {
           error = "You can only select up to 4 categories";
         }

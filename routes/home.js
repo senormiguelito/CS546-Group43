@@ -19,11 +19,11 @@ router.route("/").get(async (req, res) => {
       message = `Hey ${userSession.firstName}, this is your user ID: ${req.session.user.userID}`;
     } else {
       message = `hey you entered without login!!!, how???`;
-      res.redirect("/login"); 
+      res.redirect("/login");
     }
     let posts;
-    if(role === 'seeker') {
-      posts = await postData.getByRole("provider")
+    if (role === "seeker") {
+      posts = await postData.getByRole("provider");
     }
     if (role === "provider") {
       posts = await postData.getByRole("seeker");
@@ -65,7 +65,7 @@ router.route("/myprofile").get(async (req, res) => {
 
 router.route("/provideList").get(async (req, res) => {
   try {
-    console.log("in porviderList route")
+    console.log("in porviderList route");
     const userList = await userData.getUsersBy("provider");
     // console.log(userList)
     res.status(200).render("providerlist", { userList: userList });
@@ -79,11 +79,11 @@ router.route("/provideList/filterByDistance").post(async (req, res) => {
   try {
     // console.log("in porviderList filter route")
     // console.log(req.params,req.body)
-    let user = req.session.user.userSessionData
-    let filterBy = req.body.filter
-    let userList = undefined
-    if(filterBy.toLowerCase() === "distance"){
-      userList = await userData.sortProvidersByDistance(user)
+    let user = req.session.user.userSessionData;
+    let filterBy = req.body.filter;
+    let userList = undefined;
+    if (filterBy.toLowerCase() === "distance") {
+      userList = await userData.sortProvidersByDistance(user);
     }
     // const userList = await userData.getUsersByRole("provider");
     // console.log(userList)
@@ -98,11 +98,11 @@ router.route("/provideList/searchArea").post(async (req, res) => {
   try {
     // console.log("in porviderList search area filter route")
     // console.log(req.params,req.body)
-    let user = req.session.user.userSessionData
-    let searchArea = req.body.searchAreaInput
-    let userList = undefined
-    
-    userList = await userData.filterProviderBySearchArea(user,searchArea) 
+    let user = req.session.user.userSessionData;
+    let searchArea = req.body.searchAreaInput;
+    let userList = undefined;
+
+    userList = await userData.filterProviderBySearchArea(user, searchArea);
     // const userList = await userData.getUsersByRole("provider");
     // console.log(userList)
     res.status(200).render("providerlist", { userList: userList });
@@ -111,8 +111,6 @@ router.route("/provideList/searchArea").post(async (req, res) => {
     // return res.status(400).render("error", { error: e });
   }
 });
-
-
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -184,11 +182,11 @@ router
           imageData = req.session.user.userSessionData.imageData;
         }
       }
-      console.log(imageData);
+      // console.log(imageData);
       const arrCategories = categories
         .split(",")
         .map((s) => s.trim().replace(/"/g, "")); // convert categories from html into array
-      console.log(arrCategories);
+      // console.log(arrCategories);
       // console.log(Array.isArray(arr));
       // console.log(typeof arr);
 
@@ -255,7 +253,7 @@ router
         }
       }
 
-      console.log(messages);
+      // console.log(messages);
 
       res.render("dmList", { title: "messages", messages: messages });
     } catch (e) {
