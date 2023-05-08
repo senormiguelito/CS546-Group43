@@ -509,6 +509,7 @@ p {
 
 .dropdown:hover .dropdown-content {
   display: block;
+}
 /* Home page */
 .main-banner:before {
   content: '';

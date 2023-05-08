@@ -243,9 +243,14 @@ router
     try {
       let messages = await messageData.getMessages(userSession._id);
       for (let i = 0; i < messages.length; i++) {
+        // changing the senderId to senderName
         if (messages[i].senderId == userSession._id) {
+          let recieverName = await userData.getUser(messages[i].recieverId);
+          messages[i].recieverName = recieverName.firstName + " " + recieverName.lastName;
           messages[i].sender = true;
         } else {
+          let senderName = await userData.getUser(messages[i].senderId);
+          messages[i].senderName = senderName.firstName + " " + senderName.lastName;
           messages[i].sender = false;
         }
       }
@@ -264,19 +269,35 @@ router
   .post(async (req, res) => {
     const userSession = req.session.user.userSessionData;
     const sender = userSession._id;
-    const reciever = xss(req.body.recieverId);
-    const message = xss(req.body.message);
+    const reciever = req.body.recieverId;
+    const message = req.body.message;
+    console.log(sender, "sender");
+    console.log(reciever, "reciever");
+    console.log(message, "message");
     try {
       const newMessage = await messageData.sendMessage(
         sender,
         reciever,
         message
       );
+      const messages = await messageData.getMessages(userSession._id);
+      for (let i = 0; i < messages.length; i++) {
+        // changing the senderId to senderName
+        if (messages[i].senderId == userSession._id) {
+          let recieverName = await userData.getUser(messages[i].recieverId);
+          messages[i].recieverName = recieverName.firstName + " " + recieverName.lastName;
+          messages[i].sender = true;
+        } else {
+          let senderName = await userData.getUser(messages[i].senderId);
+          messages[i].senderName = senderName.firstName + " " + senderName.lastName;
+          messages[i].sender = false;
+        }
+      }
       // res.redirect("/messages");
-      // return res.status(200).json({ message: "Message sent successfully" });
-      return res.redirect("/home/messages");
+      return res.status(200).render("dmList", { title: "messages", messages: messages });
+      // return res.redirect("/home/messages");
     } catch (e) {
-      console.log(e);
+      // console.log(e);
       return res.status(400).render("error", { error: e });
     }
   });

@@ -11,10 +11,10 @@
   
     <div class="message" id = "message" onclick="ClickMessage(this)">
       {{#if sender}}
-        <p> message to {{recieverId}}</p>
+        <p> message to {{recieverName}}</p>
 
       {{else}}
-        <p> message from {{senderId}}</p>
+        <p> message from {{senderName}}</p>
       {{/if}}
 
         <p id = "desc" >{{message}}</p>
@@ -36,6 +36,7 @@
 	</div> --}}
   <div class="dropdown">
   <button class="dropbtn">Reply</button>
+  <p>{{messageStatus}}</p>
   <div class="dropdown-content">
      <form method = "POST" action ='/home/messages/'>
         <input type="text" placeholder="Enter your message" name = "message" id = "message"><br><br>
