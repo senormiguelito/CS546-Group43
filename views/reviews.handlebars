@@ -1,0 +1,41 @@
+<div>
+    {{!-- <form method="post" action="../user/reviews/delete/{{user._id}}" id="add-review-form" class="btn btn-primary">  
+        <input type="submit" value="Delete">
+    </form> --}}
+    {{#if msg}}
+        {{msg}} msg
+    {{/if}}
+    <p>Reviews</p>
+    {{#if error}}
+    <p >{{error}}</p>
+    {{/if}}
+    {{#each reviews}}
+    <p>Review: </p>
+    User: <a href="/../../../profile/{{userId}}">{{firatName}} {{lastName}}</a>
+    <br>
+    Rating: {{rating}}
+    <br>
+    Comment: {{comment}}
+    {{!-- add created date only --}}
+    <br>
+    <form method="post" action="../delete/{{_id}}" id="delete-review-form" class="btn btn-primary">  
+        <input type="submit" value="Delete">
+    </form>
+    <form method="post" action="../edit/{{_id}}" id="edit-review-form" class="btn btn-primary">  
+        {{!-- <label for="editRatingInput">Edit rating: </label>
+            <input type="text" placeholder="Edit Rating" name="editRatingInput" id="editRatingInput" > --}}
+         <label for = "editRatingInput">Enter Rating: </label>
+        <select name="editRatingInput" id="editRatingInput" placeholder="editRatingInput">
+          <option value=1>1</option>
+          <option value=2>2</option>
+          <option value=3>3</option>
+          <option value=4>4</option>
+          <option value=5>5</option>
+        </select>
+        <label for="editReviewInput">Edit review: </label>
+            <input type="text" placeholder="Edit Review" name="editReviewInput" id="editReviewInput" >
+        <input type="submit" value="Edit">
+    </form>
+    {{/each}}
+    
+</div>

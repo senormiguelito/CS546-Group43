@@ -236,6 +236,7 @@ export const checkComment = (comment) => {
   isvalid(comment, "comment");
   if (typeof comment !== "string") throw new Error("Comment must be a string");
   comment = comment.trim();
+  if(comment.length === 0) throw new Error("Comment should be non-empty string") //I think we need this
   if (comment.length > 250) throw new Error("Comment must be 250 characters or less!"); // implement maxlength in html
 }
 

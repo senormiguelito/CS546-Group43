@@ -74,7 +74,7 @@ router.route("/provideList").get(async (req, res) => {
   }
 });
 
-router.route("/provideList/filterByDistance").post(async (req, res) => {
+router.route("/provideList/sortBy").post(async (req, res) => {
   try {
     // console.log("in porviderList filter route")
     // console.log(req.params,req.body)
@@ -84,8 +84,13 @@ router.route("/provideList/filterByDistance").post(async (req, res) => {
     if (filterBy.toLowerCase() === "distance") {
       userList = await userData.sortProvidersByDistance(user);
     }
-    // const userList = await userData.getUsersByRole("provider");
-    // console.log(userList)
+    if(filterBy.toLowerCase() === "rating"){
+      userList = await userData.sortProviderByRating() 
+    }
+    if(filterBy.toLowerCase() === "all"){
+      userList = await userData.getUsersBy("provider");
+      console.log(userList)
+    }
     res.status(200).render("providerlist", { userList: userList });
   } catch (e) {
     res.status(400).render("providerlist", { error: e });

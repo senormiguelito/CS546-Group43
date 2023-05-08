@@ -90,12 +90,49 @@
           </div>
         </div>
       </div>
-      
+      {{!-- <div class="user-details">
+        <p>Name: {{user.firstName}} {{user.lastName}}</p>
+        <p>Email: {{user.emailAddress}}</p>
+        <p>Phone Number: {{user.phoneNumber}}</p>
+        <p>Role: {{user.role}}</p>
+        <p>Location: {{user.location_city}}, {{user.location_state}} {{user.location_zip_code}}</p>
+        <p>Categories: {{user.categories}}</p>
+        <p>Bio: {{user.bio}}</p>
+        <p>Reviews: {{user.reviews}}</p>
+        <p>Projects: {{user.projects}}</p>
+        <p>Joining Date: {{user.joiningDate}}</p>  
+      </div> --}}
+      <a href="#modal">Contact</a>
+      <br>
+      <a href="../user/reviews/{{user._id}}/allReviews">View All Reviews</a>
+      <br>
+      <div>
+        <form method="post" action="../user/reviews/{{user._id}}" id="add-review-form">
 
-  <div class="dropdown">
+        <label for="reviewInput">Enter Review: </label>
+        <input type="text" placeholder="review" name="reviewInput" id="reviewInput">
+        <br>
+        <label for = "ratingInput">Enter Rating:</label>
+        <select name="ratingInput" id="ratingInput" placeholder="rating" >
+          <option value=1>1</option>
+          <option value=2>2</option>
+          <option value=3>3</option>
+          <option value=4>4</option>
+          <option value=5>5</option>
+        </select>
+        <input type="submit" value="submit">
+        <br><br>
+    </form>
+      </div>
+        <div class="dropdown">
   <button class="dropbtn">Contact</button>
   <div class="dropdown-content">
-     <form method = "POST" action ='/home/messages/'>
+	<!-- Create the modal with input box and send button -->
+	<div id="modal" class="modal">
+		<div class="modal-content">
+			<span class="close">&times;</span>
+			<h2>Contact</h2>
+      <form method = "POST" action ='/home/messages/'>
         <input type="text" placeholder="Enter your message" name = "message" id = "message"><br><br>
         <input type="hidden" name = "recieverId" id = "recieverId" value = "{{user._id}}">
         <input type="submit" value="Send" id = "send-btn">
@@ -114,3 +151,8 @@
     </div>
     </div>
   </div>
+  <div>
+        {{#if error}}
+          <p>{{error}}</p>
+        {{/if}}
+      </div>

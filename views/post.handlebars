@@ -1,8 +1,12 @@
 
 <h1>Welcome to Our post Page!</h1>
-    <p class="about">Check out our latest job posts:</p>
+    {{!-- <p class="about">Check out our latest job posts:</p> --}}
     <div class="post-list-container">
+      {{#if post.userId}}
+          <p><a href="/profile/{{post.userId}}" class="btn btn-primary">View profile!</a></p>
+          {{/if}}
         <div class="post-list-box">
+          
         <div class="post-list-img-box">
           {{#if post.images}}
           <img src={{post.images}} alt="Post 1 Image" />
@@ -24,16 +28,7 @@
               posts.js which is getByCommentId and from that you can get post and also user id which you can use to redirect my profile to appropriate profile --}}
                 <p><a href = "/comment/profile/{{_id}}"> {{userFirstName}} {{userLastName}}</a> : {{comment}}
                 <a href="/post/{{_id}}/deleteComment" id="delete-comment"> Delete</a>
-                {{!-- <script>
-                  let deleteComment = document.getElementById("delete-link");
-                  deleteComment.addEventListener("click", function(event) {
-                    event.preventDefault(); 
-                    let url = `/${_id}/deleteComment`;
-                    let header = new XMLHttpRequest();
-                    header.open("DELETE", url);
-                    header.send();
-                  })
-                </script> --}}
+                
             </div>
         {{/each}}
         {{/if}}

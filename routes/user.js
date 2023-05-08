@@ -187,7 +187,7 @@ router.route("/seekers").get(async (req, res) => {
   }
 });
 
-router.route("/seekers/filterSeekerByDistance").post(async (req, res) => {
+router.route("/seekers/sortBy").post(async (req, res) => {
   try {
     // console.log("in seekersList filter route")
     // console.log(req.params,req.body)
@@ -196,6 +196,13 @@ router.route("/seekers/filterSeekerByDistance").post(async (req, res) => {
     let userList = undefined;
     if (filterBy.toLowerCase() === "distance") {
       userList = await userData.sortSeekersByDistance(user);
+    }
+    if(filterBy.toLowerCase() === "rating"){
+      userList = await userData.sortSeekerByRating()
+    }
+    if(filterBy.toLowerCase() === "all"){
+      userList = await userData.getUsersBy("seeker");
+      console.log(userList)
     }
     // const userList = await userData.getUsersByRole("provider");
     // console.log(userList)
