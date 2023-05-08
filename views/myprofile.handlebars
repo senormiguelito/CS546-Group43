@@ -3,7 +3,10 @@
     <div class="row container d-flex justify-content-center">
       <div class="">
         {{#if Error}} <p class="alert alert-danger">{{Error}}</p>{{/if}}
-        {{#if Message}}<p class="alert alert-success" id="success">{{Message}}</p>{{/if}}
+        {{#if Message}}<p
+            class="alert alert-success"
+            id="success"
+          >{{Message}}</p>{{/if}}
         <div class="card user-card-full">
           <div class="row m-l-0 m-r-0">
             <div class="col-sm-4 bg-c-lite-green user-profile">
@@ -19,7 +22,7 @@
                     />
                   {{else}}
                     <img
-                      src="/public/images/image-1683329589802.jpg"
+                      src="/public/images/No_User.jpg"
                       class="card-img-top"
                       alt="..."
                     />
@@ -126,5 +129,5 @@
 </div>
 {{!-- <a href="/home/myprofile/{{userID}}/edit" class="edit-button">Edit</a> --}}
 {{#if userID}}
-<p> <a href="/home/myprofile/{{userID}}/edit">Edit</a></p>
+  <p> <a href="/home/myprofile/{{userID}}/edit">Edit</a></p>
 {{/if}}
