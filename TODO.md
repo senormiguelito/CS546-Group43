@@ -8,6 +8,50 @@
 
 FYI I am going to .gitignore public/images
 
+## Monday 5/8
+
+### Rating/review
+
+* filter by rating
+* option to edit/delete review (not a core feature, put way on back burner)
+
+### AJAX submission
+
+* When a user displays interest on a post, this is where we will meet the AJAX req --> update the interest count without needing to reload the entire page for the user ;)
+
+### Profile
+
+* when a user lands on a profile, ability for session user to share their profile as a direct message to the user who's profile they are viewing
+
+#### Profile -> Posts
+
+* when a user lands on a profile ability to view all of the user's posts whos profile they are on
+
+### Posts
+
+* show the name of the user who posted above the post itself, or somewhere on the page that makes sense
+* categories needs way more options, the list is very incomplete. Maybe "other" option that will allow user to add another? Kaushal this is up to you
+* If a user is already a prospect for a job, they should not be able to double insert
+
+### Tota11y
+
+* someone has to take on: [https://khan.github.io/tota11y/](https://khan.github.io/tota11y/)
+
+#### Post author -> view all prospects -> route to profile
+
+* post author should be able to view each of the prospects' profiles by clicking a link
+
+### Break the code!
+
+* as soon as we finish the last of these reqs, find every which way to break the shit outta this and stop that from happening
+
+### Seed file for submission
+
+* a lot of the objects/documents/etc have changed in the process.
+* Need a seed file that has all the latest functionality & tweaks so nothing disagrees when graders test the code and try to break the website
+
+--------------------------------
+
 ## Saturday 12:30
 
 Input sanitization is easy. xss wrap every req.body --> BEWARE OF ARRAYS

@@ -90,7 +90,6 @@ export const getAllPostsByUser = async (userId) => {
       post._id = post._id.toString();
     });
     return posts;
-    // return posts;
   }
 };
 
@@ -134,12 +133,13 @@ export const update = async (
   categories,
   budget,
   images,
-  prospects
+  prospects,
+  comments    // check if should do error chcecking
 ) => {
   //function tweak: changed 'seekerId' param to 'userId'
 
   h.checkId(postId);
-  h.checkId(seekerId);
+  h.checkId(userId);
   h.checkTitle(title);
   h.checkDescription(description);
   h.checkcity(location_city);
@@ -147,9 +147,8 @@ export const update = async (
   h.checkzipcode(location_zip_code);
   h.checkbudget(budget);
 
-  //  h.checkprospects(prospects);
+  //h.checkprospects(prospects);
 
-  console.log("In create post data ");
   //this is different than helper function. don't delete it.
   if (!categories) throw new Error("categories not provided");
 
@@ -183,8 +182,9 @@ export const update = async (
 
   let oldPost = await get(postId);
 
-  if (oldPost.userId !== userId)
+  if (oldPost.userId !== userId) {
     throw "You can only update a post which you've created";
+  }
   // postId, seekerId, title, description, location, categories, budget, images
   if (
     oldPost.title === title &&
@@ -193,9 +193,14 @@ export const update = async (
     oldPost.location_state === location_state &&
     oldPost.location_zip_code === location_zip_code &&
     JSON.stringify(oldPost.categories) === JSON.stringify(categories) &&
-    oldPost.budget === budget
-  )
+    oldPost.budget === budget &&
+    oldPost.prospects === prospects  &&// AHA!
+    JSON.stringify(oldPost.comments) === JSON.stringify(comments)
+  ) {
+    console.log("postUpdate 199, say it aint so!");
     throw "You must change something to submit an update request";
+  }
+
 
   const newPostsInfo = {
     userId: userId,
@@ -204,11 +209,12 @@ export const update = async (
     location_city: location_city,
     location_state: location_state,
     location_zip_code: location_zip_code,
-    categories: filteredCategories,
+    categories: categories, // cmooon nyowww
     budget: budget,
     createdOrUpdatedAt: d1.toISOString(),
     images: [],
     prospects: prospects,
+    comments: comments
   };
 
   let newPost = await postsCollection.findOneAndReplace(
@@ -219,6 +225,7 @@ export const update = async (
   if (newPost.lastErrorObject.n === 0)
     throw [404, `Could not update the post with id ${postId}`];
 
+  console.log("in the clear 226");
   return newPost.value;
 };
 
@@ -230,7 +237,6 @@ export const getByCommentId = async (id) => {
   });
 
   if (!post) throw "No band with that id";
-  // post._id = post._id.toString()
   return post;
 };
 
@@ -247,13 +253,12 @@ export const getByCommentId = async (id) => {
 // };
 
 export const getByRole = async (role) => {
-  // h.checkId(id);
-  // id = id.trim();
+
   h.checkrole(role);
 
   let postList = await postsCollection.find({}).toArray();
   postList = postList.map((element) => {
-    // console.log(element.role, role)
+
     if (element.role === role) {
       element._id = element._id.toString();
       return element;

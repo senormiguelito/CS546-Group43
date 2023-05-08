@@ -159,6 +159,12 @@ const categoryList = document.getElementById("categoryList");
 const categories = [];
 const img = document.querySelector("#myImage");
 const imgInput = document.querySelector("#myImageInput");
+const createPostBtn = document.getElementById("createPost");
+if (createPostBtn) {
+  createPostBtn.addEventListener("click", (event) => {
+    sessionStorage.clear(); // clear the session from client side when user click on create post btn, becasue of city and state autofilling bug.
+  });
+}
 
 if (imgInput) {
   imgInput.addEventListener("change", (event) => {
@@ -178,7 +184,12 @@ if (imgInput) {
       let reader = new FileReader();
       reader.readAsDataURL(imgInput.files[0]);
       reader.addEventListener("load", () => {
-        img.src = reader.result;
+        if (reader.result) {
+          img.src = reader.result;
+        }
+      });
+      reader.addEventListener("error", () => {
+        console.error("Error reading file:", reader.error);
       });
     }
   });
@@ -471,6 +482,7 @@ const ListOfcategories = [
   "Pool technician",
   "Security system technician",
   "Audio-visual technician",
+  "Other",
 ];
 
 const categoryOptions = document.createElement("datalist");
@@ -616,22 +628,18 @@ if (addCategoryButton) {
   });
 }
 
-
-document.getElementById("send-btn").addEventListener("click", function() {
+if (document.getElementById("send-btn")) {
+  document.getElementById("send-btn").addEventListener("click", function () {
     // Show the message status alert
     const messageStatus = document.getElementById("message-status");
     messageStatus.innerText = "Message sent successfully!";
     messageStatus.style.display = "block";
 
     // Hide the message status alert after 3 seconds
-    setTimeout(function() {
+    setTimeout(function () {
       messageStatus.style.display = "none";
     }, 3000);
   });
+}
 
-
- 
-  
-  
-
-window.addEventListener("change", addintohiddnediv); // on window change anything
+window.addEventListener("change", addintohiddendiv); // on window change anything

@@ -37,7 +37,7 @@
             </div>
         {{/each}}
         {{/if}}
-        <div>{{interestCount}} people are interested in this project!</div>
+        <div> {{interestCount}} people are interested in this project!</div>
         <div class="comment-box">
             <form method="post" action = "/post/{{post._id}}/comment" id="comment-form" >
             <label>Add comment</label>
@@ -51,8 +51,20 @@
             <button type="submit" id="submit">click here</button>
             </form>
         </div>
-
-</div>
+      {{#if isAuthor}}
+      <form method="POST" action="/post/{{post._id}}/selectProspect">
+        <div class="dropdown">
+          <select name ="prospects" class="grey-text">{{!id="prospects"}}
+            <option selected disabled>Choose the right fit for the job!</option>
+            {{#each prospects}}
+            <option value="{{userId}}">{{firstName}} {{lastName}}</option>
+            {{/each}}
+          </select>
+          <button type="submit">Here we go!</button>
+        </div>
+      </form>
+      {{/if}}
+    </div>
 <br>
 <a href="map" class="see-all">map</a>
 <br>
