@@ -4,10 +4,8 @@ import { fileURLToPath } from "url";
 import { dirname } from "path";
 import exphbs from "express-handlebars";
 import session from "express-session";
-import helmet from "helmet";
 import flash from "connect-flash";
 import xss from "xss"; // testing input sanitization -> defends xss attacks
-let date = new Date().toUTCString();
 const app = express();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -106,7 +104,7 @@ app.use("/post/myPosts", (req, res, next) => {
     return res.status(403).render("error", {
       title: "Error",
       unauthorizedAccess: true,
-      isHide: true
+      isHide: true,
     });
   }
 });
@@ -205,7 +203,7 @@ app.use("/profile/:userId", (req, res, next) => {
     return res.status(403).render("error", {
       title: "Error",
       unauthorizedAccess: true,
-      isHide: true
+      isHide: true,
     });
   }
 });
@@ -217,7 +215,7 @@ app.use("/user/reviews/:userId", (req, res, next) => {
     return res.status(403).render("error", {
       title: "Forbidden",
       unauthorizedAccess: true,
-      isHide: true
+      isHide: true,
     });
   }
 });
