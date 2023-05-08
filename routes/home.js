@@ -268,16 +268,22 @@ router
     const userSession = req.session.user.userSessionData;
     const sender = userSession._id;
     const reciever = req.body.recieverId;
-    const message = req.body.message;
+    let message = req.body.message;
     console.log(sender, "sender");
     console.log(reciever, "reciever");
     console.log(message, "message");
     try {
+      if(message.includes("localhost:3000")){
+        message = "hey checkout my profile and let me know if you have any job suitable for me.. here is my profile link https://localhost:3000/profile/"+sender;
+      }
+      
       const newMessage = await messageData.sendMessage(
         sender,
         reciever,
         message
       );
+      
+
       const messages = await messageData.getMessages(userSession._id);
       for (let i = 0; i < messages.length; i++) {
         // changing the senderId to senderName
