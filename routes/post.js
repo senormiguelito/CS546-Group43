@@ -1,4 +1,4 @@
-import { postData, postComment } from "../data/index.js";
+import { postData, postComment, projectData } from "../data/index.js";
 import { Router } from "express";
 import { ObjectId } from "mongodb";
 import * as h from "../helpers.js";
@@ -123,39 +123,25 @@ router.route("/createPost").post(upload.single("image"), async (req, res) => {
   }
 });
 
-// router.route('/filter').post(async (req, res) => {
-//   console.log(req.params, req.body)
-//   let role = xss(req.body.filter);
-//   console.log("in filter route")
-//   if (role === 'all') {
-//     let posts = await postData.getAll()
-//     return res.render('home', { posts: posts })
-//   }
-//   else {
-//     let posts = await postData.getByRole(role)
-//     return res.render("home", { posts: posts });
-//   }
-
-// });
-
 router.route("/:postId/interested").post(async (req, res) => {
-  // console.log(req.params,req.body)
-  // console.log(req.session)
   let role = xss(req.body.filter);
   let postId = req.params.postId;
 
-  console.log("in interested route");
+//  console.log("in interested route");
   try {
     let post = await postData.get(postId);
-    // console.log(post);
+
     if (!post) throw new Error("Post was not found");
-    post.prospects = post.prospects.push({
-      userId: req.session.user._id,
-      firstName: req.session.user.firstName,
-      lastName: req.session.user.lastName,
-      email: req.session.user.emailAddress,
-      userCity: req.session.user.location_city,
-    });
+    let prospectpush = {};
+
+    prospectpush["userId"] = req.session.user.userID;
+    prospectpush["firstName"] = req.session.user.userSessionData.firstName;
+    prospectpush["lastName"] = req.session.user.userSessionData.lastName;
+    prospectpush["email"] = req.session.user.userSessionData.emailAddress;
+    prospectpush["userCity"] = req.session.user.userSessionData.location_city;
+
+    console.log(prospectpush);
+    post.prospects.push(prospectpush);
 
     const updatedPost = await postData.update(
       postId,
@@ -168,13 +154,27 @@ router.route("/:postId/interested").post(async (req, res) => {
       post.categories,
       post.budget,
       post.images,
-      post.prospects
+      post.prospects,
+      post.comments
     );
 
     //it is redirecting back to same page so you might feel weather or not something happened
     if (updatedPost) {
-      return res.redirect("/post/postId");
-      //      return res.status(200).render("post/postId");
+      let comms = await postComment.getAll(postId);
+      // okay so need a way to show number of people interested
+      let interestCount = updatedPost.prospects.length;
+
+
+      // this is where we will use AJAX form submission --> update the page without refreshing/reloading to show updated interest count
+      
+      
+      return res.render("post", {
+        post: post,
+        comms: comms,
+        interestCount: interestCount,
+      });
+      // return res.redirect(`/post/${postId}`);
+      
     }
   } catch (e) {
     res.status(400).render("error", { error: e });
@@ -183,8 +183,8 @@ router.route("/:postId/interested").post(async (req, res) => {
 
 router.route("/filter").post(async (req, res) => {
   // console.log(req.params, req.body);
-  let role = req.body.filter;
-  console.log("in filter route");
+  let role = req.body.filter; // xss?!
+  // console.log("in filter route");
   if (role === "all") {
     let posts = await postData.getAll();
     return res.render("home", { posts: posts });
@@ -196,28 +196,100 @@ router.route("/filter").post(async (req, res) => {
 
 router.route("/:postId").get(async (req, res) => {
   try {
-    let postId = xss(req.params.postId);
+    let postId = req.params.postId;
     let post = await postData.get(postId);
+    let prospectId;
 
     h.checkId(postId);
+
     if (!post) throw "could not find post with that id";
     let comms = await postComment.getAll(postId);
-    // okay so need a way to show number of people interested
     let interestCount = post.prospects.length;
 
+    // THIS IS HOW THE USER WHO POSTED IT WILL CREATE THE PROJECT SUBDOC!
+    // IF THEY POSTED THEY CAN VIEW THIS. THEY SELECT THE USER THEY DESIRE
+    // THEN HTML SUBMIT WILL CALL DATA/PROJECTS.JS 'CREATE' FUNCTION
+    // THE ROUTE BELOW WILL WORK DIVINELY AND AFTER USER SUCCESSFULLY ENTERS THE 
+    // PARAMETERS, THEY WILL LINK TO THEIR PROJECTS PAGE WHICH WILL HAVE THIS NEW PROJECT
+    // LGTM!
+    
+    let isAuthor;
+    if (req.session.user.userID === post.userId) {
+      isAuthor = true;
+      console.log("sess.ion.user is the user who posted");
+      console.log("post prospects:")
+      console.log(post.prospects);
+      return res.render("post", {
+        post: post,
+        comms: comms,
+        interestCount: interestCount,
+        isAuthor: isAuthor,
+        prospects: post.prospects,
+        postId: postId,
+      });
+    }
+
     if (!comms) {
-      return res.render("post", { post: post, interestCount: interestCount });
+      return res.render("post", {
+        post: post,
+        interestCount: interestCount
+      });  //interestCount: interestCount
     } else {
       return res.render("post", {
         post: post,
         comms: comms,
         interestCount: interestCount,
+        isAuthor: isAuthor,
+        prospects: post.prospects,
       });
     }
   } catch (e) {
     return res.status(400).render("404", { error: e });
   }
 });
+
+
+router.route("/:postId/selectProspect").post(async (req, res) => {
+  try {
+    console.log("254 in selectProspect");
+    let postId = req.params.postId;
+    let prospectId = xss(req.body.prospects);
+    // console.log("req.body: ", req.body, "req.params:", req.params)
+    //let title = xss(req.body.title);
+    //let description = xss(req.body.description);
+    let clientId = req.session.user.userID;
+    let status = "not started"; // how unbelievably wicked. Itsss alllll comming togetheaaa!
+    let assignedToId = prospectId;
+
+    let post = await postData.get(postId)
+    if (!post) throw new Error("no post specified");
+      let title = post.title
+      let description = post.description
+    
+    console.log("264");
+    // lets create the damn thing
+    console.log(title, description, clientId, status, assignedToId);
+
+    const project = await projectData.create(
+      title,
+      description,
+      clientId,         // THIS user
+      status,           // not started upon project creation
+      assignedToId      // prospect selected from super sick drop down
+    );
+
+    console.log("create went well");
+
+    console.log("project create called");     // --------> gotta delete posting, or hide it from the page - (now other users shouldn't be able to access it)
+    if (project.created) {    // routes/user.js line 142
+      return res.render("projects",{created: created, project: project});  // super duper awesome
+    }
+
+  } catch (e) {
+    return res.status(400).render("404", { error: e });
+  }
+});
+
 
 router.route("/:postId/comment").post(async (req, res) => {
   try {

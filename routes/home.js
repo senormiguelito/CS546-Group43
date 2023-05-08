@@ -11,14 +11,13 @@ router.route("/").get(async (req, res) => {
     // let posts = await postData.getAll();
     // console.log(posts.title, posts.description)
     let role = req.session.user.userSessionData.role;
-    // console.log()
-    if (!role) throw "YO! how come you logged in without providing role?";
+    if (!role) throw "You must provide a role";
     let message = "";
     if (req.session.user) {
       const userSession = req.session.user.userSessionData;
-      message = `Hey ${userSession.firstName}, this is your user ID: ${req.session.user.userID}`;
+      message = `Welcome ${userSession.firstName}, this is your user ID: ${req.session.user.userID}`;
     } else {
-      message = `hey you entered without login!!!, how???`;
+      message = `You must be logged in to be here`;
       res.redirect("/login");
     }
     let posts;
@@ -65,9 +64,9 @@ router.route("/myprofile").get(async (req, res) => {
 
 router.route("/provideList").get(async (req, res) => {
   try {
-    console.log("in porviderList route");
+//    console.log("in provideList route");
     const userList = await userData.getUsersBy("provider");
-    // console.log(userList)
+    
     res.status(200).render("providerlist", { userList: userList });
   } catch (e) {
     res.status(400).render("providerlist", { error: e });
@@ -306,25 +305,5 @@ router
     }
   });
 
-// moved the following and implemented in /users.js:
-
-// router.route("/profile/:userId").get(async (req, res) => {
-//   // access a profile page
-//   let errorMessage = '';
-//   try {
-//     if (req.session.user) {
-//       const userId = userSessionData._id.toString();
-//       const userID = req.params.userId;               // pick this or the above
-//       const user = await userData.getUser(userId);
-//       res.render('profile', { user });
-//     } else {
-//       res.redirect('/login');   // must be logged in to interact with posts
-//     }
-//   } catch (e) {
-//     console.log(e);
-//     res.status(500).render('error', { errorMessage: "Internal Server Error" });
-
-//   }
-// });
 
 export default router;

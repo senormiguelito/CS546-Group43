@@ -2,8 +2,9 @@ import { user } from '../config/mongoCollections.js';
 import { ObjectId } from 'mongodb';
 import * as h from '../helpers.js';
 import { update } from './posts.js';
-import { projectData } from './index.js';
+import { projectData, userData } from './index.js';
 let date = new Date();
+const userCollection = await user();
 
 export const create = async (
   title,
@@ -12,25 +13,28 @@ export const create = async (
   status,     // not started/in progress/finished --> only 3 options
   assignedToId      // other user involved
 ) => {
+
   h.checkTitle(title);
   h.checkDescription(description);
   h.checkId(clientId);
   h.checkstatus(status);
   h.checkId(assignedToId);
-
+  
 /*
   if (!status) {
     status = "not started";   // default value. Ask group. Or can just make drop down. Idk im fookin tired
   }
 */
-  const userCollection = await user();
   const user = await userCollection.findOne({ _id: new ObjectId(clientId) });   // figure out if clientId is correct
   if (!user) throw new Error("No user with that ID in the database");
 
   const alreadyExists = await userCollection.findOne({ _id: clientId, 'project.title': title });
-  if (alreadyExists) throw new Error(`A project with this user and title of ${title} already exists in the database`);
+  if (alreadyExists) {
+    console.log("heres the issue");
+    throw new Error(`A project with this user and title of ${title} already exists in the database`);
+  }
 
-  let newProjectId = new ObjectId();    // do we want .toString()?  --> askk someone who has more brain cells than you
+  let newProjectId = new ObjectId();
   const newProjecInfo = {
     _id: newProjectId,
     title: title,
@@ -38,22 +42,32 @@ export const create = async (
     clientId: clientId,
     status: status,
     assignedToId: assignedToId,
-    prospects: [],      // people who have shown interest for user to choose who they want for the project 
     createdAt: date.toISOString()
   };
 
-  const updatedClient = await userCollection.updateOne({ _id: clientId }, {
+  const updatedClient = await userCollection.updateOne({ _id: new ObjectId(clientId) }, {
     $push: { projects: newProjecInfo }
   });
-  const updatedAssignedTo = await userCollection.updateOne({ _id: assignedToId }, {
+  const updatedAssignedTo = await userCollection.updateOne({ _id: new ObjectId(assignedToId) }, {
     $push: { projects: newProjecInfo }
   });
+  
+  const clientCheck = await userData.getUser(clientId);
+  const assigneeCheck = await userData.getUser(assignedToId);
 
-  if (updatedClient.modifiedCount === 0 && updatedAssignedTo.modifiedCount === 0) throw new Error("This project was not added to both parties 'projects' arrays :-(");
+  if (updatedClient.modifiedCount === 0 && updatedAssignedTo.modifiedCount === 0) {
+    throw new Error("This project was not added to both parties 'projects' arrays :-(");
+  }
   else {
+    console.log("life is good");
+
+    // implement deletion of the post created by the poster!
+
+
     newProjectId = newProjectId.toString();
     const newProject = await this.get(newProjectId);
-    return newProject;
+    console.log("newProject: ", newProject);
+    return {newProject, created: true };  // just like create user func
   }
 };
 
