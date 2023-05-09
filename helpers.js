@@ -37,16 +37,11 @@ export const checkDOB = (date_of_birth) => {
     .split("-")
     .map((str) => parseInt(str)); // parse each sub-string and convert into an integer
   if (month > 12 || month < 1) throw new Error("Invalid month");
-  if (
-    day < 1 ||
-    (month === 2 && day > 28) ||
-    ((month === 4 || 6 || 9 || 11) && day > 30) ||
-    day > 31
-  )
+  if (day < 1 || (month === 2 && day > 28) || ((month === 4 || month === 6 || month === 9 || month === 11) && day > 30) || day > 31)
     throw new Error("Invalid date");
   if (year > 2010) throw new Error("You are too young to join. Grow up.");
-  if (year < 1900) throw new Error("That is preposterous");
-  date_of_birth = date_of_birth.trim();
+  if (year < 1900) throw new Error("You're a dinosaur");
+  // date_of_birth = date_of_birth.trim();
   // if (releaseDate.length !== 10) throw new Error("Incorrect releaseDate format"); // what is this releas date?
 };
 
@@ -93,7 +88,7 @@ export const checkrole = (role) => {
   role = role.toLowerCase();
   if (role !== "provider" && role !== "seeker")
     throw new Error(
-      'Invalid role specified. Only "Provider" or "Seeker" are allowed.'
+      'Invalid role specified. Only "Provider" or "Seeker" are accepted.'
     );
 };
 
@@ -298,7 +293,7 @@ export const checkprospects = (prospects) => {
   
   for (let i in prospects) {
     if (typeof prospects[i] !== "string")
-      throw new Error("Update: each prospect must be a string");
+      throw new Error("Update: each prospect must have type string");
     prospects[i] = prospects[i].trim();
     for (let j in prospects[i]) {
       if (typeof prospects[i][j] === "number")

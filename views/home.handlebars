@@ -53,14 +53,18 @@
 <h1>Welcome to Your Home Page!</h1>
 <p class="error" id="success">{{#if Message}}{{Message}}{{/if}}</p>
     <p class="about">Check out our latest job posts:</p>
-   
-    <a href="/post/newPost/createPost" class="create-post">Create a job posting!</a>
+
+<div class="me-mb-3">
+  <a href="/post/newPost/createPost" class="btn btn-primary btn-lg" id="createPost">Create a job
+    posting!</a>
     <br>
+</div>
 
 <div class="filter-button">
-  <h3>Filter: </h3>
+  <h3>Filter By User Role: </h3>
   <form method="post" action="/post/filter" id="filter-form">
     <select name="filter" id="filterInput">
+      <option selected value="">Click here to filter your results</option>
       <option value="provider">Job Provider</option>
       <option value="seeker">Job Seeker</option>
       <option value="all">Get All</option>
@@ -82,7 +86,6 @@
         {{/if}}
 
       </div>
-      {{!-- <p>{{_id}} id</p> --}}
       <h2>{{title}}</h2>
       <p>{{description}}</p>
     </div>

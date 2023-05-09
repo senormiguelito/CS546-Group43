@@ -8,38 +8,74 @@
 
 FYI I am going to .gitignore public/images
 
+## TUESDAY 5/9
+
+### Middleware routes
+
+* basically verify the user is logged in/able to access any given route
+
+### clientside posts/reviews/projects
+
+* error checking and handling in every route and function
+* need a team effort here
+
+### routes/HOME.js
+
+* line 276 catch block I think we need the return statement/resolution, Vamsi your call
+
+### We need a proper SEED FILE
+
+* update repo README
+
+### data/POSTS.js
+
+* DO THE CATEGORIES ERROR CHECKING
+
+### routes/REVIEWRATINGS.js
+
+* line 62 -> if the session user is the same as the req.params.userId, show all of the reviews left about the session user with modified html
+* I think the error checking I tried to re-implement is screwing shit up
+
+### Comment routing
+
+* after user has displayed interest, should still be able to see
+
+### AJAX
+
+### Contact
+
+* modify contact button (modal box) to display ways to contact user (phone, email ... social media integration (extra feature)
+
+------------------------------------;
+
+
+
+
+
+
+
+
+
+
+------------------------------------;
+
 ## Monday 5/8
 
 ### Rating/review
+
 * there should be a way for a user to see their reviews in profile page or somewhere!
-* filter by rating
-* option to edit/delete review (not a core feature, put way on back burner)
 
 ### AJAX submission
 
 * When a user displays interest on a post, this is where we will meet the AJAX req --> update the interest count without needing to reload the entire page for the user ;)
 
-### Profile
-
-* when a user lands on a profile, ability for session user to share their profile as a direct message to the user who's profile they are viewing
-
 #### Profile -> Posts
 
 * when a user lands on a profile ability to view all of the user's posts whos profile they are on
 
-### Posts
-
-* show the name of the user who posted above the post itself, or somewhere on the page that makes sense
-* categories needs way more options, the list is very incomplete. Maybe "other" option that will allow user to add another? Kaushal this is up to you
-* If a user is already a prospect for a job, they should not be able to double insert
-
 ### Tota11y
 
 * someone has to take on: [https://khan.github.io/tota11y/](https://khan.github.io/tota11y/)
-
-#### Post author -> view all prospects -> route to profile
-
-* post author should be able to view each of the prospects' profiles by clicking a link
 
 ### Break the code!
 
@@ -50,7 +86,7 @@ FYI I am going to .gitignore public/images
 * a lot of the objects/documents/etc have changed in the process.
 * Need a seed file that has all the latest functionality & tweaks so nothing disagrees when graders test the code and try to break the website
 
---------------------------------
+---
 
 ## Saturday 12:30
 
@@ -58,34 +94,7 @@ Input sanitization is easy. xss wrap every req.body --> BEWARE OF ARRAYS
 
 * xss(req.body) will turn anything inside parentheses into a string
 
-### providerList.handlebars
 
-need to link 
-
-## Update Friday Night/Saturday morning
-
-New design is badass. Profile & edit profile looks sooo good.
-Notes:
-
-### route/post.js
-
-I need someone smart and brave to fix the error for me in /profile/:userId
-
-* successfully links when clicking on their own profile, but I can't get it to link correctly to other users
-
-### Edit profile
-
-* user should not be required to upload a picture to successfully edit their profile
-* user should be redirected to their profile after submitting changes
-* ability to add more than 1 category is not working, and upon submission no categories are being pushed into the array
-
-### Homepage
-
-* filter button constantly resets to job provider after clicking find, which isn't successfully showing job providers/seekers on submission
-
-### My posts
-
-* Is not displaying :( even tho theres stuff in the collection
 
 ## Update Friday afternoon
 
@@ -218,40 +227,11 @@ For log out: add confirmation message after clicking 'Logout' to confirm to the 
 Do we want to throw errors if there are no users found when calling getBy() or just return something empty?
 --> return empty () and display a message "No users found when filtering by X"
 
-### data/posts.js
-
 Helper functions are implemented, its cleaned up. Rushiraj, check thru and make sure all objects are returning as you want them to
 **need to check on what we want to do with images**
-
-### Unauthorized access (403)
-
-If a user types in a specific url (which does correspond to an existing route), lets make the message that appears correspond to the page they tried to access and that they must be logged in to access it
-
-If a user types in an invalid (nonexisting route) url --> ERROR 404 NOT FOUND --> hide the toolbar/contents of the website just like login/signup
-
-### My posts
 
 ### Mikey sux
 
 I suck at coding
 
 SOMEONE PLEASE CHECK OVER THE PROJECTS ROUTES
-
-### AJAX
-
-Need at least 1 ajax form submission
-
-#### (tota11y accessibility shit ....for much, much later on)
-
-can't forget about because there is a lot of points to be lost for this
-
-### input sanitization
-
-Need to defend against XSS attacks with inputs
-
-* "wrap the request body in a function that handles it for you" - Ryan the TA, found in Slack channel
-
-------------------------------;
-mongo makes it very easy to use geolocation to filter results based on the area.
-Come see him he'll show you his snippet from back when using it.
-Documentation is OJ Simpleton
