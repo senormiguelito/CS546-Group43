@@ -6,11 +6,11 @@
         <p>{{error}}</p>
 
         <div class="sort-button">
-            <form method="post" action = "/home/provideList/filterByDistance" id="filter-form" >
-            <label>Sort: </label>
+            <form method="post" action = "/home/provideList/sortBy" id="sort-form" >
+            <label<span class="required">*</span>>Sort: </label>
             <select name="filter" id="filterInput">
               <option value="distance">Distance</option>
-              {{!-- <option value="seeker">Job Seeker</option> --}}
+              <option value="rating">Rating</option>
               <option value="all">Get All</option>
             </select>
             <button type="submit" id="find">Find</button>

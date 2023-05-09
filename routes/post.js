@@ -199,21 +199,59 @@ router.route("/:postId").get(async (req, res) => {
     let postId = req.params.postId;
     let post = await postData.get(postId);
     let prospectId;
-
+    console.log("hjewv")
     h.checkId(postId);
-
+    console.log("hjewv")
     if (!post) throw "could not find post with that id";
+    console.log("hjewv")
     let comms = await postComment.getAll(postId);
-    let interestCount = post.prospects.length;
+    console.log("hjewv")
+    let interestCount = 0
+    let isAuthor;
+    if(post.prospects.length === 0 ){
+      
+      if (req.session.user.userID === post.userId) {
+        isAuthor = true;
+        console.log("sess.ion.user is the user who posted");
+        console.log("post prospects:")
+        // console.log(post.prospects);
+        return res.render("post", {
+          post: post,
+          comms: comms,
+          interestCount: interestCount,
+          isAuthor: isAuthor,
+          prospects: [],
+          postId: postId,
+        });
+      }
+      if (!comms) {
+        console.log("jhdavfk4")
+        return res.render("post", { post: post, interestCount: interestCount});
+      } else {
+        console.log("jhdavfk5")
+        console.log("bsdkjc")
+      return res.render("post", {
+        post: post,
+        comms: comms,
+        interestCount: interestCount,
+        isAuthor: isAuthor,
+        prospects: [],
+      })
+        return res.render("post", { post: post, comms: comms });
+      }
+    }
+    interestCount = post.prospects.length;
 
+    
     // THIS IS HOW THE USER WHO POSTED IT WILL CREATE THE PROJECT SUBDOC!
     // IF THEY POSTED THEY CAN VIEW THIS. THEY SELECT THE USER THEY DESIRE
     // THEN HTML SUBMIT WILL CALL DATA/PROJECTS.JS 'CREATE' FUNCTION
     // THE ROUTE BELOW WILL WORK DIVINELY AND AFTER USER SUCCESSFULLY ENTERS THE 
     // PARAMETERS, THEY WILL LINK TO THEIR PROJECTS PAGE WHICH WILL HAVE THIS NEW PROJECT
     // LGTM!
-    
-    let isAuthor;
+    console.log("hjds")
+
+    console.log("hjds")
     if (req.session.user.userID === post.userId) {
       isAuthor = true;
       console.log("sess.ion.user is the user who posted");
@@ -228,13 +266,15 @@ router.route("/:postId").get(async (req, res) => {
         postId: postId,
       });
     }
-
+    console.log("bsdkjc")
     if (!comms) {
+      console.log("bsdkjc")
       return res.render("post", {
         post: post,
         interestCount: interestCount
       });  //interestCount: interestCount
     } else {
+      console.log("bsdkjc")
       return res.render("post", {
         post: post,
         comms: comms,
@@ -243,7 +283,9 @@ router.route("/:postId").get(async (req, res) => {
         prospects: post.prospects,
       });
     }
+    console.log("bsdkjc")
   } catch (e) {
+    console.log("jhdavfk6")
     return res.status(400).render("404", { error: e });
   }
 });

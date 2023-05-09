@@ -21,12 +21,12 @@
       <label>Sort: </label>
       <form
         method="post"
-        action="/seekers/filterSeekerByDistance"
+        action="/seekers/sortBy"
         id="filter-form"
       >
         <select name="filter" id="filterInput">
           <option value="distance">Distance</option>
-          {{! <option value="seeker">Job Seeker</option> }}
+          <option value="rating">Rating</option>
           <option value="all">Get All</option>
         </select>
         <button type="submit" id="find">Find</button>

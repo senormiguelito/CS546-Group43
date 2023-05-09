@@ -11,7 +11,7 @@ FYI I am going to .gitignore public/images
 ## Monday 5/8
 
 ### Rating/review
-
+* there should be a way for a user to see their reviews in profile page or somewhere!
 * filter by rating
 * option to edit/delete review (not a core feature, put way on back burner)
 
