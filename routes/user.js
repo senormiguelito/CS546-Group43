@@ -179,6 +179,7 @@ router.route("/seekers").get(async (req, res) => {
   try {
     // console.log("in seeker")
     const userList = await userData.getUsersBy("seeker");
+    if(!userList) throw new Error("could not find any user")
     // console.log(userList)
     res.render("seekerList", { userList: userList }); // handlebars [age]
   } catch (e) {
@@ -192,7 +193,7 @@ router.route("/seekers/sortBy").post(async (req, res) => {
     // console.log("in seekersList filter route")
     // console.log(req.params,req.body)
     let user = req.session.user.userSessionData;
-    let filterBy = req.body.filter;
+    let filterBy = xss(req.body.filter);
     let userList = undefined;
     if (filterBy.toLowerCase() === "distance") {
       userList = await userData.sortSeekersByDistance(user);
@@ -218,11 +219,10 @@ router.route("/seekers/searchArea").post(async (req, res) => {
     // console.log("in seekersList filter route")
     // console.log(req.params,req.body)
     let user = req.session.user.userSessionData;
-    let searchArea = req.body.searchAreaInput;
+    let searchArea = xss(req.body.searchAreaInput);
+    searchArea = parseInt(searchArea)
     let userList = await userData.filterSeekerBySearchArea(user, searchArea);
 
-    // const userList = await userData.getUsersByRole("provider");
-    // console.log(userList)
     res.status(200).render("seekerlist", { userList: userList });
   } catch (e) {
     res.status(400).render("seekerlist", { error: e });

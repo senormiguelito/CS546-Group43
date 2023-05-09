@@ -98,7 +98,6 @@ export const remove = async (userId, commentId) => {
     });
   }
 
-  try {
     let finalPost = undefined;
     if (findComment.userId && post.userId) {
       if (findComment.userId === userId || userId === post.userId.toString()) {
@@ -117,8 +116,5 @@ export const remove = async (userId, commentId) => {
     } else {
       throw 'Could not delete comment';
     }
-  } catch(e) {
-    throw e;
-  }
   
 };

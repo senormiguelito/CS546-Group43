@@ -1,6 +1,6 @@
 
 <h1>Welcome to Our post Page!</h1>
-    {{!-- <p class="about">Check out our latest job posts:</p> --}}
+  
     <div class="post-list-container">
       {{#if post.userId}}
           <p><a href="/profile/{{post.userId}}" class="btn btn-primary">View profile!</a></p>
@@ -9,7 +9,7 @@
           
         <div class="post-list-img-box">
           {{#if post.images}}
-          <img src={{post.images}} alt="Post 1 Image" />
+          <img src={{post.images}} alt="Post 1 Image"/>
         {{else}}
           <img
             src="../public/images/No_Image_Available.jpg"
@@ -24,12 +24,8 @@
       {{#if comms}}
         {{#each comms}}
             <div class="post-comment">
-              {{!-- NOTE FOR KAUSHAL: below id is comment id, you can get the user's id from comment id from the function I made in 
-              posts.js which is getByCommentId and from that you can get post and also user id which you can use to redirect my profile to appropriate profile --}}
                 <p><a href = "/comment/profile/{{_id}}"> {{userFirstName}} {{userLastName}}</a> : {{comment}}
-                {{#if isAuthor}}
                 <a href="/post/{{_id}}/deleteComment" id="delete-comment"> Delete</a>
-                {{/if}}
             </div>
         {{/each}}
       {{/if}}
@@ -41,8 +37,7 @@
             <input type="submit" value="post">
             </form>
         </div>
-        {{#if notAuthor}}
-        {{#unless alreadyProspect}}
+        {{#unless isAuthor}}
         <div class="interested-button">
           <form method="post" action = "/post/{{post._id}}/interested" id="interested-form" >
             <label>Interested?</label>
@@ -50,7 +45,8 @@
             </form>
         </div>
         {{/unless}}
-        {{/if}}
+
+       
       {{#if isAuthor}}
       <form method="POST" action="/post/{{post._id}}/selectProspect">
         <div class="dropdown">
@@ -87,13 +83,5 @@
   </div>
 </div>
 
-<footer class="bottom-bar">
-  <nav class="navbar navbar-expand-lg bg-body-tertiary">
-    <div class="container-fluid">
-      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-        <li class="nav-item"><a href="/home/provideList" class="see-all">See All Job Providers</a></li>
-        <li class="nav-item"><a href="/seekers" class="see-all">See All Job Seekers</a></li>
-      </ul>
-    </div>
-  </nav>
-</footer>
+
+

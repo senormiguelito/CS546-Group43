@@ -79,7 +79,7 @@ router.route("/provideList/sortBy").post(async (req, res) => {
     // console.log("in porviderList filter route")
     // console.log(req.params,req.body)
     let user = req.session.user.userSessionData;
-    let filterBy = req.body.filter;
+    let filterBy = xss(req.body.filter);
     let userList = undefined;
     if (filterBy.toLowerCase() === "distance") {
       userList = await userData.sortProvidersByDistance(user);
@@ -103,9 +103,10 @@ router.route("/provideList/searchArea").post(async (req, res) => {
     // console.log("in porviderList search area filter route")
     // console.log(req.params,req.body)
     let user = req.session.user.userSessionData;
-    let searchArea = req.body.searchAreaInput;
+    let searchArea = xss(req.body.searchAreaInput);
     let userList = undefined;
 
+    searchArea = parseInt(searchArea)
     userList = await userData.filterProviderBySearchArea(user, searchArea);
     // const userList = await userData.getUsersByRole("provider");
     // console.log(userList)

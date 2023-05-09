@@ -19,7 +19,7 @@ export const create = async (
   lastName
   // createdAt 
 ) => {
- try{
+
 
   rating = parseInt(rating)
   if(!rating) throw 'could not find rating'
@@ -105,9 +105,7 @@ export const create = async (
       throw new Error("Review was not succesfully added");
     }
   }
-}catch(e){
-  throw e
-}
+
 };
 
 export const getReviewByReviewId = async (id) => {
