@@ -17,13 +17,7 @@ router.route("/:userId").post(async (req, res) => {
     h.checkId(reviewee);
     h.checkId(reviewer);
 
-    console.log("reviewee")
-    console.log(reviewee);
-    console.log(reviewer)
-
-    console.log("20 /user/reviews/ route");
     const reviewExists = await reviewData.checkReview(reviewer, reviewee);
-    console.log(reviewExists)
     if (reviewExists) {
       // badInput = true;
       // console.log("25 bc reviewExists")
@@ -39,8 +33,10 @@ router.route("/:userId").post(async (req, res) => {
       const rating = xss(req.body.ratingInput);
       const review = xss(req.body.reviewInput);
 
+      if(review.trim().length === 0){
+        return res.status(400).render("reviews", {error:"review comment can not be empty!"})
+      }
       const thisReview = await reviewData.create(reviewer, reviewee, rating, review, reviewerFirstName, reviewerLastName);
-      // console.log("thisReview is problem")
       if (thisReview.success) {
         // console.log("it worked, bad link");
         console.log(thisReview)
@@ -56,13 +52,10 @@ router.route("/:userId").post(async (req, res) => {
 
 router.route("/:userId/allReviews").get(async (req, res) => {
   try {
-    console.log("in all review route")
-    console.log(req.params, req.body)
+
     let userId = req.params.userId
     const reviews = await reviewData.getAll(userId);
-    // console.log(req.session.user,"session user")
-    // console.log(reviews.reviewsList,"bjksdbxvk")
-    // console.log("reviews22")
+    if(!reviews) throw new Error("could not find any reviews")
     
     if (reviews.reviewsList) {
       console.log((reviews.reviewsList),"jvjj" )
@@ -87,11 +80,13 @@ router.route("/delete/:reviewId").post(async (req, res) => {
     let currentUser = req.session.user.userID
     let reviewId = req.params.reviewId 
     let review = await reviewData.getReviewByReviewId(reviewId) 
+    if(!review) throw new Error("Could not get a review to delete!")
 
     let deletedReview = undefined
     if(currentUser === review.userId){
       deletedReview = await reviewData.remove(reviewId)
-      console.log(deletedReview)
+      // console.log(deletedReview)
+      if(!deletedReview) throw new Error("can not delete someone elses review!")
       if(deletedReview.deleted === true){
         return res.redirect(`/../../user/reviews/${review.revieweeId}/allReviews`)
       }
@@ -108,16 +103,16 @@ router.route("/edit/:reviewId").post(async (req, res) => {
   try {
     let currentUser = req.session.user.userID
     let reviewId = req.params.reviewId 
-    let newComment = req.body.editReviewInput
-    let newRating = req.body.editRatingInput
+    let newComment = xss(req.body.editReviewInput)
+    let newRating = xss(req.body.editRatingInput)
 
     newRating = parseInt(newRating)
-
     let review = await reviewData.getReviewByReviewId(reviewId) 
+    if(!review) throw new Error("could not find the review to update")
     if(review.userId !==currentUser) return res.render('reviews',{msg:"You can not delete someone else's review!"})
 
     let updatedReview = await reviewData.updateReview(reviewId, newComment, newRating)
-    console.log(updatedReview)
+    if(!updatedReview) throw new Error("could not edit the review!")
     return res.redirect(`/../../user/reviews/${review.revieweeId}/allReviews`)
    
   } catch (e) {
