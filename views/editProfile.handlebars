@@ -27,13 +27,14 @@
         {{#if Error}} <p class="alert alert-danger">{{Error}}</p>{{/if}}
         {{#if Message}}<p class="alert alert-success" id="success">{{Message}}</p>{{/if}}
         <div id="error" class="alert alert-danger" role="alert" hidden></div>
+        <p><strong>Accepted image types:</strong> .jpg, .jpeg, .png</p>
         <input type="file" id="myImageInput" name="image" multiple class="form-control-file border"/><br>
         <label for="firstNameInput">First Name<span class="required">*</span></label>
         <input type="text" name="firstName" id="firstNameInput" value="{{objectUser.firstName}}">
         <label for="firstNameInput">Last Name<span class="required">*</span></label>
         <input type="text" name="lastName" id="lastNameInput" value="{{objectUser.lastName}}">
         <label for="bio">Bio</label>
-        <textarea id="bioInput" name="bio">{{objectUser.bio}}</textarea>
+        <textarea id="bioInput" name="bio" placeholder="Enter a bio to share with the community! (5000 character limit)">{{objectUser.bio}}</textarea>
         <label for="dob">Date of Birth<span class="required">*</span></label>
           <input type="date" class="form-control" id="dob" name="dob" value="{{objectUser.dob}}" required>
         <label for="emailAddressInput">Email Address<span class="required">*</span></label>
@@ -45,7 +46,7 @@
         <label for="cityInput">City<span class="required">*</span></label>
         <input type="text" name="city" id="cityInput" value="{{objectUser.location_city}}">
         <label for="stateInput">State<span class="required">*</span></label>
-        <input type="text" name="state" id="stateInput" value="{{objectUser.location_state}}">
+        <input type="text" name="state" id="stateInput" maxlength="2" value="{{objectUser.location_state}}">
         <label for="categoriesInput">Categories (One or more, up to four):</label>
         <input type="text" id="categoryInput" list="category-options" placeholder="Enter a category">
         <div class="category-container">

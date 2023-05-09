@@ -25,19 +25,16 @@
         class="form-control-file border"
       /><span class="required">*</span><br />
       <label for="titleInput">Title<span class="required">*</span>:</label>
-      <input type="text" name="titleInput" id="titleInput" />
+      <input type="text" name="titleInput" id="titleInput" placeholder="Give Your Post A Concise Title!"/>
       <br />
       <label for="descriptionInput">Description<span
           class="required"
         >*</span>:</label>
-      {{! <input type="textArea" name="descriptionInput" id="descriptionInput"> }}
-      <textarea name="descriptionInput" id="descriptionInput"></textarea>
+      <textarea name="descriptionInput" id="descriptionInput" placeholder="Here you can describe the project in detail." maxlength="2500"></textarea>
       <br />
       <label for="budgetInput">Budget<span class="required">*</span>:</label>
-      <input type="text" name="budgetInput" id="budgetInput" pattern="\d*" maxlength="10"/>
-      {{! <label for="locationInput">Location:</label>
-        <input type="text" name="locationInput" id="locationInput">
-        <br> }}
+      <input type="text" name="budgetInput" id="budgetInput" pattern="\d*" maxlength="10" placeholder="(currency is USD)"/>
+
       <br />
       <label for="roleInput">Role<span class="required">*</span>:</label>
       <select name="roleInput" id="roleInput">
@@ -81,8 +78,8 @@
           maxlength="5"
           placeholder="zipcode"
         />
-        <input class="addr" type="text" name="cityInput" id="cityInput" />
-        <input class="addr" type="text" name="stateInput" id="stateInput" />
+        <input class="addr" type="text" name="cityInput" id="cityInput" placeholder="City"/>
+        <input class="addr" type="text" name="stateInput" id="stateInput" placeholder="State"/>
         <br />
       </div>
 
