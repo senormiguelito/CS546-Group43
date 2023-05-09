@@ -630,12 +630,9 @@ if (addCategoryButton) {
 
 if (document.getElementById("send-btn")) {
   document.getElementById("send-btn").addEventListener("click", function () {
-    // Show the message status alert
     const messageStatus = document.getElementById("message-status");
     messageStatus.innerText = "Message sent successfully!";
     messageStatus.style.display = "block";
-
-    // Hide the message status alert after 3 seconds
     setTimeout(function () {
       messageStatus.style.display = "none";
     }, 3000);

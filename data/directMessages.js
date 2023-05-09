@@ -26,10 +26,15 @@ const create = async (
   };
 
   const getMessages = async (id) => {
-  
+    if (!id) throw 'Please provide an id ';
+    if (typeof id !== 'string' || id.trim().length === 0)
+      throw 'Please provide a valid id';
+    if (ObjectId.isValid(id) === false) throw 'Please provide a valid id';
+
+
     const directMessagesCollection = await directMessages()
-    let directMessage = await directMessagesCollection.find({$or:[{senderId:id},{recipientId:id}]}).toArray()
-    // let directMessage = await directMessagesCollection.find({$or:[{senderId:id},{recipientId:id}]}).sort({timeStamp: -1}).toArray();
+    // let directMessage = await directMessagesCollection.find({$or:[{senderId:id},{recipientId:id}]}).toArray()
+    let directMessage = await directMessagesCollection.find({$or:[{senderId:id},{recipientId:id}]}).sort({timeStamp: -1}).toArray();
 
     if(directMessage.length==0) {
       directMessage = []

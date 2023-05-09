@@ -1,49 +1,89 @@
-/* Message page styles */
+  .messagePage {
+    padding: 20px;
+  }
 
-.messagePage {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    margin-top: 20px;
-    padding: 10px;
-    background-color: #f5f5f5;
-  }
-  
   .messageSection {
-    flex-grow: 1;
-    margin-right: 10px;
+    margin-bottom: 20px;
   }
-  
+
   .message {
-    background-color: #fff;
-    border-radius: 5px;
+    background-color: #f2f2f2;
     padding: 10px;
+    border-radius: 5px;
     margin-bottom: 10px;
-    box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.1);
   }
-  
+
   .message p {
-    margin: 5px 0;
+    margin: 0;
   }
-  
+
   .message p:first-child {
     font-weight: bold;
+    margin-bottom: 5px;
   }
-  
-  .thatMessage {
-    flex-basis: 200px;
-    padding: 10px;
-    background-color: #fff;
+
+  .message p#desc {
+    margin-top: 5px;
+    font-style: italic;
+  }
+
+  .message p:last-child {
+    color: #888888;
+    font-size: 12px;
+  }
+
+  .dropdown {
+    position: relative;
+    display: inline-block;
+  }
+
+  .dropbtn {
+    background-color: #4CAF50;
+    color: white;
+    padding: 8px;
+    font-size: 14px;
+    border: none;
     border-radius: 5px;
-    box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
   }
-  
-  .thatMessage p {
-    text-align: center;
-    font-size: 20px;
-    margin: 0;
-    color: #444;
+
+  .dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f9f9f9;
+    min-width: 200px;
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+    padding: 12px 16px;
+    z-index: 1;
   }
-  .selected {
-    background-color: yellow;
+
+  .dropdown:hover .dropdown-content {
+    display: block;
+  }
+
+  .dropdown-content form {
+    margin-bottom: 0;
+  }
+
+  .dropdown-content input[type="text"] {
+    width: 100%;
+    padding: 6px;
+    margin-bottom: 8px;
+    box-sizing: border-box;
+  }
+
+  .dropdown-content input[type="submit"] {
+    background-color: #4CAF50;
+    color: white;
+    padding: 8px;
+    font-size: 14px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+
+  .messageStatus {
+    color: red;
+    font-size: 12px;
+    margin-top: 5px;
   }

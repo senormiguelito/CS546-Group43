@@ -241,6 +241,7 @@ router
   .route("/messages")
   .get(async (req, res) => {
     const userSession = req.session.user.userSessionData;
+
     // console.log(userSession)
     try {
       let messages = await messageData.getMessages(userSession._id);
@@ -275,9 +276,13 @@ router
     const sender = userSession._id;
     const reciever = req.body.recieverId;
     let message = req.body.message;
-    console.log(sender, "sender");
-    console.log(reciever, "reciever");
-    console.log(message, "message");
+    if(message.trim() == ""){
+      res.redirect("/home/messages");
+    }
+
+    // console.log(sender, "sender");
+    // console.log(reciever, "reciever");
+    // console.log(message, "message");
     try {
       if (message.includes("localhost:3000")) {
         message =
@@ -292,6 +297,7 @@ router
       );
 
       const messages = await messageData.getMessages(userSession._id);
+      console.log(messages);
       for (let i = 0; i < messages.length; i++) {
         // changing the senderId to senderName
         if (messages[i].senderId == userSession._id) {
@@ -312,6 +318,7 @@ router
         .render("dmList", { title: "messages", messages: messages });
       // return res.redirect("/home/messages");
     } catch (e) {
+      // console.log(e)
       // console.log(e);
       return res.status(400).render("error", { error: e });
     }
