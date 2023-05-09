@@ -213,6 +213,8 @@ router.route("/:postId").get(async (req, res) => {
     let notAuthor = true;
     let isAuthor;
 
+    let canDelete;
+
     for (let i in prospects) {
       if (thisUser === prospects[i].userId) {
         alreadyProspect = true;
@@ -232,15 +234,16 @@ router.route("/:postId").get(async (req, res) => {
     if (req.session.user.userID === post.userId) {
       isAuthor = true;
       notAuthor = false;
+      canDelete = true;
       // console.log("sess.ion.user is the user who posted");
-      // console.log("post prospects:")
-      // console.log(post.prospects);
+      // console.log("236 post prospects: ", post.prospects
       return res.render("post", {
         post: post,
         comms: comms,
         interestCount: interestCount,
         isAuthor: isAuthor,
         notAuthor: notAuthor,
+        canDelete: canDelete,
         alreadyProspect: alreadyProspect,
         prospects: post.prospects,
         postId: postId,
@@ -254,13 +257,31 @@ router.route("/:postId").get(async (req, res) => {
         notAuthor: notAuthor,
         alreadyProspect: alreadyProspect,
       }); 
-    } else {
+    } else {  // if there are comments on the post
+
+      for (let i in comms) {
+        if (comms.userId === thisUser) {
+          canDelete = true;
+          return res.render("post", {
+            post: post,
+            comms: comms,
+            interestCount: interestCount,
+            isAuthor: isAuthor,
+            notAuthor: notAuthor,
+            canDelete: canDelete,
+            alreadyProspect: alreadyProspect,
+            prospects: post.prospects,
+          });
+        }
+      }
+
       return res.render("post", {
         post: post,
         comms: comms,
         interestCount: interestCount,
         isAuthor: isAuthor,
         notAuthor: notAuthor,
+        canDelete: canDelete,
         alreadyProspect: alreadyProspect,
         prospects: post.prospects,
       });

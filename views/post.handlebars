@@ -24,10 +24,8 @@
       {{#if comms}}
         {{#each comms}}
             <div class="post-comment">
-              {{!-- NOTE FOR KAUSHAL: below id is comment id, you can get the user's id from comment id from the function I made in 
-              posts.js which is getByCommentId and from that you can get post and also user id which you can use to redirect my profile to appropriate profile --}}
                 <p><a href = "/comment/profile/{{_id}}"> {{userFirstName}} {{userLastName}}</a> : {{comment}}
-                {{#if isAuthor}}
+                {{#if canDelete}}
                 <a href="/post/{{_id}}/deleteComment" id="delete-comment"> Delete</a>
                 {{/if}}
             </div>
@@ -65,20 +63,17 @@
       </form>
       {{/if}}
     </div>
-<br>
-<a href="map" class="see-all">map</a>
-<br>
 
   <div class="dropdown">
   <button class="dropbtn">Reply</button>
-  <div class="dropdown-content">
-     <form method = "POST" action ='/home/messages/'>
+    <div class="dropdown-content">
+      <form method = "POST" action ='/home/messages/'>
         <input type="text" placeholder="Enter your message" name = "message" id = "message"><br><br>
         <input type="hidden" name = "recieverId" id = "recieverId" value = "{{senderId}}">
         <input type="submit" value="Send" id = "send-btn">
       </form>
+    </div>
   </div>
-</div>
 
 <footer class="bottom-bar">
   <nav class="navbar navbar-expand-lg bg-body-tertiary">

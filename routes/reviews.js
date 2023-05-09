@@ -28,7 +28,7 @@ router.route("/:userId").post(async (req, res) => {
     console.log(reviewExists);
     if (reviewExists) {
       // badInput = true;
-      return res.status(400).render("reviews", {error:"You have already reviewed this user!"})
+      return res.status(400).render("reviews", { error: "You have already reviewed this user!" });
     }
   } catch (e) {
     return res.status(400).render("../home", { badInput: true, error: e });
@@ -50,7 +50,7 @@ router.route("/:userId").post(async (req, res) => {
       return res.redirect("/login");
     }
   } catch (e) {
-    return res.status(500).render("error", { error: "Internal Server Error" });
+    return res.status(500).render("error", { error: "Internal Server Error", serverError: true });
   }
 });
 

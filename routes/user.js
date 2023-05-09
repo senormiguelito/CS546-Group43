@@ -178,12 +178,11 @@ router.route("/logout").get(async (req, res) => {
 router.route("/seekers").get(async (req, res) => {
   try {
     // implement helpers function 
-    // console.log("in seeker")
     const userList = await userData.getUsersBy("seeker");
     if (!userList) throw new Error("183 Couldn't find seekers");
     // console.log(userList)
 
-    return res.render("seekerList", { userList: userList }); // handlebars [age]
+    return res.render("seekerList", { userList: userList });
   } catch (e) {
     return res.render("seekerList", { error: e });
     // return res.status(400).render("error", { error: e });

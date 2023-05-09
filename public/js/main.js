@@ -490,6 +490,7 @@ const ListOfcategories = [
   "Restaurant",
   "Recreation",
   "Event Planning",
+  "Politics",
   "Home Services",
   "Dog Walker",
   "Pet Services",

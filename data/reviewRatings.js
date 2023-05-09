@@ -9,16 +9,13 @@ const reviewRatingsCollection = await reviewRatings();
 
 export const create = async (
   userId,
-  revieweeId, // user GETTING reviewed
-  // projectId, // project being reviewed
+  revieweeId,   // user GETTING reviewed
   rating,
   comment,
   firatName,    // ugh this typo hurts my soul
   lastName
-  // createdAt 
 ) => {
-
-  console.log(userId, revieweeId, rating, comment);
+  rating = parseInt(rating);
   h.checkId(userId);
   h.checkId(revieweeId);
   h.checkRating(rating);
@@ -33,7 +30,6 @@ export const create = async (
     _id: new ObjectId(revieweeId),
   });
 
-  console.log(reviewee);
 
   if (!reviewee)
     throw new Error(
