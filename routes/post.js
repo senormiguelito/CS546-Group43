@@ -11,8 +11,8 @@ import multer from "multer";
 router.route("/").get(async (req, res) => {
   try {
     let posts = await postData.getAll();
-    // console.log("in create post");
-    res.render("post", { posts: posts });
+
+    return res.render("post", { posts: posts });
   } catch (e) {
     return res.status(400).render("400", { error: e });
   }
@@ -25,7 +25,7 @@ router.route("/myPosts").get(async (req, res) => {
     let Message;
     if (req.session.successMessage) Message = req.session.successMessage;
     req.session.successMessage = null; // clear the session variable
-    res.render("myPost", {
+    return res.render("myPost", {
       title: "Here Are All Your Posts!",
       posts: myPosts,
       Message,
@@ -44,7 +44,7 @@ router.route("/myPosts").get(async (req, res) => {
 router.route("/newPost/createPost").get(async (req, res) => {
   try {
     // console.log("in create post");
-    res.render("create_post");
+    return res.render("create_post");
   } catch (e) {
     return res.status(400).render("404", { error: e });
   }
@@ -113,11 +113,11 @@ router.route("/createPost").post(upload.single("image"), async (req, res) => {
     if (newPost.insertedPost) {
       const userID = req.session.user.userID;
       req.session.post = { Created: true, userID };
-      res.status(200).redirect("/post/myposts");
+      return res.status(200).redirect("/post/myposts");
     } else {
       throw "could not create new post";
     }
-    // res.redirect('/')
+
   } catch (e) {
     return res.status(400).render("create_post", { Error: e });
   }
@@ -177,7 +177,7 @@ router.route("/:postId/interested").post(async (req, res) => {
       
     }
   } catch (e) {
-    res.status(400).render("error", { error: e });
+    return res.status(400).render("error", { error: e });
   }
 });
 
@@ -198,94 +198,74 @@ router.route("/:postId").get(async (req, res) => {
   try {
     let postId = req.params.postId;
     let post = await postData.get(postId);
-    let prospectId;
-    console.log("hjewv")
-    h.checkId(postId);
-    console.log("hjewv")
-    if (!post) throw "could not find post with that id";
-    console.log("hjewv")
+    let prospects = post.prospects;
+    let thisUser = req.session.user.userID;
     let comms = await postComment.getAll(postId);
-    console.log("hjewv")
-    let interestCount = 0
+    
+    h.checkId(postId);
+
+    let alreadyProspect = false;
+
+    if (!post) throw "could not find post with that id";
+  //  let comms = await postComment.getAll(postId);
+    let interestCount = post.prospects.length;
+    
+    let notAuthor = true;
     let isAuthor;
-    if(post.prospects.length === 0 ){
-      
-      if (req.session.user.userID === post.userId) {
-        isAuthor = true;
-        console.log("sess.ion.user is the user who posted");
-        console.log("post prospects:")
-        // console.log(post.prospects);
+
+    for (let i in prospects) {
+      if (thisUser === prospects[i].userId) {
+        alreadyProspect = true;
         return res.render("post", {
           post: post,
           comms: comms,
           interestCount: interestCount,
           isAuthor: isAuthor,
-          prospects: [],
+          notAuthor: notAuthor,
+          alreadyProspect: alreadyProspect,
+          prospects: post.prospects,
           postId: postId,
         });
       }
-      if (!comms) {
-        console.log("jhdavfk4")
-        return res.render("post", { post: post, interestCount: interestCount});
-      } else {
-        console.log("jhdavfk5")
-        console.log("bsdkjc")
-      return res.render("post", {
-        post: post,
-        comms: comms,
-        interestCount: interestCount,
-        isAuthor: isAuthor,
-        prospects: [],
-      })
-        return res.render("post", { post: post, comms: comms });
-      }
     }
-    interestCount = post.prospects.length;
 
-    
-    // THIS IS HOW THE USER WHO POSTED IT WILL CREATE THE PROJECT SUBDOC!
-    // IF THEY POSTED THEY CAN VIEW THIS. THEY SELECT THE USER THEY DESIRE
-    // THEN HTML SUBMIT WILL CALL DATA/PROJECTS.JS 'CREATE' FUNCTION
-    // THE ROUTE BELOW WILL WORK DIVINELY AND AFTER USER SUCCESSFULLY ENTERS THE 
-    // PARAMETERS, THEY WILL LINK TO THEIR PROJECTS PAGE WHICH WILL HAVE THIS NEW PROJECT
-    // LGTM!
-    console.log("hjds")
-
-    console.log("hjds")
     if (req.session.user.userID === post.userId) {
       isAuthor = true;
-      console.log("sess.ion.user is the user who posted");
-      console.log("post prospects:")
-      console.log(post.prospects);
+      notAuthor = false;
+      // console.log("sess.ion.user is the user who posted");
+      // console.log("post prospects:")
+      // console.log(post.prospects);
       return res.render("post", {
         post: post,
         comms: comms,
         interestCount: interestCount,
         isAuthor: isAuthor,
+        notAuthor: notAuthor,
+        alreadyProspect: alreadyProspect,
         prospects: post.prospects,
         postId: postId,
       });
     }
-    console.log("bsdkjc")
+
     if (!comms) {
-      console.log("bsdkjc")
       return res.render("post", {
         post: post,
-        interestCount: interestCount
-      });  //interestCount: interestCount
+        interestCount: interestCount,
+        notAuthor: notAuthor,
+        alreadyProspect: alreadyProspect,
+      }); 
     } else {
-      console.log("bsdkjc")
       return res.render("post", {
         post: post,
         comms: comms,
         interestCount: interestCount,
         isAuthor: isAuthor,
+        notAuthor: notAuthor,
+        alreadyProspect: alreadyProspect,
         prospects: post.prospects,
       });
     }
-    console.log("bsdkjc")
   } catch (e) {
-    console.log("jhdavfk6")
     return res.status(400).render("404", { error: e });
   }
 });
@@ -303,7 +283,7 @@ router.route("/:postId/selectProspect").post(async (req, res) => {
     let status = "not started"; // how unbelievably wicked. Itsss alllll comming togetheaaa!
     let assignedToId = prospectId;
 
-    let post = await postData.get(postId)
+    let post = await postData.get(postId);
     if (!post) throw new Error("no post specified");
       let title = post.title
       let description = post.description
@@ -317,15 +297,15 @@ router.route("/:postId/selectProspect").post(async (req, res) => {
       description,
       clientId,         // THIS user
       status,           // not started upon project creation
-      assignedToId      // prospect selected from super sick drop down
+      assignedToId,      // prospect selected from super sick drop down
+      postId
     );
-
     console.log("create went well");
 
-    console.log("project create called");     // --------> gotta delete posting, or hide it from the page - (now other users shouldn't be able to access it)
-    if (project.created) {    // routes/user.js line 142
-      return res.render("projects",{created: created, project: project});  // super duper awesome
-    }
+    if (project.created) {
+    // routes/user.js line 142
+      return res.render("projects", {project: project.newProject, created: project.created});  // super duper awesome
+    } 
 
   } catch (e) {
     return res.status(400).render("404", { error: e });
@@ -352,7 +332,7 @@ router.route("/:postId/comment").post(async (req, res) => {
     if (!comment) throw "could not add comment";
 
     return res.redirect(`/post/${postId}`);
-    // return res.render('home', {comment:comment})
+
   } catch (e) {
     return res.status(400).render("404", { error: e });
   }
@@ -364,7 +344,7 @@ router.route("/:commentId/deleteComment").get(async (req, res) => {
     let userId = req.session.user.userID;
     let commentId = xss(req.params.commentId);
 
-    h.checkValid(userId);
+    h.checkId(userId);    //h.checkValid(userId);
     h.checkId(commentId);
     userId = userId.trim();
     commentId = commentId.trim();
@@ -375,7 +355,6 @@ router.route("/:commentId/deleteComment").get(async (req, res) => {
       return res.redirect(`/post/${postByCommentId._id.toString()}`);
     if (!deletedComment) throw "could not delete comment";
     // res.redirect(`/post/${postByCommentId._id.toString()}`)
-    // res.json(req.params);
   } catch (e) {
     return res.status(400).render("404", { error: e });
   }

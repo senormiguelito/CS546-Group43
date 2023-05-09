@@ -9,10 +9,10 @@ import xss from "xss";            // -------------> we need to wrap every req.bo
 router
   .route("/:userId") // getAll projects involved from this userId
   .get(async (req, res) => {
-    let userId = req.params.userId; // unsure of id-- is it userId or projectId? in this route, if wrong, replace all projectId with userId
-    let message = "";
+    let userId = req.session.user.userID; // unsure of id-- is it userId or projectId? in this route, if wrong, replace all projectId with userId
+    const userProjects = await projectData.getAllProjectsByUser(clientId)
     try {
-      h.checkValid(userId);
+      h.checkId(userId);
       userId = userId.trim(); // might as well
       if (ObjectId.isValid(userId)) throw new Error("invalid userId");
     } catch (e) {
@@ -20,13 +20,12 @@ router
     }
 
     try {
-      const projects = await projectData.getAll(userId);
-      if (projects == null)
-        throw "No projects involved with this user!";
-      message = "Here are your projects! Good work";
-      return res
-        .status(200)
-        .render("projects", { projects: projects, Message: message });
+      if (userProjects.noProjects) {
+        return res.status(200).render("projects", { projects: noProjects });
+      } else {
+        message = "Here are your projects! You are building the community!";
+        return res.status(200).render("projects", { projects: projects, Message: message });
+      }
     } catch (e) {
       return res.status(400).render("home", { error: e }); // ask smart group members about render in case of error
     }
@@ -76,12 +75,12 @@ router
         const clientProjects = await projectData.getAllProjectsByUser(
           user._id.toString()
         );
-        res.status(200).render("projects", { projects: projects }); // returns updated client projects
+        return res.status(200).render("projects", { projects: projects }); // returns updated client projects
       } else if (user._id.toString() === assignedTo._id.toString()) {
         const assignedToProjects = await projectData.getAllProjectsByUser(
           user._id.toString()
         );
-        res.status(200).render("projects", { projects: projects }); // returns updated user projects
+        return res.status(200).render("projects", { projects: projects }); // returns updated user projects
       }
       // Maybe this works? Idea is to render the projects page with the updated user projects after insertion.
     } catch (e) {
@@ -139,8 +138,34 @@ router
     }
   });
 
+router.route("/").get(async (req, res) => {
+  let userId = req.session.user.userID; // unsure of id-- is it userId or projectId? in this route, if wrong, replace all projectId with userId
+  const userProjects = await projectData.getAllProjectsByUser(userId);
+
+  try {
+    h.checkId(userId);
+    userId = userId.trim(); // might as well
+    if (!ObjectId.isValid(userId)) throw new Error("invalid userId");
+  } catch (e) {
+    return res.status(400).redirect("/", { error: e }); //  unverified, not sure where to redirect. Need help. And jesus.
+  }
+
+  console.log("userProjects", userProjects);
+  console.log("userProjects.noProjects: ", userProjects.noProjects);
+  try {
+    if (userProjects.noProjects) {
+      return res.render("projects", { userProjects: userProjects, noProjects: true });
+    }
+    if (userProjects.projects) {
+      return res.render("projects", { userProjects: userProjects, projects: true });
+    }
+  } catch (e) {
+    return res.redirect("/home", 400);
+  }
+})
+
 router
-  .route('/projects/:projectId').get(async (req, res) => {  // get projectById
+  .route('/:projectId').get(async (req, res) => {  // get projectById
     let message = "";
     let projectId = req.params.projectId;
     try {
@@ -201,7 +226,7 @@ router
         .status(200)
         .redirect("/projects", { projectId: projectId, updated: true });
     } catch (e) {
-      res.status(400).redirect("/", { error: e });
+      return res.status(400).redirect("/", { error: e });
     }
   });
 
