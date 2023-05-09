@@ -50,8 +50,8 @@ export const create = async (
     location_state: location_state,
     location_zip_code: location_zip_code,
     createdOrUpdatedAt: d1.toISOString(),
-    images: images, // for right now am uploading only one image, because multiple image will take more time to done this post thing.
-    prospects: [], // Empty prospects array --> User interaction will push that user into the prospects array.
+    images: images,     // for right now only one image
+    prospects: [],      // Empty prospects array --> User interaction will push that user into the prospects array.
     // When poster decides on whos the right fit, select that prospect from the drop down ---> this will create the 'project'
   };
 
@@ -65,13 +65,14 @@ export const create = async (
 };
 
 export const getAll = async () => {
-  // console.log("inside data>posts>getAll");
+
   let postList = await postsCollection.find({}).toArray();
   postList = postList.map((element) => {
     element._id = element._id.toString();
     return element;
   });
-  if (!postList) throw "Could not get all posts";
+  if (!postList) throw "Could not retrieve all posts";
+  
   return postList;
 };
 
@@ -119,6 +120,7 @@ export const remove = async (id) => {
 
   result["postId"] = id;
   result["deleted"] = true;
+
   return result;
 };
 
@@ -134,9 +136,8 @@ export const update = async (
   budget,
   images,
   prospects,
-  comments    // check if should do error chcecking
+  comments    
 ) => {
-  //function tweak: changed 'seekerId' param to 'userId'
 
   h.checkId(postId);
   h.checkId(userId);
@@ -146,9 +147,9 @@ export const update = async (
   h.checkstate(location_state);
   h.checkzipcode(location_zip_code);
   h.checkbudget(budget);
+  //h.checkprospects(prospects);      // brought the dog out to play. Lets see if it screws shit up
 
-  //h.checkprospects(prospects);
-
+ 
   //this is different than helper function. don't delete it.
   if (!categories) throw new Error("categories not provided");
 
@@ -182,6 +183,17 @@ export const update = async (
 
   let oldPost = await get(postId);
 
+  // if (JSON.stringify(oldPost.prospects) === JSON.stringify(prospects)) {
+  //   throw new Error("user is already a prospect for the role");
+  // }
+
+  oldPost.prospects.forEach(element => {
+    prospects.forEach(element1 => {
+      if (element.userId === element1.userId) {
+        return;
+      }
+    });
+  });
   if (oldPost.userId !== userId) {
     throw "You can only update a post which you've created";
   }
@@ -194,10 +206,10 @@ export const update = async (
     oldPost.location_zip_code === location_zip_code &&
     JSON.stringify(oldPost.categories) === JSON.stringify(categories) &&
     oldPost.budget === budget &&
-    oldPost.prospects === prospects  &&// AHA!
+    JSON.stringify(oldPost.prospects) === JSON.stringify(prospects)   &&  // AHA!
     JSON.stringify(oldPost.comments) === JSON.stringify(comments)
   ) {
-    console.log("postUpdate 199, say it aint so!");
+    console.log("199 postUpdate, Hit because no changes detected");
     throw "You must change something to submit an update request";
   }
 
@@ -212,7 +224,7 @@ export const update = async (
     categories: categories, // cmooon nyowww
     budget: budget,
     createdOrUpdatedAt: d1.toISOString(),
-    images: [],
+    images: images, 
     prospects: prospects,
     comments: comments
   };
@@ -225,18 +237,19 @@ export const update = async (
   if (newPost.lastErrorObject.n === 0)
     throw [404, `Could not update the post with id ${postId}`];
 
-  console.log("in the clear 226");
+  console.log("228 newPost value: ", newPost.value);
   return newPost.value;
 };
 
 export const getByCommentId = async (id) => {
   h.checkId(id);
   id = id.trim();
+
   const post = await postsCollection.findOne({
     comments: { $elemMatch: { _id: new ObjectId(id) } },
   });
-
-  if (!post) throw "No band with that id";
+  if (!post) throw "No comment with that id found in the database";
+  
   return post;
 };
 
@@ -257,21 +270,22 @@ export const getByRole = async (role) => {
   h.checkrole(role);
 
   let postList = await postsCollection.find({}).toArray();
+  
   postList = postList.map((element) => {
-
     if (element.role === role) {
       element._id = element._id.toString();
       return element;
     }
   });
-  if (!postList) throw "Could not get all posts";
+
+  if (!postList) throw "Had a problem retrieving posts";
   postList = postList.filter(function (element) {
     return element !== undefined;
   });
-  //  console.log(postList, "postList");
+
   return postList;
 
-  // const postsCollection = await posts();
+
   // const post = await postsCollection.find({role: role});
   // if (!post) throw 'No post found in the database with that id';
   // post._id = post._id.toString()

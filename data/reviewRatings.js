@@ -13,48 +13,43 @@ export const create = async (
   // projectId, // project being reviewed
   rating,
   comment,
-  firatName,
+  firatName,    // ugh this typo hurts my soul
   lastName
-  // createdAt  --> not sure needs to be passed in
+  // createdAt 
 ) => {
-  console.log(userId,revieweeId,rating,comment)
-  // h.checkValidUserID(userId);
-  // h.checkValidRevieweeId(revieweeId);
-  // h.checkValidProjectId(projectId);
-  // h.checkReview(comment);
-  // h.selfReview(userId, revieweeId);
-  // h.checkRating(rating);
-  console.log(userId,revieweeId,rating,comment)
-  rating = Math.round(rating * 10) / 10;
 
-//  const sanitizedComment = xss(comment);
+  console.log(userId, revieweeId, rating, comment);
+  h.checkId(userId);
+  h.checkId(revieweeId);
+  h.checkRating(rating);
+  h.checkReview(comment);
+  // h.checkfirstname(firatName);
+  // h.checklastname(lastName);
+  h.selfReview(userId, revieweeId); 
+
+  rating = Math.round(rating * 10) / 10;
 
   const reviewee = await userCollection.findOne({
     _id: new ObjectId(revieweeId),
   });
-console.log(reviewee)
-  // move to helpers.js
+
+  console.log(reviewee);
+
   if (!reviewee)
     throw new Error(
       `A user with ID: ${revieweeId} does not exist in the database`
     );
 
-  // const project = reviewee.projects.find((project) => project.id === projectId);
-  // if (!project)
-  //   throw new Error(
-  //     `A project with ID of ${projectId} does not exist with the user specified`
-  //   );
-
   // prevent duplicate insertion!! very important
   const reviewExists = await userCollection.findOne({
     userId: userId,
-    revieweeId: revieweeId //,
-    // projectId: projectId,
+    revieweeId: revieweeId 
   });
+
   if (reviewExists)
     throw new Error(
       "It seems you've already left a review for this user"
-    ); // iron this out.
+    ); 
 
   if (!reviewExists) {
     let newReviewId = new ObjectId();
@@ -65,9 +60,8 @@ console.log(reviewee)
       revieweeId: revieweeId,
       firatName:firatName,
       lastName:lastName,
-      // projectId: projectId,
       rating: rating,
-      comment: comment, // sanitizedComment,
+      comment: comment, 
       createdAt: date.toISOString(),
     };
 
@@ -78,8 +72,9 @@ console.log(reviewee)
       rating
     );
     ratingList = ratingList.concat(rating);
-    console.log(totalRating,"vdhjwvsljlvhjd lhja lshjvbll",ratingList.length)
+    
     const overallRating = totalRating / (ratingList.length); // + 1 corresponds to current review-rating (don't need one)
+    
     const updatedUserReviews = await userCollection.updateOne(
       { _id: reviewee._id },
       {
@@ -99,7 +94,7 @@ console.log(reviewee)
       let reviewSuccess = await reviewRatingsCollection.findOne({
         _id: new ObjectId(newReview._id),
       });
-      console.log(updatedUserReviews,"uur")
+
       return { reviewSuccess, success: true };
     } else {
       throw new Error("Review was not succesfully added");
@@ -112,12 +107,14 @@ export const getReviewByReviewId = async (id) => {
   const reviewRating = await reviewRatingsCollection.findOne({
     _id: new ObjectId(id),
   });
-  if (!reviewRating) throw new Error("No review/rating with that id");
+  if (!reviewRating) throw "No review/rating with that id";
   reviewRating._id = reviewRating._id.toString();
+
   return reviewRating;
 };
 
 export const getReviewsByUser = async (userId) => {
+
   const reviews = await reviewRatingsCollection.find({ userId: userId }).toArray();
   reviews.forEach((review) => {
     review._id = review._id.toString();
@@ -126,6 +123,7 @@ export const getReviewsByUser = async (userId) => {
 };
 
 export const checkReview = async (userId, revieweeId) => {
+
   const reviewExists = await reviewRatingsCollection.findOne({
     userId: userId,
     revieweeId: revieweeId
@@ -148,6 +146,7 @@ export const getAll = async (revieweeId) => {
 
   const reviewsList = await reviewRatingsCollection.find({revieweeId: revieweeId}).toArray();
   if (!reviewsList) throw "this user was not found in our reviews collection. Perhaps they haven't been reviewed!";
+  
   reviewsList.forEach((review) => {
     review._id = review._id.toString();
   });
@@ -166,24 +165,14 @@ export const remove = async (id) => {
   id = id.trim();
   if (!ObjectId.isValid(id)) throw 'invalid object ID';
 
-// 
+  let finalUser = await userCollection.updateOne({ "reviews._id": new ObjectId(id) }, { $pull: { reviews: { _id: new ObjectId(id) } } });
 
-// let user = await userCollection.findOne({
-//   reviews: { $elemMatch: { _id: new ObjectId(id) } },
-// });
-
-// if (!user) throw new Error("No user with that ID in the database");
-
-
-let finalUser = await userCollection.updateOne({ "reviews._id" : new ObjectId(id)}, {$pull :{reviews:{_id:new ObjectId(id)}}})
-
-
-let totalRating =0
-let len =0
+  let totalRating = 0;
+  let len = 0;
     for (const key in finalUser) {
       if(key === "reviews"){
         finalUser[key].forEach(element => {
-          len = len+1
+          len = len + 1
           totalRating = totalRating + element.rating
         });
       }
@@ -191,8 +180,8 @@ let len =0
 
     for (const key in finalUser) {
       if(key === "overallRating"){
-        finalUser[key] = totalRating/len
-        console.log(finalUser[key],"vhjv")
+        finalUser[key] = totalRating / len;
+        console.log(finalUser[key], "R&R: finalUser Key 104");
       }
     }
     let newUser = await userCollection.findOneAndReplace(
@@ -207,8 +196,8 @@ let len =0
   if (deletionInfo.lastErrorObject.n === 0) {
     throw `Could not delete review with id of ${id}`;
   }
-  result["commentId"] = id
-  result["deleted"] = true
+  result["commentId"] = id;
+  result["deleted"] = true;
   return result;
 };
 
