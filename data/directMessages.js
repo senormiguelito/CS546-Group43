@@ -34,7 +34,7 @@ const create = async (
 
     const directMessagesCollection = await directMessages()
     // let directMessage = await directMessagesCollection.find({$or:[{senderId:id},{recipientId:id}]}).toArray()
-    let directMessage = await directMessagesCollection.find({$or:[{senderId:id},{recipientId:id}]}).sort({timeStamp: -1}).toArray();
+    let directMessage = await directMessagesCollection.find({$or:[{senderId:id},{recieverId:id}]}).sort({timeStamp: -1}).toArray();
 
     if(directMessage.length==0) {
       directMessage = []

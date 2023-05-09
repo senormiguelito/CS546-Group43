@@ -245,6 +245,7 @@ router
     // console.log(userSession)
     try {
       let messages = await messageData.getMessages(userSession._id);
+      console.log(messages);
       for (let i = 0; i < messages.length; i++) {
         // changing the senderId to senderName
         if (messages[i].senderId == userSession._id) {

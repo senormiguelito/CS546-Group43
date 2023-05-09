@@ -1,119 +1,118 @@
 <div class="page-content page-container" id="page-content">
-    <div class="padding">
+  <div class="padding">
+    <div class="">
       <div class="">
-        <div class="">
-          <div class="card user-card-full">
-            <div class="row m-l-0 m-r-0">
-              <div class="col-sm-4 bg-c-lite-green user-profile">
-                <div class="card-block text-center text-white">
-                  <div class="m-b-25">
-                    {{#if user.imageData}}
-                    <img src={{user.imageData}} class="img-radius" alt="User-Profile-Image"  width="200" height="200">
-                      {{else}}
-                      <img src="/public/images/No_Image_Available.jpg" class="img-radius" 
-                      alt="User-Profile-Image"  width="200" height="200">
-                      {{/if}}
+        <div class="card user-card-full">
+          <div class="row m-l-0 m-r-0">
+            <div class="col-sm-4 bg-c-lite-green user-profile">
+              <div class="card-block text-center text-white">
+                <div class="m-b-25">
+                  {{#if user.imageData}}
+                  <img src={{user.imageData}} class="img-radius" alt="User-Profile-Image" width="200" height="200">
+                  {{else}}
+                  <img src="/public/images/No_Image_Available.jpg" class="img-radius" alt="User-Profile-Image"
+                    width="200" height="200">
+                  {{/if}}
+                </div>
+                <h6 class="f-w-600">{{user.firstName}} {{user.lastName}}</h6>
+                <p>{{user.role}}</p>
+                <i class=" mdi mdi-square-edit-outline feather icon-edit m-t-10 f-16"></i>
+              </div>
+            </div>
+            <div class="col-sm-8">
+              <div class="card-block">
+                <h6 class="m-b-20 p-b-5 b-b-default f-w-600">Information</h6>
+                <div class="row">
+                  <div class="col-sm-3">
+                    <h5 class="m-b-10 f-w-600">Name:</h5>
+                    <h6 class="text-muted f-w-400">{{user.firstName}} {{user.lastName}}</h6>
                   </div>
-                  <h6 class="f-w-600">{{user.firstName}} {{user.lastName}}</h6>
-                  <p>{{user.role}}</p>
-                  <i class=" mdi mdi-square-edit-outline feather icon-edit m-t-10 f-16"></i>
+                  <div class="col-sm-3">
+                    <h5 class="m-b-10 f-w-600">Email:</h5>
+                    <h6 class="text-muted f-w-400">{{user.emailAddress}}</h6>
+                  </div>
+
+                  <div class="col-sm-3">
+                    <h5 class="m-b-10 f-w-600">Phone Number:</h5>
+                    <h6 class="text-muted f-w-400">{{user.phoneNumber}}</h6>
+                  </div>
                 </div>
               </div>
-              <div class="col-sm-8">
-                <div class="card-block">
-                  <h6 class="m-b-20 p-b-5 b-b-default f-w-600">Information</h6>
-                  <div class="row">
-                    <div class="col-sm-3">
-                      <h5 class="m-b-10 f-w-600">Name:</h5>
-                      <h6 class="text-muted f-w-400">{{user.firstName}} {{user.lastName}}</h6>
-                    </div>
-                    <div class="col-sm-3">
-                      <h5 class="m-b-10 f-w-600">Email:</h5>
-                      <h6 class="text-muted f-w-400">{{user.emailAddress}}</h6>
-                    </div>
-                   
-                    <div class="col-sm-3">
-                      <h5 class="m-b-10 f-w-600">Phone Number:</h5>
-                      <h6 class="text-muted f-w-400">{{user.phoneNumber}}</h6>
-                    </div>
+
+              <div class="card-block">
+                <h6 class="m-b-20 p-b-5 b-b-default f-w-600"></h6>
+                <div class="row">
+                  <div class="col-sm-3">
+                    <h5 class="m-b-10 f-w-600">Role:</h5>
+                    <h6 class="text-muted f-w-400">{{user.role}}</h6>
+                  </div>
+                  <div class="col-sm-3">
+                    <h5 class="m-b-10 f-w-600">Bio</h5>
+                    <h6 class="text-muted f-w-400">{{user.bio}}</h6>
+                  </div>
+                  <div class="col-sm-3">
+                    <h5 class="m-b-10 f-w-600">Joining Date:</h5>
+                    <h6 class="text-muted f-w-400">{{user.joiningDate}}</h6>
                   </div>
                 </div>
-
-                <div class="card-block">
-                  <h6 class="m-b-20 p-b-5 b-b-default f-w-600"></h6>
-                  <div class="row">
-                    <div class="col-sm-3">
-                      <h5 class="m-b-10 f-w-600">Role:</h5>
-                      <h6 class="text-muted f-w-400">{{user.role}}</h6>
-                    </div>
-                    <div class="col-sm-3">
-                      <h5 class="m-b-10 f-w-600">Bio</h5>
-                      <h6 class="text-muted f-w-400">{{user.bio}}</h6>
-                    </div>
-                    <div class="col-sm-3">
-                      <h5 class="m-b-10 f-w-600">Joining Date:</h5>
-                      <h6 class="text-muted f-w-400">{{user.joiningDate}}</h6>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="card-block">
-                  <h6 class="m-b-20 p-b-5 b-b-default f-w-600">Location</h6>
-                  <div class="row">
-                    <div class="col-sm-3">
-                      <h5 class="m-b-10 f-w-600">City:</h5>
-                      <h6 class="text-muted f-w-400">{{user.location_city}}</h6>
-                    </div>
-                    <div class="col-sm-3">
-                      <h5 class="m-b-10 f-w-600">State:</h5>
-                      <h6 class="text-muted f-w-400">{{user.location_state}}</h6>
-                    </div>
-                    <div class="col-sm-3">
-                      <h5 class="m-b-10 f-w-600">Zipcode:</h5>
-                      <h6 class="text-muted f-w-400">{{user.location_zip_code}}</h6>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="card-block">
-                  <h6 class="m-b-20 p-b-5 b-b-default f-w-600">Categories</h6>
-                  <div class="row">
-                    <div class="col-sm-3">
-                      <h5 class="m-b-10 f-w-600"></h5>
-                      <h6 class="text-muted f-w-400">{{user.categories}}</h6>
-                    </div>
-                  </div>
-                </div>
-
               </div>
+
+              <div class="card-block">
+                <h6 class="m-b-20 p-b-5 b-b-default f-w-600">Location</h6>
+                <div class="row">
+                  <div class="col-sm-3">
+                    <h5 class="m-b-10 f-w-600">City:</h5>
+                    <h6 class="text-muted f-w-400">{{user.location_city}}</h6>
+                  </div>
+                  <div class="col-sm-3">
+                    <h5 class="m-b-10 f-w-600">State:</h5>
+                    <h6 class="text-muted f-w-400">{{user.location_state}}</h6>
+                  </div>
+                  <div class="col-sm-3">
+                    <h5 class="m-b-10 f-w-600">Zipcode:</h5>
+                    <h6 class="text-muted f-w-400">{{user.location_zip_code}}</h6>
+                  </div>
+                </div>
+              </div>
+
+              <div class="card-block">
+                <h6 class="m-b-20 p-b-5 b-b-default f-w-600">Categories</h6>
+                <div class="row">
+                  <div class="col-sm-3">
+                    <h5 class="m-b-10 f-w-600"></h5>
+                    <h6 class="text-muted f-w-400">{{user.categories}}</h6>
+                  </div>
+                </div>
+              </div>
+
             </div>
           </div>
         </div>
       </div>
-      {{!-- <div class="user-details">
-        <p>Name: {{user.firstName}} {{user.lastName}}</p>
-        <p>Email: {{user.emailAddress}}</p>
-        <p>Phone Number: {{user.phoneNumber}}</p>
-        <p>Role: {{user.role}}</p>
-        <p>Location: {{user.location_city}}, {{user.location_state}} {{user.location_zip_code}}</p>
-        <p>Categories: {{user.categories}}</p>
-        <p>Bio: {{user.bio}}</p>
-        <p>Reviews: {{user.reviews}}</p>
-        <p>Projects: {{user.projects}}</p>
-        <p>Joining Date: {{user.joiningDate}}</p>  
-      </div> --}}
-      <a href="#modal">Contact</a>
-      <br>
-      <a href="../user/reviews/{{user._id}}/allReviews">View All Reviews</a>
-      <br>
-      <div>
-        <form method="post" action="../user/reviews/{{user._id}}" id="add-review-form">
+    </div>
+    {{!-- <div class="user-details">
+      <p>Name: {{user.firstName}} {{user.lastName}}</p>
+      <p>Email: {{user.emailAddress}}</p>
+      <p>Phone Number: {{user.phoneNumber}}</p>
+      <p>Role: {{user.role}}</p>
+      <p>Location: {{user.location_city}}, {{user.location_state}} {{user.location_zip_code}}</p>
+      <p>Categories: {{user.categories}}</p>
+      <p>Bio: {{user.bio}}</p>
+      <p>Reviews: {{user.reviews}}</p>
+      <p>Projects: {{user.projects}}</p>
+      <p>Joining Date: {{user.joiningDate}}</p>
+    </div> --}}
+    <br>
+    <a href="../user/reviews/{{user._id}}/allReviews">View All Reviews</a>
+    <br>
+    <div>
+      <form method="post" action="../user/reviews/{{user._id}}" id="add-review-form">
 
         <label for="reviewInput">Enter Review: </label>
         <input type="text" placeholder="review" name="reviewInput" id="reviewInput">
         <br>
-        <label for = "ratingInput">Enter Rating:</label>
-        <select name="ratingInput" id="ratingInput" placeholder="rating" >
+        <label for="ratingInput">Enter Rating:</label>
+        <select name="ratingInput" id="ratingInput" placeholder="rating">
           <option value=1>1</option>
           <option value=2>2</option>
           <option value=3>3</option>
@@ -122,17 +121,12 @@
         </select>
         <input type="submit" value="submit">
         <br><br>
-    </form>
-      </div>
-        <div class="dropdown">
+      </form>
+    </div>
+      <div class="dropdown">
   <button class="dropbtn">Contact</button>
   <div class="dropdown-content">
-	<!-- Create the modal with input box and send button -->
-	<div id="modal" class="modal">
-		<div class="modal-content">
-			<span class="close">&times;</span>
-			<h2>Contact</h2>
-      <form method = "POST" action ='/home/messages/'>
+     <form method = "POST" action ='/home/messages/'>
         <input type="text" placeholder="Enter your message" name = "message" id = "message"><br><br>
         <input type="hidden" name = "recieverId" id = "recieverId" value = "{{user._id}}">
         <input type="submit" value="Send" id = "send-btn">
@@ -148,11 +142,12 @@
 </form>
 
 </div>
+      </div>
     </div>
-    </div>
+    
   </div>
   <div>
-        {{#if error}}
-          <p>{{error}}</p>
-        {{/if}}
-      </div>
+    {{#if error}}
+    <p>{{error}}</p>
+    {{/if}}
+  </div>
