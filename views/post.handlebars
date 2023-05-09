@@ -72,6 +72,13 @@
   <div class="dropdown">
   <button class="dropbtn">Reply</button>
   <div class="dropdown-content">
+    <p>
+      {{firstName}} {{lastName}}
+    </p>
+    <br>
+    <p>
+      {{email}}
+    </p>
      <form method = "POST" action ='/home/messages/'>
         <input type="text" placeholder="Enter your message" name = "message" id = "message"><br><br>
         <input type="hidden" name = "recieverId" id = "recieverId" value = "{{senderId}}">
