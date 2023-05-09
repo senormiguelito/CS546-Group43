@@ -245,8 +245,18 @@ router
     // console.log(userSession)
     try {
       let messages = await messageData.getMessages(userSession._id);
-      console.log(messages);
       for (let i = 0; i < messages.length; i++) {
+        let m = messages[i].message;
+        if(m.split("localhost:3000").length > 1){
+          messages[i].hasLink = true;
+          messages[i].message = messages[i].message.split("http://localhost:3000")[0];
+          let link = m.split("localhost:3000")[1].split(" ")[0];
+          messages[i].link = "http://localhost:3000" + link;
+        }
+        else{
+          messages[i].hasLink = false;
+        }
+
         // changing the senderId to senderName
         if (messages[i].senderId == userSession._id) {
           let recieverName = await userData.getUser(messages[i].recieverId);
@@ -261,7 +271,7 @@ router
         }
       }
 
-      // console.log(messages);
+      console.log(messages);
 
       res.render("dmList", { title: "messages", messages: messages });
     } catch (e) {
@@ -287,7 +297,7 @@ router
     try {
       if (message.includes("localhost:3000")) {
         message =
-          "hey checkout my profile and let me know if you have any job suitable for me.. here is my profile link https://localhost:3000/profile/" +
+          "hey checkout my profile and let me know if you have any job suitable for me.. here is my profile link http://localhost:3000/profile/" +
           sender;
       }
 

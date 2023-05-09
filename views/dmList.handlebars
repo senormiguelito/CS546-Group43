@@ -12,12 +12,19 @@
     <div class="message" id = "message" onclick="ClickMessage(this)">
       {{#if sender}}
         <p> message to {{recieverName}}</p>
-          <p id = "desc" >{{message}}</p>
         <p>{{timeStamp}}</p>
 
       {{else}}
+
+      
         <p> message from {{senderName}}</p>
-        <p id = "desc" >{{message}}</p>
+        {{#if hasLink}}
+    
+          <p id = "desc" >{{message}} <a href = "{{link}}"> Profile</a></p>
+          
+        {{else}}
+          <p id = "desc" >{{message}}</p>
+        {{/if}}
         <p>{{timeStamp}}</p>
         <div class="dropdown">
   <button class="dropbtn">Reply</button>
