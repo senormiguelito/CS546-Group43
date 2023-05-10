@@ -565,3 +565,28 @@ p {
   letter-spacing: 0.3px !important;
   transition: all .5s;
 }
+
+#dmError {
+  color: red;
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+#posterror {
+  color: red;
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+#profileError{
+  color: red;
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+#reviewsError{
+  color: red;
+  font-weight: bold;
+  margin-top: 10px;
+}
+
