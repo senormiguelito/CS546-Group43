@@ -19,10 +19,7 @@ router.route("/:userId").post(async (req, res) => {
 
     const reviewExists = await reviewData.checkReview(reviewer, reviewee);
     if (reviewExists) {
-      // badInput = true;
-      // console.log("25 bc reviewExists")
       return res.status(400).render("reviews", {error:"You have already reviewed this user!"})
-    //   throw new Error("You have already reviewed this user!");
     }
   } catch (e) {
     return res.status(400).render("../home", { badInput: true, error: e });

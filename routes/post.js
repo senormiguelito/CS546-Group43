@@ -11,10 +11,11 @@ import multer from "multer";
 router.route("/").get(async (req, res) => {
   try {
     let posts = await postData.getAll();
+    if(!posts) throw new Error("could not find any posts!") 
     // console.log("in create post");
     res.render("post", { posts: posts });
   } catch (e) {
-    return res.status(400).render("400", { error: e });
+    return res.status(400).render("justError", { error: e });
   }
 });
 
@@ -43,10 +44,9 @@ router.route("/myPosts").get(async (req, res) => {
 
 router.route("/newPost/createPost").get(async (req, res) => {
   try {
-    // console.log("in create post");
     res.render("create_post");
   } catch (e) {
-    return res.status(400).render("404", { error: e });
+    return res.status(400).render("justError", { error: e });
   }
 });
 
@@ -137,6 +137,7 @@ router.route("/:postId/interested").post(async (req, res) => {
     prospectpush["userId"] = req.session.user.userID;
     prospectpush["firstName"] = req.session.user.userSessionData.firstName;
     prospectpush["lastName"] = req.session.user.userSessionData.lastName;
+    prospectpush["role"] = req.session.user.userSessionData.role;
     prospectpush["email"] = req.session.user.userSessionData.emailAddress;
     prospectpush["userCity"] = req.session.user.userSessionData.location_city;
 
@@ -148,6 +149,7 @@ router.route("/:postId/interested").post(async (req, res) => {
       post.userId,
       post.title,
       post.description,
+      post.role,
       post.location_city,
       post.location_state,
       post.location_zip_code,
@@ -157,6 +159,7 @@ router.route("/:postId/interested").post(async (req, res) => {
       post.prospects,
       post.comments
     );
+    
 
     //it is redirecting back to same page so you might feel weather or not something happened
     if (updatedPost) {
@@ -180,7 +183,7 @@ router.route("/:postId/interested").post(async (req, res) => {
 
 router.route("/filter").post(async (req, res) => {
   // console.log(req.params, req.body);
-  let role = req.body.filter; // xss?!
+  let role = xss(req.body.filter); // xss?!
   // console.log("in filter route");
   if (role === "all") {
     let posts = await postData.getAll();
@@ -196,16 +199,22 @@ router.route("/:postId").get(async (req, res) => {
     let postId = req.params.postId;
     let post = await postData.get(postId);
     let prospectId;
-    console.log("hjewv");
     h.checkId(postId);
-    console.log("hjewv");
+   
     if (!post) throw "could not find post with that id";
-    console.log("hjewv");
+
     let comms = await postComment.getAll(postId);
-    console.log("hjewv");
-    let interestCount = 0;
+  
+    let interestCount = 0
     let isAuthor;
-    if (post.prospects.length === 0) {
+
+
+    if(req.session.user.userID === post.userId){
+      isAuthor = true
+    }
+    // console.log(isAuthor)
+    if(post.prospects.length === 0 ){
+      
       if (req.session.user.userID === post.userId) {
         isAuthor = true;
         console.log("sess.ion.user is the user who posted");
@@ -221,18 +230,17 @@ router.route("/:postId").get(async (req, res) => {
         });
       }
       if (!comms) {
-        // console.log("jhdavfk4");
-        return res.render("post", { post: post, interestCount: interestCount });
+      
+        return res.render("post", { post: post, interestCount: interestCount});
       } else {
-        // console.log("jhdavfk5");
-        // console.log("bsdkjc");
-        return res.render("post", {
-          post: post,
-          comms: comms,
-          interestCount: interestCount,
-          isAuthor: isAuthor,
-          prospects: [],
-        });
+        
+      return res.render("post", {
+        post: post,
+        comms: comms,
+        interestCount: interestCount,
+        isAuthor: isAuthor,
+        prospects: [],
+      })
         return res.render("post", { post: post, comms: comms });
       }
     }
@@ -278,10 +286,9 @@ router.route("/:postId").get(async (req, res) => {
         prospects: post.prospects,
       });
     }
-    console.log("bsdkjc");
   } catch (e) {
-    console.log("jhdavfk6");
-    return res.status(400).render("404", { error: e });
+    console.log("jhdavfk6")
+    return res.status(400).render("justError", { error: e });
   }
 });
 
@@ -322,14 +329,14 @@ router.route("/:postId/selectProspect").post(async (req, res) => {
       return res.render("projects", { created: created, project: project }); // super duper awesome
     }
   } catch (e) {
-    return res.status(400).render("404", { error: e });
+    return res.status(400).render("justError", { error: e });
   }
 });
 
 router.route("/:postId/comment").post(async (req, res) => {
   try {
     let userId = req.session.user.userID;
-    let comm = req.body.postCommentInput;
+    let comm = xss(req.body.postCommentInput);
     let postId = xss(req.params.postId);
     h.checkId(userId);
     h.checkId(postId);
@@ -347,7 +354,7 @@ router.route("/:postId/comment").post(async (req, res) => {
     return res.redirect(`/post/${postId}`);
     // return res.render('home', {comment:comment})
   } catch (e) {
-    return res.status(400).render("post", { Error: e });
+    return res.status(400).render("justError", { error: e });
   }
 });
 
@@ -357,20 +364,22 @@ router.route("/:commentId/deleteComment").get(async (req, res) => {
     let userId = req.session.user.userID;
     let commentId = xss(req.params.commentId);
 
+    console.log("in here")
     h.checkValid(userId);
     h.checkId(commentId);
     userId = userId.trim();
     commentId = commentId.trim();
     let postByCommentId = await postData.getByCommentId(commentId);
     if (!postByCommentId) throw "could not find user with that comment";
-    let deletedComment = await postComment.remove(userId, commentId);
+
+    let  deletedComment = await postComment.remove(userId, commentId);
+    // console.log(deletedComment,"delcom")
+    if (!deletedComment) throw "could not delete comment";
     if (deletedComment)
       return res.redirect(`/post/${postByCommentId._id.toString()}`);
-    if (!deletedComment) throw "could not delete comment";
     // res.redirect(`/post/${postByCommentId._id.toString()}`)
-    // res.json(req.params);
   } catch (e) {
-    return res.status(400).render("404", { error: e });
+    return res.status(400).render("justError", { error: e });
   }
 });
 
