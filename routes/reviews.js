@@ -12,6 +12,7 @@ router.route("/:userId").post(async (req, res) => {
   try {
     h.checkId(reviewee);
     h.checkId(reviewer);
+    //    h.selfReview(reviewee, reviewer);
 
     const reviewExists = await reviewData.checkReview(reviewer, reviewee);
     if (reviewExists) {
@@ -42,14 +43,15 @@ router.route("/:userId").post(async (req, res) => {
         reviewerLastName
       );
       if (thisReview.success) {
-        console.log(thisReview);
+        // console.log(thisReview);
         return res.redirect(`../../profile/${reviewee}`);
+        
       }
     } else {
       return res.redirect("/login");
     }
   } catch (e) {
-    return res.status(500).render("error", { error: "Internal Server Error" });
+    return res.status(500).render("error", { error: "Internal Server Error", serverError: true });
   }
 });
 
@@ -60,7 +62,7 @@ router.route("/:userId/allReviews").get(async (req, res) => {
     if (!reviews) throw new Error("could not find any reviews");
 
     if (reviews.reviewsList) {
-      console.log(reviews.reviewsList, "jvjj");
+      // console.log(reviews.reviewsList, "jvjj");
       return res
         .status(200)
         .render("reviews", { reviews: reviews.reviewsList, found: true });
@@ -99,7 +101,7 @@ router.route("/delete/:reviewId").delete(async (req, res) => {
       res.render("reviews", { msg: "can not deleted someone elses review!" });
     }
   } catch (e) {
-    res.render("reviews", { msg: e });
+    return res.render('reviews', { msg: e });
   }
 });
 
@@ -126,7 +128,7 @@ router.route("/edit/:reviewId").put(async (req, res) => {
     if (!updatedReview) throw new Error("could not edit the review!");
     return res.redirect(`/../../user/reviews/${review.revieweeId}/allReviews`);
   } catch (e) {
-    res.render("reviews", { msg: e });
+    return res.render('reviews', { msg: e });
   }
 });
 

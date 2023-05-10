@@ -1,6 +1,9 @@
 node_modules/
 .env
 
-
+public/images
 
 .DS_Store
+
+.DS_Store
+public/css/.DS_Store

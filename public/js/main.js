@@ -141,23 +141,27 @@ const signupForm = document.getElementById("signup-form");
 const loginForm = document.getElementById("login-form");
 
 const commentForm = document.getElementById("comment-form");
-commentForm.addEventListener("submit", (event) => {
-  event.preventDefault();
-  const comment = document.getElementById("postCommentInput").value;
-  const errorContainer = document.getElementById("posterror");
-  const errors = [];
-  if(comment.trim() === ""){
-    errors.push("Comment cannot be empty");
-  }
-  if(errors.length > 0){
-    errorContainer.innerText = errors.join(", ");
-    errorContainer.style.display = "block";
-    // showing the error only for 1.5 seconds.
-    setTimeout(function () {
-      errorContainer.style.display = "none";
-    }, 1500);
-  }
-});
+// if (commentForm) {
+//   console.log("asbcz")
+// commentForm.addEventListener("submit", (event) => {
+//   event.preventDefault();
+//   console.log("vhjsdchzj")
+//   const comment = document.getElementById("postCommentInput").value;
+//   const errorContainer = document.getElementById("posterror");
+//   const errors = [];
+//   if(comment.trim() === ""){
+//     errors.push("Comment cannot be empty");
+//   }
+//   if(errors.length > 0){
+//     errorContainer.innerText = errors.join(", ");
+//     errorContainer.style.display = "block";
+//     // showing the error only for 1.5 seconds.
+//     setTimeout(function () {
+//       errorContainer.style.display = "none";
+//     }, 1500);
+//   }
+// });
+// }
 
 const editprofileForm = document.getElementById("myprofile-edit");
 const resetButton = document.getElementById("reset-button");
@@ -739,10 +743,13 @@ if (document.getElementById("send-btn")) {
 }
 
 var dmForm = document.getElementById("dm-form");
+if (dmForm) {  
 dmForm.addEventListener("submit", function (e) {
   e.preventDefault();
-  var dmInput = document.getElementById("message");
-  var recId = document.getElementById("recieverId");
+
+  var dmInput = document.getElementById("dm-input");
+  var recId = document.getElementById("recId");
+
   var error = document.getElementById("dmError");
   var errors = [];
   if (dmInput.value == "") {
@@ -763,6 +770,8 @@ dmForm.addEventListener("submit", function (e) {
     }, 1500);
   } 
 });
+}
+
 const profileForm = document.getElementById("add-review-form");
 if (profileForm) {
   profileForm.addEventListener("submit", function (e) {
@@ -796,10 +805,13 @@ if (filterFrom) {
     e.preventDefault();
     const filterError = document.getElementById("filterError");
     const filterInput = document.getElementById("searchAreaInput");
-    const errors = [];
-    if(filterInput.value.trim() == ""){
-      errors.push("Please enter a valid search area");
+    let errors = [];
+    if (filterInput) {
+      if(filterInput.value.trim() == ""){
+        errors.push("Please enter a valid search area");
+      }
     }
+
     if (errors.length > 0) {
       filterError.innerText = errors.join(", ");
       filterError.style.display = "block";

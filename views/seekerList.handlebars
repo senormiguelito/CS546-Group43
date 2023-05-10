@@ -29,19 +29,19 @@
           <option value="rating">Rating</option>
           <option value="all">Get All</option>
         </select>
-        <button type="submit" id="find">Find</button>
+        <button type="submit" id="seekerFilterfind">Find</button>
       </form>
     </div>
     <div class="filter-button">
-      <form method="post" action="/seekers/searchArea" id="filter-form">
+      <form method="post" action="/seekers/searchArea" id="seeker-filter-form">
         <label>Filter using area of search: </label>
         <input
           type="text"
           placeholder="Enter search area in miles: "
           name="searchAreaInput"
           id="searchAreaInput"
-        />
-        <button type="submit" id="find">Find</button>
+        >
+        <button type="submit" id="seekerSearchfind">Find</button>
       </form>
     </div>
     <div class="row">
@@ -50,13 +50,13 @@
           <div class="col-sm-3">
             <div class="card" style="width: 18rem;">
               {{#if imageData}}
-                <img src={{imageData}} class="card-img-top" alt="..." />
+                <img src={{imageData}} class="card-img-top" alt="..." >
               {{else}}
                 <img
                   src="/public/images/No_Image_Available.jpg"
                   class="card-img-top"
                   alt="..."
-                />
+                >
               {{/if}}
               <div class="card-body">
                 <h2 card-title>{{firstName}} {{lastName}}</h2>

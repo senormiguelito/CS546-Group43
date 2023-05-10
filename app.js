@@ -267,6 +267,21 @@ app.use("/post/newPost/createPost", (req, res, next) => {
   }
 });
 
+app.use("/post/:postId/interested", (req, res, next) => {
+  if (req.session.user) {
+    if (req.method == 'POST') {
+      req.method = 'PUT';
+    }
+    next();
+  } else {
+    return res.status(403).render("error", {
+      title: "Error",
+      unauthorizedAccess: true,
+      isHide: true,
+    });
+  }
+});
+
 //please add your route name if you add any in futer, like /home/seekerpage/addpost
 // app.use("/yournewroute", (req, res, next) => {
 //   if (req.session.user) {
@@ -298,16 +313,15 @@ app.use(async (req, res, next) => {
   next();
 });
 
-app.use('/post/:commentId/deleteComment', async (req, res, next) => {
-  console.log(req);
-  if (req.method == 'GET') {
-    req.method = 'DELETE';
-  }
-  next();
-});
+// app.use('/post/:commentId/deleteComment', async (req, res, next) => {
+//   console.log(req);
+//   if (req.method == 'GET') {
+//     req.method = 'DELETE';
+//   }
+//   next();
+// });
 
 app.use('/post/:postId/delete', async (req, res, next) => {
-  console.log(req);
   if (req.method == 'POST') {
     req.method = 'DELETE';
   }
@@ -315,7 +329,7 @@ app.use('/post/:postId/delete', async (req, res, next) => {
 });
 
 app.use('/user/reviews/delete/:reviewId', async (req, res, next) => {
-  console.log(req);
+  
   if (req.method == 'POST') {
     req.method = 'DELETE';
   }
@@ -323,7 +337,7 @@ app.use('/user/reviews/delete/:reviewId', async (req, res, next) => {
 });
 
 app.use('/seekers/searchArea', async (req, res, next) => {
-  console.log(req);
+  
   if (req.method == 'POST') {
     req.method = 'PUT';
   }
@@ -331,7 +345,7 @@ app.use('/seekers/searchArea', async (req, res, next) => {
 });
 
 app.use('/user/reviews/edit/:reviewId', async (req, res, next) => {
-  console.log(req);
+  
   if (req.method == 'POST') {
     req.method = 'PUT';
   }
@@ -339,7 +353,7 @@ app.use('/user/reviews/edit/:reviewId', async (req, res, next) => {
 });
 
 app.use('/post/filter', async (req, res, next) => {
-  console.log(req);
+  
   if (req.method == 'POST') {
     req.method = 'GET';
   }
@@ -347,7 +361,7 @@ app.use('/post/filter', async (req, res, next) => {
 });
 
 app.use('/home/provideList/searchArea', async (req, res, next) => {
-  console.log(req);
+  
   if (req.method == 'POST') {
     req.method = 'GET';
   }
@@ -355,7 +369,7 @@ app.use('/home/provideList/searchArea', async (req, res, next) => {
 });
 
 app.use('/home/provideList/sortBy', async (req, res, next) => {
-  console.log(req);
+
   if (req.method == 'POST') {
     req.method = 'GET';
   }

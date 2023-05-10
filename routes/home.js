@@ -18,7 +18,7 @@ router.route("/").get(async (req, res) => {
       message = `Welcome ${userSession.firstName}, this is your user ID: ${req.session.user.userID}`;
     } else {
       message = `You must be logged in to be here`;
-      res.redirect("/login");
+      return res.redirect("/login");
     }
     let posts;
     if (role === "seeker") {
@@ -28,7 +28,7 @@ router.route("/").get(async (req, res) => {
       posts = await postData.getByRole("seeker");
     }
     if (!posts) throw "OOPS! could not find posts!";
-    res.render("home", { posts: posts, Message: message });
+    return res.render("home", { posts: posts, Message: message });
   } catch (e) {
     return res.status(400).render("home", { error: e });
   }
@@ -47,9 +47,9 @@ router.route("/myprofile").get(async (req, res) => {
     req.session.user = { userID: userID, userSessionData: user };
     const objectUser = req.session.user.userSessionData;
     if (Message.trim() == "") {
-      res.render("myprofile", { title: "Profile", userID, objectUser });
+      return res.render("myprofile", { title: "Profile", userID, objectUser });
     } else {
-      res.render("myprofile", {
+      return res.render("myprofile", {
         title: "Profile",
         userID,
         objectUser,
@@ -58,25 +58,24 @@ router.route("/myprofile").get(async (req, res) => {
     }
   } catch (e) {
     const objectUser = req.session.user.userSessionData;
-    res.render("myprofile", { Error: e, title: "Profile", userID, objectUser });
+    return res.render("myprofile", { Error: e, title: "Profile", userID, objectUser });
   }
 });
 
 router.route("/provideList").get(async (req, res) => {
   try {
-    //    console.log("in provideList route");
     const userList = await userData.getUsersBy("provider");
 
-    res.status(200).render("providerlist", { userList: userList });
+    return res.status(200).render("providerlist", { userList: userList });
   } catch (e) {
-    res.status(400).render("providerlist", { error: e });
+    return res.status(400).render("providerlist", { error: e });
     // return res.status(400).render("error", { error: e });
   }
 });
 
 router.route("/provideList/sortBy").get(async (req, res) => {
   try {
-    console.log(req.method,"req")
+    // console.log(req.method,"req")
     // console.log("in porviderList filter route")
     // console.log(req.params,req.body)
     let user = req.session.user.userSessionData;
@@ -92,9 +91,9 @@ router.route("/provideList/sortBy").get(async (req, res) => {
       userList = await userData.getUsersBy("provider");
       console.log(userList)
     }
-    res.status(200).render("providerlist", { userList: userList });
+    return res.status(200).render("providerlist", { userList: userList });
   } catch (e) {
-    res.status(400).render("providerlist", { error: e });
+    return res.status(400).render("providerlist", { error: e });
     // return res.status(400).render("error", { error: e });
   }
 });
@@ -111,9 +110,9 @@ router.route("/provideList/searchArea").get(async (req, res) => {
     userList = await userData.filterProviderBySearchArea(user, searchArea);
     // const userList = await userData.getUsersByRole("provider");
     // console.log(userList)
-    res.status(200).render("providerlist", { userList: userList });
+    return res.status(200).render("providerlist", { userList: userList });
   } catch (e) {
-    res.status(400).render("providerlist", { error: e });
+    return res.status(400).render("providerlist", { error: e });
     // return res.status(400).render("error", { error: e });
   }
 });
@@ -147,7 +146,7 @@ router
         }
       }
       if (user) {
-        res.render("editProfile", {
+        return res.render("editProfile", {
           title: `${user.firstName + user.lastName}`,
           userID,
           objectUser,
@@ -157,7 +156,7 @@ router
     } catch (e) {
       const userID = req.session.user.userID;
       const objectUser = req.session.user.userSessionData;
-      res.status(400).render("editprofile", {
+      return res.status(400).render("editprofile", {
         Error: e,
         userID,
         objectUser,
@@ -194,7 +193,6 @@ router
         .map((s) => s.trim().replace(/"/g, "")); // convert categories from html into array
       // console.log(arrCategories);
       // console.log(Array.isArray(arr));
-      // console.log(typeof arr);
 
       const profileUpdated = await userData.update(
         req.session.user.userID,
@@ -213,7 +211,7 @@ router
       if (profileUpdated) {
         const userID = req.session.user.userID;
         req.session.user = { Updated: true, userID };
-        res.status(200).redirect("/home/myprofile");
+        return res.status(200).redirect("/home/myprofile");
       } else {
         throw `not updated successfully`;
       }
@@ -273,11 +271,11 @@ router
         }
       }
 
-      console.log(messages);
+      // console.log(messages);
 
-      res.render("dmList", { title: "messages", messages: messages });
+      return res.render("dmList", { title: "messages", messages: messages });
     } catch (e) {
-      console.log(e);
+      console.log(e); // --------------------------------> I think we need that return here
       // return res.status(400).render("error", { error: e });
     }
     // const messages = await messageData.getMessages(userSession._id);
@@ -290,7 +288,7 @@ router
     const reciever = req.body.recieverId;
     let message = req.body.message;
     if(message.trim() == ""){
-      res.redirect("/home/messages");
+      return res.render("error", {badInput: true, error: "empty message!"});
     }
 
     // console.log(sender, "sender");
@@ -310,7 +308,7 @@ router
       );
 
       const messages = await messageData.getMessages(userSession._id);
-      console.log(messages);
+      // console.log(messages);
       for (let i = 0; i < messages.length; i++) {
         // changing the senderId to senderName
         if (messages[i].senderId == userSession._id) {

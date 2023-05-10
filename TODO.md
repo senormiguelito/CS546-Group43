@@ -33,7 +33,7 @@ FYI I am going to .gitignore public/images
 
 ### routes/REVIEWRATINGS.js
 
-* line 62 -> if the session user is the same as the req.params.userId, show all of the reviews left about the session user with modified html
+* line 62 -> if the session user is the same as the req.para	ms.userId, show all of the reviews left about the session user with modified html
 * I think the error checking I tried to re-implement is screwing shit up
 
 ### Comment routing
@@ -47,15 +47,6 @@ FYI I am going to .gitignore public/images
 * modify contact button (modal box) to display ways to contact user (phone, email ... social media integration (extra feature)
 
 ------------------------------------;
-
-
-
-
-
-
-
-
-
 
 ------------------------------------;
 
@@ -93,8 +84,6 @@ FYI I am going to .gitignore public/images
 Input sanitization is easy. xss wrap every req.body --> BEWARE OF ARRAYS
 
 * xss(req.body) will turn anything inside parentheses into a string
-
-
 
 ## Update Friday afternoon
 

@@ -11,13 +11,11 @@ const reviewRatingsCollection = await reviewRatings();
 
 export const create = async (
   userId,
-  revieweeId, // user GETTING reviewed
-  // projectId, // project being reviewed
+  revieweeId,   // user GETTING reviewed
   rating,
   comment,
   firatName,    // ugh this typo hurts my soul
   lastName
-  // createdAt 
 ) => {
 
 
@@ -31,7 +29,6 @@ export const create = async (
   // h.checklastname(lastName);
   h.selfReview(userId, revieweeId); 
   rating = Math.round(rating * 10) / 10;
-
   
   const reviewee = await userCollection.findOne({
     _id: new ObjectId(revieweeId),
@@ -53,7 +50,6 @@ export const create = async (
     throw new Error(
       "It seems you've already left a review for this user"
     ); 
-
     
   if (!reviewExists) {
     let newReviewId = new ObjectId();
@@ -86,7 +82,6 @@ export const create = async (
         $set: { overallRating: overallRating },
       }
     );
-
     
     if (updatedUserReviews.modifiedCount === 1) {
 

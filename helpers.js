@@ -144,7 +144,6 @@ export const checkstate = (state) => {
 };
 
 export const checkRating = (rating) => {
-  // isvalid(rating, "rating"); //bruhhhh integer can't be trimmed );
   if (typeof rating !== "number") throw new Error("rating must be a number");
   if (rating > 5 || rating < 1)
     throw new Error("rating can not be less than 1 or greater than 5");

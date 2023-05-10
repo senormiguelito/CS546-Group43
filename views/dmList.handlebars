@@ -39,10 +39,11 @@
   <p>{{messageStatus}}</p>
   <div class="dropdown-content">
      <form id = "dm-form" method = "POST" action ='/home/messages/'>
-        <input  type="text" placeholder="Enter your message" name = "message" id = "message"><br><br>
-        <input  type="hidden" name = "recieverId" id = "recieverId" value = "{{senderId}}">
+        <input id = "dm-input" type="text" placeholder="Enter your message" name = "message" id = "message"><br><br>
+        <input id = "recId" type="hidden" name = "recieverId" id = "recieverId" value = "{{senderId}}">
         <input type="submit" value="Send" id = "send-btn">
       </form>
+     
      
   </div>
 </div>

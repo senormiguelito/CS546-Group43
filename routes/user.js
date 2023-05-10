@@ -23,7 +23,7 @@ router
         if (checkregister) {
           const userName = req.session.user.firstName;
           const message = `Hurray! ${userName}, you have registered successfully! Please log in to access our website.`;
-          res.render("login", {
+          return res.render("login", {
             isHide: true,
             title: "Login",
             Message: message,
@@ -41,7 +41,7 @@ router
         // not registered so it will not going to throw any error so no catch(e), so your website will be loading but never render login page.)
       }
     } catch (e) {
-      res.status(400).render("login", {
+      return res.status(400).render("login", {
         Error: e,
         layout: "main",
         isLoginPage: false,
@@ -62,23 +62,24 @@ router
         if (loginDetails.authentication) {
           const userSessionData = loginDetails.thisUser;
           const userId = userSessionData._id.toString();
-          // console.log(userId);
+
           req.session.user = {
             userID: userId, // --> here I am sending user's Object Id converted into string data into session.
             userSessionData,
             authentication: true,
           };
-          res.redirect("/home/myprofile");
+          return res.redirect("/home/myprofile"); // nice!
         }
       } else {
-        res.status(400).render("login", {
+        return res.status(400).render("login", {
           Error: "sorry, you are not authenticated",
           layout: "main",
           isHide: true,
         });
       }
     } catch (e) {
-      res.status(400).render("login", { Error: e, isHide: true });
+      // console.log(e);
+      return res.status(400).render("login", { Error: e, isHide: true });
     }
   });
 
@@ -89,9 +90,9 @@ router
       if (req.session.user) {
         req.session.user = { justRegistered: false };
       }
-      res.render("sign-up", { title: "Registration", isHide: true });
+      return res.render("sign-up", { title: "Registration", isHide: true });
     } catch (e) {
-      res
+      return res
         .send(400)
         .render("sign-up", { title: "Registration", Error: e, isHide: true });
     }
@@ -140,14 +141,14 @@ router
           emailAddress: emailAddress,
           justRegistered: true,
         };
-        res.status(200).redirect("/login");
+        return res.status(200).redirect("/login");
       } else {
-        res
+        return res
           .status(500)
           .render("login", { Error: "Internal Server Error", isHide: true });
       }
     } catch (e) {
-      res
+      return res
         .status(400)
         .render("sign-up", { Error: e, title: "Registration", isHide: true });
     }
@@ -157,9 +158,9 @@ router.route("/logout").get(async (req, res) => {
   //code here for GET
   try {
     req.session.destroy();
-    res.status(200).redirect("/");
+    return res.status(200).redirect("/"); // add a message to confirm that you have been logged out
   } catch (e) {
-    res.status(400).render("error", { Error: e });
+    return res.status(400).render("error", { Error: e });
   }
 });
 
@@ -170,29 +171,34 @@ router.route("/seekers").get(async (req, res) => {
 
     res.render("seekerList", { userList: userList });
   } catch (e) {
-    res.render("seekerList", { error: e });
+    return res.render("seekerList", { error: e });
+    // return res.status(400).render("error", { error: e });
   }
 });
 
 router.route("/seekers/sortBy").post(async (req, res) => {
   try {
+
     let user = req.session.user.userSessionData;
-    let filterBy = xss(req.body.filter);
+    let filterBy = xss(req.body.filter);      // wrapped in xss
     let userList = undefined;
     if (filterBy.toLowerCase() === "distance") {
       userList = await userData.sortSeekersByDistance(user);
+      if (!userList) throw new Error("error sorting by distance");
     }
     if (filterBy.toLowerCase() === "rating") {
       userList = await userData.sortSeekerByRating();
     }
     if (filterBy.toLowerCase() === "all") {
       userList = await userData.getUsersBy("seeker");
-      console.log(userList);
+      // console.log(userList);
     }
-
-    res.status(200).render("seekerlist", { userList: userList });
+    // const userList = await userData.getUsersByRole("provider");
+    // console.log(userList)
+    return res.status(200).render("seekerlist", { userList: userList });
   } catch (e) {
-    res.status(400).render("seekerlist", { error: e });
+    return res.status(400).render("seekerlist", { error: e });
+
   }
 });
 
@@ -200,18 +206,21 @@ router.route("/seekers/searchArea").put(async (req, res) => {
   try {
     let user = req.session.user.userSessionData;
     let searchArea = xss(req.body.searchAreaInput);
-    searchArea = parseInt(searchArea);
     let userList = await userData.filterSeekerBySearchArea(user, searchArea);
+    if (!userList) throw new Error("No user in that search area");
+    // const userList = await userData.getUsersByRole("provider");
+    // console.log(userList)
+    return res.status(200).render("seekerlist", { userList: userList });
 
-    res.status(200).render("seekerlist", { userList: userList });
   } catch (e) {
-    res.status(400).render("seekerlist", { error: e });
+    return res.status(400).render("seekerlist", { error: e });
+
   }
 });
 router.route("/profile/:userId").get(async (req, res) => {
   // access a profile page
   const userId = req.params.userId;
-  console.log(userId);
+  // console.log(userId);
 
   try {
     if (!userId) throw new Error("no userId specified");
@@ -224,6 +233,8 @@ router.route("/profile/:userId").get(async (req, res) => {
       const user = await userData.getUser(userId);
       let profileToAccessById = user._id.toString();
       profileToAccessById = profileToAccessById.trim();
+
+
       let currentUserId = req.session.user.userID.toString();
       currentUserId = currentUserId.trim();
 
@@ -233,13 +244,13 @@ router.route("/profile/:userId").get(async (req, res) => {
         //if this user clicks on view profile and its their profile:
         return res.redirect("/home/myprofile");
       }
-      res.status(200).render("profile", { title: "Profile", user: user });
-      // res.status(200).render('profile', { user: user });    // now we can see just what tha hell is goin on
+      return res.status(200).render("profile", { title: "Profile", user: user });
+
     } else {
-      res.redirect("/login"); // must be logged in to interact with posts
+      return res.redirect("/login"); 
     }
   } catch (e) {
-    return res.status(404).render("error", { error: e });
+    return res.status(400).render("error", { error: e });
   }
 });
 
@@ -248,6 +259,11 @@ router.route("/comment/profile/:commentId").get(async (req, res) => {
   try {
     const commentId = req.params.commentId;
     const post = await postData.getByCommentId(commentId);
+
+    if (!post) throw new Error("No post was found with that commentId");
+    // console.log("req.session.user:");
+    // console.log(req.session.user);
+
     let userId = undefined;
     post.comments.forEach((element) => {
       if (element._id.toString() === commentId) {
@@ -257,8 +273,8 @@ router.route("/comment/profile/:commentId").get(async (req, res) => {
 
     try {
       if (!userId) throw new Error("no userId specified");
-
       h.checkId(userId);
+
     } catch (e) {
       return res.status(400).redirect("/home");
     }
@@ -275,11 +291,10 @@ router.route("/comment/profile/:commentId").get(async (req, res) => {
           //if this user clicks on view profile and its their profile:
           return res.redirect("/home/myprofile");
         } else {
-          console.log("lets NOT go home");
-          res.status(200).render("profile", { title: "Profile", user: user });
+          return res.status(200).render("profile", { title: "Profile", user: user });
         }
       } else {
-        res.redirect("/login"); // must be logged in to interact with posts
+        return res.redirect("/login"); 
       }
     } catch (e) {
       return res.status(404).render("error", { error: e });
