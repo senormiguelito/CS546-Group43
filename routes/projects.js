@@ -7,7 +7,8 @@ import * as h from "../helpers.js";
 import xss from "xss"; // -------------> we need to wrap every req.body.... with xss(req.body....) <------------------------
 
 router.route("/").get(async (req, res) => {
-  let userId = req.session.user.userID; // unsure of id-- is it userId or projectId? in this route, if wrong, replace all projectId with userId
+  let userId = req.session.user.userID;
+  console.log("userId", userId);
   const userProjects = await projectData.getAllProjectsByUser(userId);
 
   try {
@@ -18,8 +19,6 @@ router.route("/").get(async (req, res) => {
     return res.status(400).redirect("/", { error: e }); //  unverified, not sure where to redirect. Need help. And jesus.
   }
 
-  // console.log("userProjects", userProjects);
-  // console.log("userProjects.noProjects: ", userProjects.noProjects);
   try {
     if (userProjects.noProjects) {
       return res.render("projects", { userProjects: userProjects, noProjects: true });
@@ -28,9 +27,9 @@ router.route("/").get(async (req, res) => {
       return res.render("projects", { userProjects: userProjects, projects: true });
     }
   } catch (e) {
-    return res.redirect("/home", 400);
+    return res.redirect("/home");
   }
-})
+});
 
 router
   .route("/:userId") // getAll projects involved from this userId

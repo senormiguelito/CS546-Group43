@@ -144,7 +144,8 @@ export const update = async (
   budget,
   images,
   prospects,
-  comments    
+  comments,
+  currentProspectId
 ) => {
 
   h.checkId(postId);
@@ -156,6 +157,7 @@ export const update = async (
   h.checkzipcode(location_zip_code);
   h.checkbudget(budget);
   //h.checkprospects(prospects);      // brought the dog out to play. Lets see if it screws shit up
+  h.checkId(currentProspectId);
 
  
   //this is different than helper function. don't delete it.
@@ -192,18 +194,13 @@ export const update = async (
 
   let oldPost = await get(postId);
 
-  // if (JSON.stringify(oldPost.prospects) === JSON.stringify(prospects)) {
-  //   throw new Error("user is already a prospect for the role");
-  // }
+  for (let i in oldPost.prospects) {
+    if (currentProspectId === oldPost.prospects[i].userId) {
+      throw new Error("You are already a prospect!");
+    }
+  }
 
-  oldPost.prospects.forEach(element => {
-    prospects.forEach(element1 => {
-      if (element.userId === element1.userId) {
-        // return oldPost;
-        throw new Error("you can not be prospect twice!")
-      }
-    });
-  });
+
   if (oldPost.userId !== userId) {
     throw "You can only update a post which you've created";
   }

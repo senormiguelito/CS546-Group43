@@ -8,10 +8,10 @@ const userCollection = await user();
 
 export const create = async (
   title,
-  description,    // will be the description of the project the user posted
-  clientId,     // THIS user
-  status,     // not started/in progress/finished --> only 3 options
-  assignedToId,      // other user involved
+  description,        // will be the description of the project the user posted
+  clientId,           // THIS user
+  status,             // not started/in progress/finished --> only 3 options
+  assignedToId,       // other user involved
   postId
 ) => {
 
@@ -70,21 +70,16 @@ console.log("in here")
     throw new Error("This project was not added to both parties 'projects' arrays :-(");
   }
   else {
-    console.log("life is good");
-
     // implement deletion of the post created by the poster!
 
-    console.log("66create: newProjectInfo: ", newProjectInfo);
-
     let newProjId = newProjectInfo._id.toString();
-    console.log("newProjId");
-    // const newProject = await this.get(newProjectId);
+
     const newProject = await getProjectById(newProjId); // will take us to getProjectById function
     if (!newProject) throw new Error("new project wasn't found in the database");
     console.log("newProject: ", newProject);
 
     const killthePost = await postData.remove(postId);
-    if (killthePost.deleted){
+    if (killthePost.deleted === true){
       return {newProject, created: true };  // just like create user func
     }
   }
@@ -108,12 +103,6 @@ export const getAllProjectsByUser = async (userId) => {
     return {allUserProjects, projects: true};
   }
 };
-
-// export const getAllProjects = async () => {
-//   // I actually have no clue how to do this -- getting all projects by all users.. really only need 1/2 of users because every project is tied to 2 users
-//   // either way, this hurts my brain
-//   // create a loop that gets all projects by user and then goes to the next user in the database 
-// };
 
 export const getProjectById = async (projectId) => {
   h.checkId(projectId);
