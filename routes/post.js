@@ -221,8 +221,8 @@ router.route("/:postId").get(async (req, res) => {
           comms: comms,
           interestCount: interestCount,
           isAuthor: isAuthor,
-          notAuthor: notAuthor,
-          alreadyProspect: alreadyProspect,
+       //   notAuthor: notAuthor,
+       //   alreadyProspect: alreadyProspect,
           prospects: post.prospects,
           postId: postId,
         });
@@ -254,9 +254,9 @@ router.route("/:postId").get(async (req, res) => {
         comms: comms,
         interestCount: interestCount,
         isAuthor: isAuthor,
-        notAuthor: notAuthor,
-        canDelete: canDelete,
-        alreadyProspect: alreadyProspect,
+       // notAuthor: notAuthor,
+      //  canDelete: canDelete,
+       // alreadyProspect: alreadyProspect,
         prospects: post.prospects,
         postId: postId,
       });
@@ -275,9 +275,9 @@ router.route("/:postId").get(async (req, res) => {
         comms: comms,
         interestCount: interestCount,
         isAuthor: isAuthor,
-        notAuthor: notAuthor,
-        canDelete: canDelete,
-        alreadyProspect: alreadyProspect,
+       // notAuthor: notAuthor,
+       // canDelete: canDelete,
+        //alreadyProspect: alreadyProspect,
         prospects: post.prospects,
       });
     }
