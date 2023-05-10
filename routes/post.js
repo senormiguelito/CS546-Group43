@@ -11,9 +11,8 @@ import multer from "multer";
 router.route("/").get(async (req, res) => {
   try {
     let posts = await postData.getAll();
-    if(!posts) throw new Error("could not find any posts!") 
-    // console.log("in create post");
-    res.render("post", { posts: posts });
+
+    return res.render("post", { posts: posts });
   } catch (e) {
     return res.status(400).render("justError", { error: e });
   }
@@ -26,7 +25,7 @@ router.route("/myPosts").get(async (req, res) => {
     let Message;
     if (req.session.successMessage) Message = req.session.successMessage;
     req.session.successMessage = null; // clear the session variable
-    res.render("myPost", {
+    return res.render("myPost", {
       title: "Here Are All Your Posts!",
       posts: myPosts,
       Message,
@@ -44,7 +43,8 @@ router.route("/myPosts").get(async (req, res) => {
 
 router.route("/newPost/createPost").get(async (req, res) => {
   try {
-    res.render("create_post");
+    // console.log("in create post");
+    return res.render("create_post");
   } catch (e) {
     return res.status(400).render("justError", { error: e });
   }
@@ -86,7 +86,6 @@ router.route("/createPost").post(upload.single("image"), async (req, res) => {
     } else {
       throw "image is not inserted, it is reuired.";
     }
-    // console.log(imageData);
 
     h.checkTitle(title);
     h.checkDescription(description);
@@ -96,7 +95,7 @@ router.route("/createPost").post(upload.single("image"), async (req, res) => {
     h.checkcity(city);
     h.checkstate(state);
     h.checkValid(userId);
-    // console.log(title, description, budget, role, categories, zip, city, state)
+
     let newPost = await postData.create(
       userId,
       title,
@@ -113,11 +112,11 @@ router.route("/createPost").post(upload.single("image"), async (req, res) => {
     if (newPost.insertedPost) {
       const userID = req.session.user.userID;
       req.session.post = { Created: true, userID };
-      res.status(200).redirect("/post/myposts");
+      return res.status(200).redirect("/post/myposts");
     } else {
       throw "could not create new post";
     }
-    // res.redirect('/')
+
   } catch (e) {
     return res.status(400).render("create_post", { Error: e });
   }
@@ -127,7 +126,6 @@ router.route("/:postId/interested").post(async (req, res) => {
   let role = xss(req.body.filter);
   let postId = req.params.postId;
 
-  //  console.log("in interested route");
   try {
     let post = await postData.get(postId);
 
@@ -159,15 +157,11 @@ router.route("/:postId/interested").post(async (req, res) => {
       post.prospects,
       post.comments
     );
-    
-
-    //it is redirecting back to same page so you might feel weather or not something happened
+ 
     if (updatedPost) {
       let comms = await postComment.getAll(postId);
       // okay so need a way to show number of people interested
       let interestCount = updatedPost.prospects.length;
-
-      // this is where we will use AJAX form submission --> update the page without refreshing/reloading to show updated interest count
 
       return res.render("post", {
         post: post,
@@ -177,7 +171,7 @@ router.route("/:postId/interested").post(async (req, res) => {
       // return res.redirect(`/post/${postId}`);
     }
   } catch (e) {
-    res.status(400).render("error", { error: e });
+    return res.status(400).render("error", { error: e });
   }
 });
 
@@ -198,13 +192,15 @@ router.route("/:postId").get(async (req, res) => {
   try {
     let postId = req.params.postId;
     let post = await postData.get(postId);
+    let prospects = post.prospects;
+    let thisUser = req.session.user.userID;
+    let comms = await postComment.getAll(postId);
+    
     let prospectId;
     h.checkId(postId);
    
     if (!post) throw "could not find post with that id";
 
-    let comms = await postComment.getAll(postId);
-  
     let interestCount = 0
     let isAuthor;
 
@@ -225,7 +221,9 @@ router.route("/:postId").get(async (req, res) => {
           comms: comms,
           interestCount: interestCount,
           isAuthor: isAuthor,
-          prospects: [],
+          notAuthor: notAuthor,
+          alreadyProspect: alreadyProspect,
+          prospects: post.prospects,
           postId: postId,
         });
       }
@@ -246,15 +244,6 @@ router.route("/:postId").get(async (req, res) => {
     }
     interestCount = post.prospects.length;
 
-    // THIS IS HOW THE USER WHO POSTED IT WILL CREATE THE PROJECT SUBDOC!
-    // IF THEY POSTED THEY CAN VIEW THIS. THEY SELECT THE USER THEY DESIRE
-    // THEN HTML SUBMIT WILL CALL DATA/PROJECTS.JS 'CREATE' FUNCTION
-    // THE ROUTE BELOW WILL WORK DIVINELY AND AFTER USER SUCCESSFULLY ENTERS THE
-    // PARAMETERS, THEY WILL LINK TO THEIR PROJECTS PAGE WHICH WILL HAVE THIS NEW PROJECT
-    // LGTM!
-    // console.log("hjds");
-
-    // console.log("hjds");
     if (req.session.user.userID === post.userId) {
       isAuthor = true;
       // console.log("sess.ion.user is the user who posted");
@@ -265,6 +254,9 @@ router.route("/:postId").get(async (req, res) => {
         comms: comms,
         interestCount: interestCount,
         isAuthor: isAuthor,
+        notAuthor: notAuthor,
+        canDelete: canDelete,
+        alreadyProspect: alreadyProspect,
         prospects: post.prospects,
         postId: postId,
       });
@@ -283,6 +275,9 @@ router.route("/:postId").get(async (req, res) => {
         comms: comms,
         interestCount: interestCount,
         isAuthor: isAuthor,
+        notAuthor: notAuthor,
+        canDelete: canDelete,
+        alreadyProspect: alreadyProspect,
         prospects: post.prospects,
       });
     }
@@ -352,7 +347,7 @@ router.route("/:postId/comment").post(async (req, res) => {
     if (!comment) throw "could not add comment";
 
     return res.redirect(`/post/${postId}`);
-    // return res.render('home', {comment:comment})
+
   } catch (e) {
     return res.status(400).render("justError", { error: e });
   }
@@ -365,8 +360,7 @@ router.route("/:commentId/deleteComment").delete(async (req, res) => {
     let userId = req.session.user.userID;
     let commentId = xss(req.params.commentId);
 
-  
-    h.checkValid(userId);
+    h.checkId(userId);    //h.checkValid(userId);
     h.checkId(commentId);
     userId = userId.trim();
     commentId = commentId.trim();
