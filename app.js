@@ -29,7 +29,7 @@ app.use(
 app.use((req, res, next) => {
   res.setHeader(
     "Content-Security-Policy",
-    "script-src 'self' cdn.jsdelivr.net ajax.googleapis.com kit.fontawesome.com/f7fb940881.js"
+    "script-src 'self' cdn.jsdelivr.net ajax.googleapis.com kit.fontawesome.com/f7fb940881.js https://khan.github.io/tota11y/dist/tota11y.min.js 'unsafe-eval'"
   );
   next();
 });
