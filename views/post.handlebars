@@ -2,6 +2,11 @@
 <h1>Welcome to Our post Page!</h1>
     {{!-- <p class="about">Check out our latest job posts:</p> --}}
     <div class="post-list-container">
+       {{#if Error}} <p class="alert alert-danger">{{Error}}</p>{{/if}}
+        {{#if Message}}<p
+            class="alert alert-success"
+            id="success"
+          >{{Message}}</p>{{/if}}
       {{#if post.userId}}
           <p><a href="/profile/{{post.userId}}" class="btn btn-primary">View profile!</a></p>
           {{/if}}

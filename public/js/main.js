@@ -166,6 +166,72 @@ if (createPostBtn) {
   });
 }
 
+// (function ($) {
+//   const deletePostHandler = async (event) => {
+//     console.log("you entered into delete ajax.");
+//     try {
+//       event.preventDefault();
+//       const button = $(event.currentTarget);
+//       const postId = button.data("id");
+//       let deleteReq = {
+//         method: "POST",
+//         url: `/post/${postId}/delete`,
+//         contentType: "application/json",
+//         data: JSON.stringify({
+//           id: postId,
+//         }),
+//       };
+//       $.ajax(deleteReq).then(function (responseMessage) {
+//         console.log(responseMessage);
+//       });
+//     } catch (error) {
+//       console.error(error);
+//     }
+//   };
+//   $(".deletePostbtn").on("click", deletePostHandler);
+// })(window.jQuery);
+
+(function ($) {
+  const deletePostHandler = async (event) => {
+    console.log("you entered into delete ajax.");
+    try {
+      event.preventDefault();
+      const button = $(event.currentTarget);
+      const postId = button.data("id");
+      const postElement = $("#post-" + postId);
+      let deleteReq = {
+        method: "POST",
+        url: `/post/${postId}/delete`,
+        contentType: "application/json",
+        data: JSON.stringify({
+          id: postId,
+        }),
+      };
+      $.ajax(deleteReq).then(function (responseMessage) {
+        console.log(responseMessage);
+        console.log(postElement);
+        if (responseMessage.success) {
+          postElement.remove();
+          button.remove();
+        }
+        // Display a success message at the top of the page
+        const message = $("<div>")
+          .addClass("alert alert-success")
+          .text("Post deleted successfully");
+        $("body").prepend(message);
+
+        // Remove the message after 5 seconds
+        setTimeout(function () {
+          message.remove();
+        }, 5000);
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  $(".deletePostbtn").on("click", deletePostHandler);
+})(window.jQuery);
+
 if (imgInput) {
   imgInput.addEventListener("change", (event) => {
     const file = event.target.files[0];

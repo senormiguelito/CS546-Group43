@@ -29,7 +29,7 @@ app.use(
 app.use((req, res, next) => {
   res.setHeader(
     "Content-Security-Policy",
-    "script-src 'self' cdn.jsdelivr.net"
+    "script-src 'self' cdn.jsdelivr.net ajax.googleapis.com"
   );
   next();
 });
@@ -38,8 +38,10 @@ app.use((req, res, next) => {
 //   helmet.contentSecurityPolicy({
 //     directives: {
 //       "default-src": ["'self'"],
-//       "script-src": ["'self'", "api.zippopotam.us"], // i used outside resource for get city and state name by zipcode and to allow that i have to use helmet, otherwise it was throwing an error.
-//       "connect-src": ["'self'", "api.zippopotam.us"],
+//       "script-src": [
+//         "'self'",
+//         "https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js",
+//       ],
 //     },
 //   })
 // );

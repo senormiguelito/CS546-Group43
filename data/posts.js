@@ -213,7 +213,6 @@ export const update = async (
     throw "You must change something to submit an update request";
   }
 
-
   const newPostsInfo = {
     userId: userId,
     title: title,
@@ -226,7 +225,7 @@ export const update = async (
     createdOrUpdatedAt: d1.toISOString(),
     images: images, 
     prospects: prospects,
-    comments: comments
+    comments: comments,
   };
 
   let newPost = await postsCollection.findOneAndReplace(
@@ -266,7 +265,6 @@ export const getByCommentId = async (id) => {
 // };
 
 export const getByRole = async (role) => {
-
   h.checkrole(role);
 
   let postList = await postsCollection.find({}).toArray();
