@@ -74,7 +74,7 @@ router.route("/:userId/allReviews").get(async (req, res) => {
 
 router.route("/delete/:reviewId").delete(async (req, res) => {
   try {
-    console.log(req.method,"method")
+    // console.log(req.method,"method")
     let currentUser = req.session.user.userID
     let reviewId = req.params.reviewId 
     let review = await reviewData.getReviewByReviewId(reviewId) 

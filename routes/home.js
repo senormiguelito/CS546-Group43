@@ -76,7 +76,7 @@ router.route("/provideList").get(async (req, res) => {
 
 router.route("/provideList/sortBy").get(async (req, res) => {
   try {
-    console.log(req.method,"req")
+    // console.log(req.method,"req")
     // console.log("in porviderList filter route")
     // console.log(req.params,req.body)
     let user = req.session.user.userSessionData;

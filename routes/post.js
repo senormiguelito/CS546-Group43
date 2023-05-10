@@ -123,10 +123,10 @@ router.route("/createPost").post(upload.single("image"), async (req, res) => {
   }
 });
 
-router.route("/:postId/interested").post(async (req, res) => {
+router.route("/:postId/interested").put(async (req, res) => {
   let role = xss(req.body.filter);
   let postId = req.params.postId;
-
+  console.log(req.session.user,"usrd")
   //  console.log("in interested route");
   try {
     let post = await postData.get(postId);
@@ -177,7 +177,7 @@ router.route("/:postId/interested").post(async (req, res) => {
       // return res.redirect(`/post/${postId}`);
     }
   } catch (e) {
-    res.status(400).render("error", { error: e });
+    res.status(400).render("error", { error: e , badInput:true}); // thi won't work ig
   }
 });
 
@@ -359,7 +359,7 @@ router.route("/:postId/comment").post(async (req, res) => {
 });
 
 // needs to change method from get to delete
-router.route("/:commentId/deleteComment").delete(async (req, res) => {
+router.route("/:commentId/deleteComment").get(async (req, res) => {
   try {
     
     let userId = req.session.user.userID;
