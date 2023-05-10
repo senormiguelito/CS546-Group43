@@ -129,6 +129,10 @@ router.route("/:postId/interested").put(async (req, res) => {
     if (!post) throw new Error("Post was not found");
     let prospectpush = {};
 
+    if (!post.comments) {
+      post.comments = [];
+    }
+
     prospectpush["userId"] = req.session.user.userID;
     prospectpush["firstName"] = req.session.user.userSessionData.firstName;
     prospectpush["lastName"] = req.session.user.userSessionData.lastName;
@@ -151,24 +155,25 @@ router.route("/:postId/interested").put(async (req, res) => {
       post.budget,
       post.images,
       post.prospects,
-      post.comments
+      post.comments,
+      req.session.user.userID.toString()
     );
- 
+
     if (updatedPost) {
       let comms = await postComment.getAll(postId);
       // okay so need a way to show number of people interested
-      let interestCount = updatedPost.prospects.length;
+      let interestCount = updatedPost.prospects.length + 1;
 
       // return res.render("post", {
       //   post: post,
       //   comms: comms,
       //   interestCount: interestCount,
       // });
-      req.session.user = { interestedUpdated: true, post, comms, interestCount, postId };
-      return res.redirect(`/post/${postId}`);
+      req.session.interestedPost = { interestedUpdated: true, post, comms, interestCount, postId };
+      return res.status(200).redirect(`/post/${postId}`);
     }
   } catch (e) {
-    res.status(400).render("error", { error: e , badInput:true}); // thi won't work ig
+    res.status(400).render("error", { error: e , badInput: true}); // thi won't work ig
   }
 });
 
@@ -187,11 +192,12 @@ router.route("/filter").get(async (req, res) => {
 
 router.route("/:postId").get(async (req, res) => {
   try {
-    if (req.session.user.interestedUpdated) {
-      const post = req.session.user.post;
-      const comms = req.session.user.comms;
-      const interestCount = req.session.user.interestCount;
-      const postId = req.session.user.postId;
+    if (req.session.interestedPost) {
+      if (req.session.interestedPost.interestedUpdated === true){
+      let post = req.session.interestedPost.post;
+      let comms = await postComment.getAll(postId);
+      let interestCount = req.session.interestedPost.interestCount;
+      const postId = req.session.interestedPost.postId;
       return res.render("post", {
         post: post,
         comms: comms,
@@ -200,6 +206,8 @@ router.route("/:postId").get(async (req, res) => {
         prospects: post.prospects,
         postId: postId,
       });
+      }
+
     }
     let postId = req.params.postId;
     let post = await postData.get(postId);
@@ -218,7 +226,7 @@ router.route("/:postId").get(async (req, res) => {
     if(req.session.user.userID === post.userId){
       isAuthor = true
     }
-    // console.log(isAuthor)
+
     if(post.prospects.length === 0 ){
       
       if (req.session.user.userID === post.userId) {
@@ -244,7 +252,7 @@ router.route("/:postId").get(async (req, res) => {
         isAuthor: isAuthor,
         prospects: [],
       })
-        return res.render("post", { post: post, comms: comms });
+        // return res.render("post", { post: post, comms: comms });
       }
     }
     interestCount = post.prospects.length;
@@ -260,14 +268,14 @@ router.route("/:postId").get(async (req, res) => {
         postId: postId,
       });
     }
-    // console.log("bsdkjc");
+
     if (!comms) {
       return res.render("post", {
         post: post,
         interestCount: interestCount,
       }); //interestCount: interestCount
     } else {
-      // console.log("bsdkjc");
+
       return res.render("post", {
         post: post,
         comms: comms,
@@ -277,7 +285,6 @@ router.route("/:postId").get(async (req, res) => {
       });
     }
   } catch (e) {
-    // console.log("jhdavfk6")
     return res.status(400).render("error", { error: e , badInput:true});
   }
 });
@@ -289,25 +296,33 @@ router.route("/:postId/selectProspect").post(async (req, res) => {
     let clientId = req.session.user.userID;
     let status = "not started"; // how unbelievably wicked. Itsss alllll comming togetheaaa!
     let assignedToId = prospectId;
-
+    
     let post = await postData.get(postId);
+
     if (!post) throw new Error("no post specified");
+
     let title = post.title;
     let description = post.description;
 
     const project = await projectData.create(
       title,
       description,
-      clientId, // THIS user
-      status, // not started upon project creation
-      assignedToId // prospect selected from super sick drop down
+      clientId,       // THIS user
+      status,         // not started upon project creation
+      assignedToId,   // prospect selected from super sick drop down
+      postId
     );
 
-    // console.log("create went well");
-
     if (project.created) {
-      // routes/user.js line 142
-      return res.render("projects", { created: created, project: project }); // super duper awesome
+      console.log("created project: ", project);
+
+      return res.render("projects", {
+        created: project.created,
+        title: project.newProject.title,
+        description: project.newProject.description,
+        status: project.newProject.status,
+        assignedToId: project.newProject.assignedToId
+      }); // super duper awesome
     }
   } catch (e) {
     return res.status(400).render("justError", { error: e });
@@ -318,10 +333,9 @@ router.route("/:postId/comment").post(async (req, res) => {
   try {
     let userId = req.session.user.userID;
     let comm = xss(req.body.postCommentInput);
-    let postId = xss(req.params.postId);
+    let postId = req.params.postId;   // I think this is the issue
     h.checkId(userId);
     h.checkId(postId);
-    // console.log("jhdvchxmasnz")
 
     if (!comm) throw "please enter comment!";
     if (comm.trim().length === 0) throw "please enter non-empty comment!";

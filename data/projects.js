@@ -8,25 +8,28 @@ const userCollection = await user();
 
 export const create = async (
   title,
-  description,    // will be the description of the project the user posted
-  clientId,     // THIS user
-  status,     // not started/in progress/finished --> only 3 options
-  assignedToId,      // other user involved
+  description,        // will be the description of the project the user posted
+  clientId,           // THIS user
+  status,             // not started/in progress/finished --> only 3 options
+  assignedToId,       // other user involved
   postId
 ) => {
 
+console.log(postId,"pid in create")
   h.checkTitle(title);
   h.checkDescription(description);
   h.checkId(clientId);
   h.checkstatus(status);
   h.checkId(assignedToId);
-  h.checkId(postId);
+  // h.checkId(postId);
+
   
 /*
   if (!status) {
     status = "not started";   // default value. Ask group. Or can just make drop down. Idk im fookin tired
   }
 */
+
   const user = await userCollection.findOne({ _id: new ObjectId(clientId) });   // figure out if clientId is correct
   if (!user) throw new Error("No user with that ID in the database");
 
@@ -53,7 +56,7 @@ export const create = async (
   const updatedAssignedTo = await userCollection.updateOne({ _id: new ObjectId(assignedToId) }, {
     $push: { projects: newProjectInfo }
   });
-  
+  console.log("in here")
   const clientCheck = await userData.getUser(clientId);
   const assigneeCheck = await userData.getUser(assignedToId);
 
@@ -61,21 +64,16 @@ export const create = async (
     throw new Error("This project was not added to both parties 'projects' arrays :-(");
   }
   else {
-    console.log("life is good");
-
     // implement deletion of the post created by the poster!
 
-    console.log("66create: newProjectInfo: ", newProjectInfo);
-
     let newProjId = newProjectInfo._id.toString();
-    console.log("newProjId");
-    // const newProject = await this.get(newProjectId);
+
     const newProject = await getProjectById(newProjId); // will take us to getProjectById function
     if (!newProject) throw new Error("new project wasn't found in the database");
     console.log("newProject: ", newProject);
 
     const killthePost = await postData.remove(postId);
-    if (killthePost.deleted){
+    if (killthePost.deleted === true){
       return {newProject, created: true };  // just like create user func
     }
   }
@@ -83,13 +81,14 @@ export const create = async (
 
 export const getAllProjectsByUser = async (userId) => {
   h.checkValid(userId);
-  
-  if (!ObjectId.isValid(userId)) throw new Error("invalid userId");
-  userId = userId.trim();
 
+  userId = userId.trim();
+  console.log("projects85: ", userId);
+  if (!ObjectId.isValid(userId)) throw new Error("invalid userId");
+  console.log("88");
   const user = await userCollection.findOne({ _id: new ObjectId(userId) }); // converts string userId to an objectId to be compared
   if (!user) throw new Error("No user with that ID in our database");
-  const allUserProjects = user.projects;
+  let allUserProjects = user.projects;
   for (let i in allUserProjects) {
     allUserProjects[i]._id = allUserProjects[i]._id.toString();
   }
@@ -100,21 +99,16 @@ export const getAllProjectsByUser = async (userId) => {
   }
 };
 
-// export const getAllProjects = async () => {
-//   // I actually have no clue how to do this -- getting all projects by all users.. really only need 1/2 of users because every project is tied to 2 users
-//   // either way, this hurts my brain
-//   // create a loop that gets all projects by user and then goes to the next user in the database 
-// };
-
 export const getProjectById = async (projectId) => {
+  
   h.checkId(projectId);
 
   if (!ObjectId.isValid(projectId)) throw new Error("projectId is not a valid objectId");
-  projectId = projectId.trim();
 
   let userProjects = await userCollection.findOne({ 'projects._id': new ObjectId(projectId), }, { projection: { _id: 0, projects: 1 } });
   if (!userProjects) throw new Error("No project with this ID found in our database");
   userProjects = userProjects.projects;
+  console.log("111 userProjects", userProjects);
   
   for (let i in userProjects) {
     if (userProjects[i]._id.toString() === projectId) {

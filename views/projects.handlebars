@@ -1,20 +1,14 @@
-
-
-
 {{#if created}}
 <header>Here is the project you just created!</header>
-<h1>{{project.title}}</h1>
+<h1>{{title}}</h1>
     
-  <div class="projects">
-    <h2>{{project.description}}</h2>
-    <p>{{project.status}}</p>
-    <p><a href="/profile/{{project.assignedToId}}">View 's Profile</a></p>
-  </div>
-  {{/if}}
-{{!-- {{#if noProjects }}
-  <h1>It looks like you aren't yet involved in any projects!</h1>
-  <p>Your community awaits you, <a href="/newPost/createPost">click here</a> to make a posting!</p>
-{{/if}} --}}
+  {{!-- <div class="projects"> --}}
+    <h2>{{description}}</h2>
+    <p>{{status}}</p>
+    <p><a href="/profile/{{assignedToId}}">View Profile</a></p>
+  {{!-- </div> --}}
+{{/if}}
+
 
 
 <div class="me-mb-3">
@@ -26,18 +20,13 @@
 </div>
 
 <br />
-{{!-- {{#if Error}} <p class="alert alert-danger">{{Error}}</p>{{/if}}
-{{#if Message}}<p
-    class="alert alert-success"
-    id="success"
-  >{{Message}}</p>{{/if}} --}}
 
 <div class="row">
   {{#if projects}}
     <h1 class="mb-3">Here, you can view all projects you have been involved in!</h1>
     {{#each userProjects.allUserProjects}}
       <div class="col-sm-3">
-        <div class="col-sm-3" id="projects" data-id="{{_id}}">
+        <div class="project-list-box" id="projects" data-id="{{_id}}">
           <div class="card" style="width: 18rem;">
             {{#if images}}
               <img src={{images}} class="card-img-top" alt="..." />
