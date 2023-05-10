@@ -298,6 +298,70 @@ app.use(async (req, res, next) => {
   next();
 });
 
+app.use('/post/:commentId/deleteComment', async (req, res, next) => {
+  console.log(req);
+  if (req.method == 'GET') {
+    req.method = 'DELETE';
+  }
+  next();
+});
+
+app.use('/post/:postId/delete', async (req, res, next) => {
+  console.log(req);
+  if (req.method == 'POST') {
+    req.method = 'DELETE';
+  }
+  next();
+});
+
+app.use('/user/reviews/delete/:reviewId', async (req, res, next) => {
+  console.log(req);
+  if (req.method == 'POST') {
+    req.method = 'DELETE';
+  }
+  next();
+});
+
+app.use('/seekers/searchArea', async (req, res, next) => {
+  console.log(req);
+  if (req.method == 'POST') {
+    req.method = 'PUT';
+  }
+  next();
+});
+
+app.use('/user/reviews/edit/:reviewId', async (req, res, next) => {
+  console.log(req);
+  if (req.method == 'POST') {
+    req.method = 'PUT';
+  }
+  next();
+});
+
+app.use('/post/filter', async (req, res, next) => {
+  console.log(req);
+  if (req.method == 'POST') {
+    req.method = 'GET';
+  }
+  next();
+});
+
+app.use('/home/provideList/searchArea', async (req, res, next) => {
+  console.log(req);
+  if (req.method == 'POST') {
+    req.method = 'GET';
+  }
+  next();
+});
+
+app.use('/home/provideList/sortBy', async (req, res, next) => {
+  console.log(req);
+  if (req.method == 'POST') {
+    req.method = 'GET';
+  }
+  next();
+});
+
 configRoutes(app);
 
 app.listen(3000, () => {

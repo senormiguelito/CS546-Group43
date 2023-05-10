@@ -74,8 +74,9 @@ router.route("/provideList").get(async (req, res) => {
   }
 });
 
-router.route("/provideList/sortBy").post(async (req, res) => {
+router.route("/provideList/sortBy").get(async (req, res) => {
   try {
+    console.log(req.method,"req")
     // console.log("in porviderList filter route")
     // console.log(req.params,req.body)
     let user = req.session.user.userSessionData;
@@ -98,7 +99,7 @@ router.route("/provideList/sortBy").post(async (req, res) => {
   }
 });
 
-router.route("/provideList/searchArea").post(async (req, res) => {
+router.route("/provideList/searchArea").get(async (req, res) => {
   try {
     // console.log("in porviderList search area filter route")
     // console.log(req.params,req.body)

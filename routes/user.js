@@ -196,7 +196,7 @@ router.route("/seekers/sortBy").post(async (req, res) => {
   }
 });
 
-router.route("/seekers/searchArea").post(async (req, res) => {
+router.route("/seekers/searchArea").put(async (req, res) => {
   try {
     let user = req.session.user.userSessionData;
     let searchArea = xss(req.body.searchAreaInput);

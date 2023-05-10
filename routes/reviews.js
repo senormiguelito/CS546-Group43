@@ -78,7 +78,7 @@ router.route("/:userId/allReviews").get(async (req, res) => {
   }
 });
 
-router.route("/delete/:reviewId").post(async (req, res) => {
+router.route("/delete/:reviewId").delete(async (req, res) => {
   try {
     let currentUser = req.session.user.userID;
     let reviewId = req.params.reviewId;
@@ -103,7 +103,7 @@ router.route("/delete/:reviewId").post(async (req, res) => {
   }
 });
 
-router.route("/edit/:reviewId").post(async (req, res) => {
+router.route("/edit/:reviewId").put(async (req, res) => {
   try {
     let currentUser = req.session.user.userID;
     let reviewId = req.params.reviewId;

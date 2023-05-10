@@ -181,7 +181,7 @@ router.route("/:postId/interested").post(async (req, res) => {
   }
 });
 
-router.route("/filter").post(async (req, res) => {
+router.route("/filter").get(async (req, res) => {
   // console.log(req.params, req.body);
   let role = xss(req.body.filter); // xss?!
   // console.log("in filter route");
@@ -288,7 +288,7 @@ router.route("/:postId").get(async (req, res) => {
     }
   } catch (e) {
     console.log("jhdavfk6")
-    return res.status(400).render("justError", { error: e });
+    return res.status(400).render("error", { error: e , badInput:true});
   }
 });
 
@@ -359,12 +359,13 @@ router.route("/:postId/comment").post(async (req, res) => {
 });
 
 // needs to change method from get to delete
-router.route("/:commentId/deleteComment").get(async (req, res) => {
+router.route("/:commentId/deleteComment").delete(async (req, res) => {
   try {
+    
     let userId = req.session.user.userID;
     let commentId = xss(req.params.commentId);
 
-    console.log("in here")
+  
     h.checkValid(userId);
     h.checkId(commentId);
     userId = userId.trim();
@@ -383,7 +384,7 @@ router.route("/:commentId/deleteComment").get(async (req, res) => {
   }
 });
 
-router.route("/:postId/delete").post(async (req, res) => {
+router.route("/:postId/delete").delete(async (req, res) => {
   try {
     let userId = req.session.user.userID;
     let postId = xss(req.body.id);
@@ -414,5 +415,29 @@ router.route("/:postId/delete").post(async (req, res) => {
     // return res.redirect(`/post/myposts`);
   }
 });
+// router.route("/:postId/delete").delete(async (req, res) => {
+//   try {
+//     console.log(req.method,"req")
+//     let userId = req.session.user.userID;
+//     let postId = (req.params.postId);
+
+//     h.checkValid(userId);
+//     h.checkId(postId);
+//     userId = userId.trim();
+//     postId = postId.trim();
+//     let postByPostId = await postData.get(postId);
+//     if (!postByPostId) throw "could not find user with that postId";
+//     if (postByPostId.userId !== userId) {
+//       throw "userId and postId is not matched";
+//     }
+//     let deletedPost = await postData.remove(postId);
+//     req.session.successMessage = `Post(${deletedPost.postId}) deleted successfully`;
+//     if (deletedPost.deleted) return res.redirect(`/post/myposts`);
+//     else throw `could not delete this post : ${postId}`;
+//   } catch (e) {
+//     req.session.errorMessage = `Post(${postId}) is not deleted successfully`;
+//     return res.redirect(`/post/myposts`);
+//   }
+// });
 
 export default router;
