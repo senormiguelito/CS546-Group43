@@ -169,8 +169,8 @@ router.route("/:postId/interested").put(async (req, res) => {
       //   comms: comms,
       //   interestCount: interestCount,
       // });
-      req.session.user = { interestedUpdated: true, post, comms, interestCount, postId };
-      return res.redirect(`/post/${postId}`);
+      req.session.interestedPost = { interestedUpdated: true, post, comms, interestCount, postId };
+      return res.status(200).redirect(`/post/${postId}`);
     }
   } catch (e) {
     res.status(400).render("error", { error: e , badInput: true}); // thi won't work ig
@@ -192,11 +192,12 @@ router.route("/filter").get(async (req, res) => {
 
 router.route("/:postId").get(async (req, res) => {
   try {
-    if (req.session.user.interestedUpdated) {
-      let post = req.session.user.post;
-      let comms = req.session.user.comms;
-      let interestCount = req.session.user.interestCount;
-      const postId = req.session.user.postId;
+    if (req.session.interestedPost) {
+      if (req.session.interestedPost.interestedUpdated === true){
+      let post = req.session.interestedPost.post;
+      let comms = await postComment.getAll(postId);
+      let interestCount = req.session.interestedPost.interestCount;
+      const postId = req.session.interestedPost.postId;
       return res.render("post", {
         post: post,
         comms: comms,
@@ -205,6 +206,8 @@ router.route("/:postId").get(async (req, res) => {
         prospects: post.prospects,
         postId: postId,
       });
+      }
+
     }
     let postId = req.params.postId;
     let post = await postData.get(postId);

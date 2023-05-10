@@ -18,7 +18,7 @@ router.route("/").get(async (req, res) => {
     if (!ObjectId.isValid(userId)) throw new Error("invalid userId");
     console.log("projRout19")
   } catch (e) {
-    return res.status(400).redirect("/", { error: e }); //  unverified, not sure where to redirect. Need help. And jesus.
+    return res.status(400).render("error", { error: e, badInput: true });
   }
 
   try {
