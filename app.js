@@ -162,6 +162,8 @@ app.use("/login", (req, res, next) => {
       next();
     } else if (req.session.user.authentication) {
       return res.redirect("/home");
+    } else if (req.session.user.userID) {
+      return res.redirect("/home");
     }
   } else if (!req.session.user) {
     next();
@@ -229,7 +231,6 @@ app.use("/projects", (req, res, next) => {
   }
 });
 
-
 app.use("/api", (req, res, next) => {
   if (req.session.user) {
     next();
@@ -254,6 +255,17 @@ app.use("/post", (req, res, next) => {
   }
 });
 
+app.use("/post/newPost/createPost", (req, res, next) => {
+  if (req.session.user) {
+    next();
+  } else {
+    return res.status(403).render("error", {
+      title: "Error",
+      unauthorizedAccess: true,
+      isHide: true,
+    });
+  }
+});
 
 //please add your route name if you add any in futer, like /home/seekerpage/addpost
 // app.use("/yournewroute", (req, res, next) => {
