@@ -34,14 +34,28 @@ router.route("/").get(async (req, res) => {
 router
   .route("/:userId") // getAll projects involved from this userId
   .get(async (req, res) => {
+    
     let userId = req.session.user.userID; // unsure of id-- is it userId or projectId? in this route, if wrong, replace all projectId with userId
-    const userProjects = await projectData.getAllProjectsByUser(clientId)
+
+
     try {
+
+      if (userId === req.params.userId) {   // trying to click on our own projects, view individually
+
+        const userProjects = await projectData.getAllProjectsByUser(userId);
+        if (!userProjects) {
+          throw new Error("This user is not involved in any projects");
+        }
+        else {
+          res.render("/", {})
+        }
+      }
+
       h.checkId(userId);
       userId = userId.trim(); // might as well
       if (ObjectId.isValid(userId)) throw new Error("invalid userId");
     } catch (e) {
-      return res.status(400).redirect("/", { error: e }); //  unverified, not sure where to redirect. Need help. And jesus.
+      return res.status(400).render("error", { error: e, badInput: true }); //  unverified, not sure where to redirect. Need help. And jesus.
     }
 
     try {

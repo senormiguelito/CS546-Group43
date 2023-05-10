@@ -8,6 +8,16 @@ postListBoxes.forEach(postListBox => {
   });
 });
 
+const projectListBoxes = document.querySelectorAll('.project-list-box');
+projectListBoxes.forEach(projectListBox => {
+  projectListBox.addEventListener('click', () => {
+    const projectId = projectListBox.getAttribute('data-id');
+    if(projectId){
+      window.location.href = `/projects/${projectId}`;
+    }
+  });
+});
+
 const mmodal = document.getElementById("mmodal");
 const closeBtn = document.getElementsByClassName("close")[0];
 if (mmodal) {

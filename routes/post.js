@@ -311,8 +311,15 @@ router.route("/:postId/selectProspect").post(async (req, res) => {
     );
 
     if (project.created) {
+      console.log("created project: ", project);
 
-      return res.render("projects", { created: project.created, project: project }); // super duper awesome
+      return res.render("projects", {
+        created: project.created,
+        title: project.newProject.title,
+        description: project.newProject.description,
+        status: project.newProject.status,
+        assignedToId: project.newProject.assignedToId
+      }); // super duper awesome
     }
   } catch (e) {
     return res.status(400).render("justError", { error: e });
