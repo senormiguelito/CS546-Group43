@@ -286,12 +286,10 @@ router
     const userSession = req.session.user.userSessionData;
     const sender = userSession._id;
     const reciever = req.body.recieverId;
-    let message = req.body.message;
-    if(message.trim() == ""){
-      return res.render("error", {badInput: true, error: "empty message!"});
+    let message = req.body.message;// console.log(sender, "sender");
+    if(message.trim().length==0){
+      return res.status(400).render("error", { error: "Empty message", badInput : true });
     }
-
-    // console.log(sender, "sender");
     // console.log(reciever, "reciever");
     // console.log(message, "message");
     try {
@@ -311,6 +309,16 @@ router
       // console.log(messages);
       for (let i = 0; i < messages.length; i++) {
         // changing the senderId to senderName
+        let m = messages[i].message;
+        if(m.split("localhost:3000").length > 1){
+          messages[i].hasLink = true;
+          messages[i].message = messages[i].message.split("http://localhost:3000")[0];
+          let link = m.split("localhost:3000")[1].split(" ")[0];
+          messages[i].link = "http://localhost:3000" + link;
+        }
+        else{
+          messages[i].hasLink = false;
+        }
         if (messages[i].senderId == userSession._id) {
           let recieverName = await userData.getUser(messages[i].recieverId);
           messages[i].recieverName =

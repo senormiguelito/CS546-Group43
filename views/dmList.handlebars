@@ -6,7 +6,7 @@
     timeStamp: '2023-05-02T13:31:02.778Z'
   }  --}}
   <div class = "messagePage">
-     <p id = "dmError"></p>
+     <p id = 'dmError'></p>
   <div class="messageSection">
   {{#each messages}}
   
@@ -39,11 +39,10 @@
   <p>{{messageStatus}}</p>
   <div class="dropdown-content">
      <form id = "dm-form" method = "POST" action ='/home/messages/'>
-        <input id = "dm-input" type="text" placeholder="Enter your message" name = "message" id = "message"><br><br>
-        <input id = "recId" type="hidden" name = "recieverId" id = "recieverId" value = "{{senderId}}">
+        <input type="text" placeholder="Enter your message" name = "message" id = "message"><br><br>
+        <input type="hidden" name = "recieverId" id = "recieverId" value = "{{senderId}}">
         <input type="submit" value="Send" id = "send-btn">
       </form>
-     
      
   </div>
 </div>

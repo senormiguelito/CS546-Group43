@@ -742,35 +742,74 @@ if (document.getElementById("send-btn")) {
   });
 }
 
-var dmForm = document.getElementById("dm-form");
-if (dmForm) {  
-dmForm.addEventListener("submit", function (e) {
-  e.preventDefault();
+// const dmForm = document.getElementById("dm-form");
+// if (dmForm) {
+//   dmForm.addEventListener("submit", function (e) {
+//     console.log("clickeddd")
+//     e.preventDefault();
+//     const dmInput = document.getElementById("message");
+//     const dmError = document.getElementById("dmError");
+//     const errors = [];
+//     if(!dmInput){
+//       errors.push("invalid message");
+//     }
+//     if (!dmInput.value) {
+//       errors.push("Please refresh the page and please enter a valid message ");
+//     }
+//     if(dmInput.value.trim().length===0){
+//       errors.push("Please refresh the page and please enter a non-empty message");
+//     }
 
-  var dmInput = document.getElementById("dm-input");
-  var recId = document.getElementById("recId");
+//     if (errors.length > 0) {
+//       dmError.innerText = errors.join(", ");
+//       dmError.style.display = "block";
+//       setTimeout(function () {
+//         dmError.style.display = "none";
+//       }, 3000);
+      
+//     } 
+//     else {
+//       dmForm.submit();
+//     }
+//   });
+// }
 
-  var error = document.getElementById("dmError");
-  var errors = [];
-  if (dmInput.value == "") {
-    errors.push("Please enter a message");
-  }
-  if(dmInput.value.trim() == ""){
-    errors.push("Please enter a valid message");
-  }
-  if (recId.value.trim() == "") {
-    errors.push("Please enter a valid recipient");
-  }
-  if (errors.length > 0) {
-    error.innerText = errors.join(", ");
-    error.style.display = "block";
-    // showing the error only for 1.5 seconds.
-    setTimeout(function () {
-      error.style.display = "none";
-    }, 1500);
-  } 
-});
-}
+
+
+// const dmPageForm = document.getElementById("dmPage-form");
+// if (dmForm) {
+//   dmForm.addEventListener("submit", function (e) {
+//     console.log("clickeddd")
+//     e.preventDefault();
+//     const dmInput = document.getElementById("message");
+//     const dmError = document.getElementById("dmPageError");
+//     const errors = [];
+//     if(!dmInput){
+//       errors.push("invalid message");
+//     }
+//     if (!dmInput.value) {
+//       errors.push("Please refresh the page and please enter a valid message ");
+//     }
+//     if(dmInput.value.trim().length===0){
+//       errors.push("Please refresh the page and please enter a non-empty message");
+//     }
+
+//     if (errors.length > 0) {
+//       dmError.innerText = errors.join(", ");
+//       dmError.style.display = "block";
+//       setTimeout(function () {
+//         dmError.style.display = "none";
+//       }, 3000);
+      
+//     } 
+//     else {
+//       dmForm.submit();
+//     }
+//   });
+// }
+
+
+
 
 const profileForm = document.getElementById("add-review-form");
 if (profileForm) {
