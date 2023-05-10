@@ -141,26 +141,27 @@ const signupForm = document.getElementById("signup-form");
 const loginForm = document.getElementById("login-form");
 
 const commentForm = document.getElementById("comment-form");
-if (commentForm) {
-  
-commentForm.addEventListener("submit", (event) => {
-  event.preventDefault();
-  const comment = document.getElementById("postCommentInput").value;
-  const errorContainer = document.getElementById("posterror");
-  const errors = [];
-  if(comment.trim() === ""){
-    errors.push("Comment cannot be empty");
-  }
-  if(errors.length > 0){
-    errorContainer.innerText = errors.join(", ");
-    errorContainer.style.display = "block";
-    // showing the error only for 1.5 seconds.
-    setTimeout(function () {
-      errorContainer.style.display = "none";
-    }, 1500);
-  }
-});
-}
+// if (commentForm) {
+//   console.log("asbcz")
+// commentForm.addEventListener("submit", (event) => {
+//   event.preventDefault();
+//   console.log("vhjsdchzj")
+//   const comment = document.getElementById("postCommentInput").value;
+//   const errorContainer = document.getElementById("posterror");
+//   const errors = [];
+//   if(comment.trim() === ""){
+//     errors.push("Comment cannot be empty");
+//   }
+//   if(errors.length > 0){
+//     errorContainer.innerText = errors.join(", ");
+//     errorContainer.style.display = "block";
+//     // showing the error only for 1.5 seconds.
+//     setTimeout(function () {
+//       errorContainer.style.display = "none";
+//     }, 1500);
+//   }
+// });
+// }
 
 const editprofileForm = document.getElementById("myprofile-edit");
 const resetButton = document.getElementById("reset-button");

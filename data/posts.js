@@ -192,7 +192,8 @@ export const update = async (
   oldPost.prospects.forEach(element => {
     prospects.forEach(element1 => {
       if (element.userId === element1.userId) {
-        return;
+        // return oldPost;
+        throw new Error("you can not be prospect twice!")
       }
     });
   });
