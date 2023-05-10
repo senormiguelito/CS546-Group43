@@ -290,24 +290,29 @@ router.route("/:postId/selectProspect").post(async (req, res) => {
     let status = "not started"; // how unbelievably wicked. Itsss alllll comming togetheaaa!
     let assignedToId = prospectId;
 
+    
     let post = await postData.get(postId);
+    console.log("into selct prospect!")
+    // console.log("ejkadsbac ",post,"post data in select")
     if (!post) throw new Error("no post specified");
+
     let title = post.title;
     let description = post.description;
-
+    console.log("into selct prospect!")
     const project = await projectData.create(
       title,
       description,
       clientId, // THIS user
       status, // not started upon project creation
-      assignedToId // prospect selected from super sick drop down
+      assignedToId, // prospect selected from super sick drop down
+      postId
     );
-
+    console.log("into selct prospect!",project,"project")
     // console.log("create went well");
 
     if (project.created) {
       // routes/user.js line 142
-      return res.render("projects", { created: created, project: project }); // super duper awesome
+      return res.render("projects", { created: project.created, project: project }); // super duper awesome
     }
   } catch (e) {
     return res.status(400).render("justError", { error: e });

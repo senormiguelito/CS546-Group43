@@ -15,27 +15,36 @@ export const create = async (
   postId
 ) => {
 
+console.log(postId,"pid in create")
+  console.log("problem")
   h.checkTitle(title);
+  console.log("problem2")
   h.checkDescription(description);
+  console.log("problem3")
   h.checkId(clientId);
+  console.log("problem4")
   h.checkstatus(status);
+  console.log("problem5")
   h.checkId(assignedToId);
-  h.checkId(postId);
+  console.log("problem6")
+  // h.checkId(postId);
+  console.log("no problem")
   
 /*
   if (!status) {
     status = "not started";   // default value. Ask group. Or can just make drop down. Idk im fookin tired
   }
 */
+console.log("in here")
   const user = await userCollection.findOne({ _id: new ObjectId(clientId) });   // figure out if clientId is correct
   if (!user) throw new Error("No user with that ID in the database");
-
+  console.log("in here")
   const alreadyExists = await userCollection.findOne({ _id: clientId, 'project.title': title });
   if (alreadyExists) {
     console.log("already exists");
     throw new Error(`A project with this user and title of ${title} already exists in the database`);
   }
-
+  console.log("in here")
   let newProjectId = new ObjectId();
   const newProjectInfo = {
     _id: newProjectId,
@@ -53,7 +62,7 @@ export const create = async (
   const updatedAssignedTo = await userCollection.updateOne({ _id: new ObjectId(assignedToId) }, {
     $push: { projects: newProjectInfo }
   });
-  
+  console.log("in here")
   const clientCheck = await userData.getUser(clientId);
   const assigneeCheck = await userData.getUser(assignedToId);
 

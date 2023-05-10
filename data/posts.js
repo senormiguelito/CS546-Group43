@@ -98,26 +98,33 @@ export const get = async (id) => {
   // (postId)
   h.checkId(id);
   id = id.trim();
+  
   const post = await postsCollection.findOne({ _id: new ObjectId(id) });
+  
   if (!post) throw "No post found in the database with that id";
   post._id = post._id.toString();
-
   return post;
 };
 
 export const remove = async (id) => {
   // (postId)
+  console.log("the problem , 111")
+  console.log(id,"id")
   h.checkId(id);
+  console.log("the problem , 113")
   id = id.trim();
   let result = {};
 
+  console.log("the problem , 116")
   const deletionInfo = await postsCollection.findOneAndDelete({
     _id: new ObjectId(id),
   });
+  console.log("no problem, 120")
 
   if (deletionInfo.lastErrorObject.n === 0)
     throw `Could not delete post with id of ${id}`;
 
+  console.log("the problem")
   result["postId"] = id;
   result["deleted"] = true;
 
