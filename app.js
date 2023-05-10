@@ -231,6 +231,19 @@ app.use("/projects", (req, res, next) => {
   }
 });
 
+app.use("/projects/:id", (req, res, next) => {
+  if (req.session.user) {
+    next();
+  } else {
+    return res.status(403).render("error", {
+      title: "Error",
+      unauthorizedAccess: true,
+      isHide: true,
+    }); //it's so cool that we are using error page if user tries to access any routes without login.
+    // return res.redirect("/login");
+  }
+});
+
 app.use("/api", (req, res, next) => {
   if (req.session.user) {
     next();
