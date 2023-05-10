@@ -214,7 +214,7 @@ router.route("/seekers/sortBy").post(async (req, res) => {
   }
 });
 
-router.route("/seekers/searchArea").post(async (req, res) => {
+router.route("/seekers/searchArea").put(async (req, res) => {
   try {
     // console.log("in seekersList filter route")
     // console.log(req.params,req.body)
