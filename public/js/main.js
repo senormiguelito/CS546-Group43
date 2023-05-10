@@ -743,33 +743,33 @@ if (document.getElementById("send-btn")) {
 }
 
 var dmForm = document.getElementById("dm-form");
-if (dmForm) {  
-dmForm.addEventListener("submit", function (e) {
-  e.preventDefault();
+if (dmForm) {
+  dmForm.addEventListener("submit", function (e) {
+    e.preventDefault();
 
-  var dmInput = document.getElementById("dm-input");
-  var recId = document.getElementById("recId");
+    var dmInput = document.getElementById("dm-input");
+    var recId = document.getElementById("recId");
 
-  var error = document.getElementById("dmError");
-  var errors = [];
-  if (dmInput.value == "") {
-    errors.push("Please enter a message");
-  }
-  if(dmInput.value.trim() == ""){
-    errors.push("Please enter a valid message");
-  }
-  if (recId.value.trim() == "") {
-    errors.push("Please enter a valid recipient");
-  }
-  if (errors.length > 0) {
-    error.innerText = errors.join(", ");
-    error.style.display = "block";
-    // showing the error only for 1.5 seconds.
-    setTimeout(function () {
-      error.style.display = "none";
-    }, 1500);
-  } 
-});
+    var error = document.getElementById("dmError");
+    var errors = [];
+    if (dmInput.value == "") {
+      errors.push("Please enter a message");
+    }
+    if (dmInput.value.trim() == "") {
+      errors.push("Please enter a valid message");
+    }
+    if (recId.value.trim() == "") {
+      errors.push("Please enter a valid recipient");
+    }
+    if (errors.length > 0) {
+      error.innerText = errors.join(", ");
+      error.style.display = "block";
+      // showing the error only for 1.5 seconds.
+      setTimeout(function () {
+        error.style.display = "none";
+      }, 1500);
+    }
+  });
 }
 
 const profileForm = document.getElementById("add-review-form");
@@ -807,7 +807,7 @@ if (filterFrom) {
     const filterInput = document.getElementById("searchAreaInput");
     let errors = [];
     if (filterInput) {
-      if(filterInput.value.trim() == ""){
+      if (filterInput.value.trim() == "") {
         errors.push("Please enter a valid search area");
       }
     }
@@ -852,5 +852,79 @@ if (reviewsForm) {
   });
 }
 
-
 window.addEventListener("change", addintohiddendiv); // on window change anything
+
+const sharebtn = document.getElementById("shareBtn");
+if (sharebtn) {
+  sharebtn.addEventListener("click", function () {
+    // Display the modal
+    document.getElementById("shareModal").style.display = "block";
+  });
+
+  // Close the modal when the close button or outside the modal is clicked
+  document.addEventListener("click", function (event) {
+    const modal = document.getElementById("shareModal");
+    if (event.target === modal || event.target.classList.contains("close")) {
+      modal.style.display = "none";
+    }
+  });
+
+  // Share when a platform is selected
+  const sharebutton = document.getElementById("platformList");
+  if (sharebutton) {
+    sharebutton.addEventListener("click", function (event) {
+      const platform = event.target.dataset.platform;
+      const userName = event.target.dataset.name;
+      const userId = event.target.dataset.userId;
+      const url = "http://localhost:3000/home/myprofile";
+      const message = `Check out this user: ${userName}/${userId}. by using following link ${url}`;
+      const text = "This is my profile, have a look at it!";
+      // Open the share URL based on the selected platform
+      switch (platform) {
+        case "facebook":
+          window.open(
+            `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
+              url
+            )}&quote=${encodeURIComponent(text)}`
+          );
+          break;
+        case "whatsapp":
+          window.open(
+            `https://web.whatsapp.com/send?text=${encodeURIComponent(message)}`
+          );
+          break;
+        case "twitter":
+          window.open(
+            `https://twitter.com/intent/tweet?url=${encodeURIComponent(
+              url
+            )}&text=${encodeURIComponent(text)}`
+          );
+          break;
+        case "telegram":
+          window.open(
+            `https://t.me/share/url?url=${encodeURIComponent(
+              url
+            )}&text=${encodeURIComponent(text)}`
+          );
+          break;
+        case "linkedin":
+          window.open(
+            `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(
+              url
+            )}&summary=${encodeURIComponent(text)}`
+          );
+          break;
+        case "reddit":
+          window.open(
+            `https://www.reddit.com/submit?url=${encodeURIComponent(
+              url
+            )}&title=${encodeURIComponent(text)}`
+          );
+          break;
+      }
+
+      // Close the modal
+      document.getElementById("shareModal").style.display = "none";
+    });
+  }
+}
