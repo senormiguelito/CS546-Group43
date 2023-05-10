@@ -41,6 +41,7 @@
             <input = "text" placeholder="Comment" name="postCommentInput" id="postCommentInput" maxlength="250">
             <input type="submit" value="post">
             </form>
+            <p id = "posterror"></p>
         </div>
         {{#unless isAuthor}}
         <div class="interested-button">
@@ -66,9 +67,6 @@
       </form>
       {{/if}}
     </div>
-<br>
-<a href="map" class="see-all">map</a>
-<br>
 
   <div class="dropdown">
   <button class="dropbtn">Reply</button>
@@ -87,6 +85,3 @@
       </form>
   </div>
 </div>
-
-
-

@@ -8,19 +8,17 @@ router.route("/").get(async (req, res) => {
   let errorMessage = "";
   if (user) {
     if (user.role === "provider") {
-      res.redirect("/providerHome"); // placeholder redirect for now
+      return res.redirect("/providerHome"); // placeholder redirect for now
     }
     if (user.role === "seeker") {
-      res.redirect("/seekerHome"); // same idea placeholder redirect
+      return res.redirect("/seekerHome"); // same idea placeholder redirect
     } else {
       errorMessage = "invalid role";
     }
   }
   if (!user) {
-    res.redirect("/signup");
+    return res.redirect("/signup");
   }
 });
 
 export default router;
-
-//I THINK THERE IS NO USE OF THIS CODE, BECAUSE WE ARE DOING THIS MIDDLEWARE FUNCTIONS.
