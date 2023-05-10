@@ -741,8 +741,8 @@ if (document.getElementById("send-btn")) {
 var dmForm = document.getElementById("dm-form");
 dmForm.addEventListener("submit", function (e) {
   e.preventDefault();
-  var dmInput = document.getElementById("dm-input");
-  var recId = document.getElementById("recId");
+  var dmInput = document.getElementById("message");
+  var recId = document.getElementById("recieverId");
   var error = document.getElementById("dmError");
   var errors = [];
   if (dmInput.value == "") {

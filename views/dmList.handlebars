@@ -6,13 +6,20 @@
     timeStamp: '2023-05-02T13:31:02.778Z'
   }  --}}
   <div class = "messagePage">
-     <p id = 'dmError'></p>
+     <p id = "dmError"></p>
   <div class="messageSection">
   {{#each messages}}
   
     <div class="message" id = "message" onclick="ClickMessage(this)">
       {{#if sender}}
         <p> message to {{recieverName}}</p>
+        {{#if hasLink}}
+    
+          <p id = "desc" >{{message}} <a href = "{{link}}"> Profile</a></p>
+          
+        {{else}}
+          <p id = "desc" >{{message}}</p>
+        {{/if}}
         <p>{{timeStamp}}</p>
 
       {{else}}
@@ -32,8 +39,8 @@
   <p>{{messageStatus}}</p>
   <div class="dropdown-content">
      <form id = "dm-form" method = "POST" action ='/home/messages/'>
-        <input id = "dm-input" type="text" placeholder="Enter your message" name = "message" id = "message"><br><br>
-        <input id = "recId" type="hidden" name = "recieverId" id = "recieverId" value = "{{senderId}}">
+        <input  type="text" placeholder="Enter your message" name = "message" id = "message"><br><br>
+        <input  type="hidden" name = "recieverId" id = "recieverId" value = "{{senderId}}">
         <input type="submit" value="Send" id = "send-btn">
       </form>
      
