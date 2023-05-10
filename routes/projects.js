@@ -4,7 +4,33 @@ import { userData } from "../data/index.js";
 import { projectData } from "../data/index.js";
 import { ObjectId } from "mongodb";
 import * as h from "../helpers.js";
-import xss from "xss";            // -------------> we need to wrap every req.body.... with xss(req.body....) <------------------------ 
+import xss from "xss"; // -------------> we need to wrap every req.body.... with xss(req.body....) <------------------------
+
+router.route("/").get(async (req, res) => {
+  let userId = req.session.user.userID; // unsure of id-- is it userId or projectId? in this route, if wrong, replace all projectId with userId
+  const userProjects = await projectData.getAllProjectsByUser(userId);
+
+  try {
+    h.checkId(userId);
+    userId = userId.trim(); // might as well
+    if (!ObjectId.isValid(userId)) throw new Error("invalid userId");
+  } catch (e) {
+    return res.status(400).redirect("/", { error: e }); //  unverified, not sure where to redirect. Need help. And jesus.
+  }
+
+  console.log("userProjects", userProjects);
+  console.log("userProjects.noProjects: ", userProjects.noProjects);
+  try {
+    if (userProjects.noProjects) {
+      return res.render("projects", { userProjects: userProjects, noProjects: true });
+    }
+    if (userProjects.projects) {
+      return res.render("projects", { userProjects: userProjects, projects: true });
+    }
+  } catch (e) {
+    return res.redirect("/home", 400);
+  }
+})
 
 router
   .route("/:userId") // getAll projects involved from this userId
@@ -21,8 +47,7 @@ router
 
     try {
       const projects = await projectData.getAll(userId);
-      if (projects == null)
-        throw "No projects involved with this user!";
+      if (projects == null) throw "No projects involved with this user!";
       message = "Here are your projects! Good work";
       return res
         .status(200)
@@ -140,7 +165,9 @@ router
   });
 
 router
-  .route('/projects/:projectId').get(async (req, res) => {  // get projectById
+  .route("/projects/:projectId")
+  .get(async (req, res) => {
+    // get projectById
     let message = "";
     let projectId = req.params.projectId;
     try {
@@ -163,7 +190,8 @@ router
       return res.status(404).render("error", { error: e });
     }
   })
-  .put(async (req, res) => {    // fixed router.route reference error
+  .put(async (req, res) => {
+    // fixed router.route reference error
     // to update project title/description/status
     const projectInfo = xss(req.body);
     let projectId = req.params.projectId;
@@ -204,5 +232,37 @@ router
       res.status(400).redirect("/", { error: e });
     }
   });
+
+router.route("/").get(async (req, res) => {
+  let userId = req.session.user.userID; // unsure of id-- is it userId or projectId? in this route, if wrong, replace all projectId with userId
+  const userProjects = await projectData.getAllProjectsByUser(userId);
+
+  try {
+    h.checkId(userId);
+    userId = userId.trim(); // might as well
+    if (!ObjectId.isValid(userId)) throw new Error("invalid userId");
+  } catch (e) {
+    return res.status(400).redirect("/", { error: e }); //  unverified, not sure where to redirect. Need help. And jesus.
+  }
+
+  console.log("userProjects", userProjects);
+  console.log("userProjects.noProjects: ", userProjects.noProjects);
+  try {
+    if (userProjects.noProjects) {
+      return res.render("projects", {
+        userProjects: userProjects,
+        noProjects: true,
+      });
+    }
+    if (userProjects.projects) {
+      return res.render("projects", {
+        userProjects: userProjects,
+        projects: true,
+      });
+    }
+  } catch (e) {
+    return res.redirect("/home", 400);
+  }
+});
 
 export default router;
