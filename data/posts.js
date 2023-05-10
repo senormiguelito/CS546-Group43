@@ -129,6 +129,7 @@ export const update = async (
   userId,
   title,
   description,
+  role,
   location_city,
   location_state,
   location_zip_code,
@@ -177,6 +178,7 @@ export const update = async (
   userId = userId.trim();
   title = title.trim();
   description = description.trim();
+  role = role.trim()
   location_city = location_city.trim();
   location_state = location_state.trim();
   location_zip_code = location_zip_code.trim();
@@ -201,6 +203,7 @@ export const update = async (
   if (
     oldPost.title === title &&
     oldPost.description === description &&
+    oldPost.role === role &&
     oldPost.location_city === location_city &&
     oldPost.location_state === location_state &&
     oldPost.location_zip_code === location_zip_code &&
@@ -213,11 +216,11 @@ export const update = async (
     throw "You must change something to submit an update request";
   }
 
-
   const newPostsInfo = {
     userId: userId,
     title: title,
     description: description,
+    role: role,
     location_city: location_city,
     location_state: location_state,
     location_zip_code: location_zip_code,
@@ -226,7 +229,7 @@ export const update = async (
     createdOrUpdatedAt: d1.toISOString(),
     images: images, 
     prospects: prospects,
-    comments: comments
+    comments: comments,
   };
 
   let newPost = await postsCollection.findOneAndReplace(
@@ -266,11 +269,9 @@ export const getByCommentId = async (id) => {
 // };
 
 export const getByRole = async (role) => {
-
   h.checkrole(role);
 
   let postList = await postsCollection.find({}).toArray();
-  
   postList = postList.map((element) => {
     if (element.role === role) {
       element._id = element._id.toString();

@@ -3,7 +3,7 @@ const router = Router();
 import * as h from "../helpers.js";
 import { userData } from "../data/index.js";
 import { postData } from "../data/index.js";
-import { reviewData } from "../data/index.js";
+
 import xss from "xss";
 
 router.route("/").get(async (req, res) => {
@@ -103,20 +103,17 @@ router
     const lastName = xss(req.body.lastName);
     const DOB = xss(req.body.dob);
     const emailAddress = xss(req.body.email);
-    // console.log(req.body.phoneNumber);
     const phone = xss(req.body.phoneNumber);
-    // console.log(phone);
     const password = xss(req.body.password);
     const confirmpassword = xss(req.body.confirmPassword);
     const role = xss(req.body.role);
     const zip = xss(req.body.zip);
     const city = xss(req.body.city);
     const state = xss(req.body.state);
-    // console.log("harshil", phone + "-" + firstName);
     try {
       h.checkfirstname(firstName);
       h.checklastname(lastName);
-      h.checkDOB(DOB); // important check //please if you change anything please check it twise that it is working or not, h.checkDOB(date_of_birth); is never gonna work here.
+      h.checkDOB(DOB);
       h.checkemail(emailAddress);
       h.checkphone(phone);
       h.checkpassword(password);
@@ -127,7 +124,7 @@ router
       h.checkzipcode(zip);
 
       let newUser = await userData.create(
-        firstName, // here order is matter, so don't change anything random if you want to send dob in create function then it should be after lastname only. or you have to change the order in create function in users.js data file
+        firstName,
         lastName,
         DOB,
         emailAddress,
@@ -138,7 +135,6 @@ router
         city,
         state
       );
-      // console.log(CreatedUser.insertedUser);
       if (newUser.insertedUser) {
         req.session.user = {
           firstName: firstName,
@@ -158,13 +154,6 @@ router
     }
   });
 
-// router.route("/error").get(async (req, res) => {
-//   res.status(403).render("error", {
-//     title: "Error",
-//     message: "there is an error, Check your internet connection.",
-//   });
-// });
-
 router.route("/logout").get(async (req, res) => {
   //code here for GET
   try {
@@ -177,12 +166,10 @@ router.route("/logout").get(async (req, res) => {
 
 router.route("/seekers").get(async (req, res) => {
   try {
-    // implement helpers function 
     const userList = await userData.getUsersBy("seeker");
-    if (!userList) throw new Error("183 Couldn't find seekers");
-    // console.log(userList)
+    if (!userList) throw new Error("could not find any user");
 
-    return res.render("seekerList", { userList: userList });
+    res.render("seekerList", { userList: userList });
   } catch (e) {
     return res.render("seekerList", { error: e });
     // return res.status(400).render("error", { error: e });
@@ -199,12 +186,12 @@ router.route("/seekers/sortBy").post(async (req, res) => {
       userList = await userData.sortSeekersByDistance(user);
       if (!userList) throw new Error("error sorting by distance");
     }
-    if(filterBy.toLowerCase() === "rating"){
-      userList = await userData.sortSeekerByRating()
+    if (filterBy.toLowerCase() === "rating") {
+      userList = await userData.sortSeekerByRating();
     }
-    if(filterBy.toLowerCase() === "all"){
+    if (filterBy.toLowerCase() === "all") {
       userList = await userData.getUsersBy("seeker");
-      console.log(userList)
+      console.log(userList);
     }
     // const userList = await userData.getUsersByRole("provider");
     // console.log(userList)
@@ -215,10 +202,8 @@ router.route("/seekers/sortBy").post(async (req, res) => {
   }
 });
 
-router.route("/seekers/searchArea").post(async (req, res) => {
+router.route("/seekers/searchArea").put(async (req, res) => {
   try {
-    // console.log("in seekersList filter route")
-    // console.log(req.params,req.body)
     let user = req.session.user.userSessionData;
     let searchArea = xss(req.body.searchAreaInput);
     let userList = await userData.filterSeekerBySearchArea(user, searchArea);
@@ -226,6 +211,7 @@ router.route("/seekers/searchArea").post(async (req, res) => {
     // const userList = await userData.getUsersByRole("provider");
     // console.log(userList)
     return res.status(200).render("seekerlist", { userList: userList });
+
   } catch (e) {
     return res.status(400).render("seekerlist", { error: e });
 
@@ -233,7 +219,6 @@ router.route("/seekers/searchArea").post(async (req, res) => {
 });
 router.route("/profile/:userId").get(async (req, res) => {
   // access a profile page
-
   const userId = req.params.userId;
   // console.log(userId);
 

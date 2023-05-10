@@ -3,6 +3,8 @@ import { ObjectId } from "mongodb";
 let date = new Date(); // no params: current date and time of instantiation
 import * as h from "../helpers.js";
 import xss from "xss"; // input sanitization
+// import { compareSync } from "bcryptjs";
+// import { compareSync } from "bcryptjs";
 const userCollection = await user();
 const reviewRatingsCollection = await reviewRatings();
 
@@ -15,38 +17,40 @@ export const create = async (
   firatName,    // ugh this typo hurts my soul
   lastName
 ) => {
-  rating = parseInt(rating);
+
+
+  rating = parseInt(rating)
+  if(!rating) throw 'could not find rating'
   h.checkId(userId);
-  h.checkId(revieweeId);
-  h.checkRating(rating);
+  h.checkId(revieweeId);  
+  h.checkRating(rating);  //this check almost gave me heart attack, we're getting rating using form so it'll be in string
   h.checkReview(comment);
   // h.checkfirstname(firatName);
   // h.checklastname(lastName);
   h.selfReview(userId, revieweeId); 
-
   rating = Math.round(rating * 10) / 10;
-
+  
   const reviewee = await userCollection.findOne({
     _id: new ObjectId(revieweeId),
   });
 
+  // prevent duplicate insertion!! very important
+  let reviewExists = await reviewRatingsCollection.findOne({
+    _id: new ObjectId(revieweeId)
+  })
 
   if (!reviewee)
     throw new Error(
       `A user with ID: ${revieweeId} does not exist in the database`
     );
 
-  // prevent duplicate insertion!! very important
-  const reviewExists = await userCollection.findOne({
-    userId: userId,
-    revieweeId: revieweeId 
-  });
-
+    
+  
   if (reviewExists)
     throw new Error(
       "It seems you've already left a review for this user"
     ); 
-
+    
   if (!reviewExists) {
     let newReviewId = new ObjectId();
 
@@ -69,7 +73,7 @@ export const create = async (
     );
     ratingList = ratingList.concat(rating);
     
-    const overallRating = totalRating / (ratingList.length); // + 1 corresponds to current review-rating (don't need one)
+    const overallRating = totalRating / (ratingList.length); 
     
     const updatedUserReviews = await userCollection.updateOne(
       { _id: reviewee._id },
@@ -78,7 +82,7 @@ export const create = async (
         $set: { overallRating: overallRating },
       }
     );
-
+    
     if (updatedUserReviews.modifiedCount === 1) {
 
       const newReview = await reviewRatingsCollection.insertOne(
@@ -96,10 +100,12 @@ export const create = async (
       throw new Error("Review was not succesfully added");
     }
   }
+
 };
 
 export const getReviewByReviewId = async (id) => {
 
+  h.checkId(id)
   const reviewRating = await reviewRatingsCollection.findOne({
     _id: new ObjectId(id),
   });
@@ -111,6 +117,7 @@ export const getReviewByReviewId = async (id) => {
 
 export const getReviewsByUser = async (userId) => {
 
+  h.checkValid(userId)
   const reviews = await reviewRatingsCollection.find({ userId: userId }).toArray();
   reviews.forEach((review) => {
     review._id = review._id.toString();
@@ -120,6 +127,8 @@ export const getReviewsByUser = async (userId) => {
 
 export const checkReview = async (userId, revieweeId) => {
 
+  h.checkValid(userId)
+  h.checkId(revieweeId)
   const reviewExists = await reviewRatingsCollection.findOne({
     userId: userId,
     revieweeId: revieweeId
@@ -135,7 +144,7 @@ export const checkReview = async (userId, revieweeId) => {
 };
 
 export const getAll = async (revieweeId) => {
-  // console.log("in get all review")
+  
   h.checkId(revieweeId);
   if (!ObjectId.isValid(revieweeId))
     throw new Error("revieweeId is not a valid ObjectId");
@@ -153,8 +162,9 @@ export const getAll = async (revieweeId) => {
 };
 
 export const remove = async (id) => {
+  //id is reviewId in review rating collection
   let result ={}
-  console.log("in remove")
+  
   if (!id) throw 'You must provide an id to search for';
   if (typeof id !== 'string') throw 'Id must be a string';
   if (id.trim().length === 0) throw 'id cannot be an empty string or just spaces';
@@ -162,36 +172,61 @@ export const remove = async (id) => {
   if (!ObjectId.isValid(id)) throw 'invalid object ID';
 
   let finalUser = await userCollection.updateOne({ "reviews._id": new ObjectId(id) }, { $pull: { reviews: { _id: new ObjectId(id) } } });
-
-  let totalRating = 0;
-  let len = 0;
-    for (const key in finalUser) {
-      if(key === "reviews"){
-        finalUser[key].forEach(element => {
-          len = len + 1
-          totalRating = totalRating + element.rating
-        });
-      }
-    }
-
-    for (const key in finalUser) {
-      if(key === "overallRating"){
-        finalUser[key] = totalRating / len;
-        console.log(finalUser[key], "R&R: finalUser Key 104");
-      }
-    }
-    let newUser = await userCollection.findOneAndReplace(
-      { _id: new ObjectId(id)},
-      finalUser
-    );
-    
-  const deletionInfo = await reviewRatingsCollection.findOneAndDelete({
+  if(finalUser.modifiedCount === 0) throw new Error("could not get the user with that review!")
+ 
+  const reviewInfo = await reviewRatingsCollection.findOne({
     _id: new ObjectId(id)
   });
+  if(!reviewInfo) throw new Error("could not find find the review in database")
+  let userId = reviewInfo.revieweeId
 
-  if (deletionInfo.lastErrorObject.n === 0) {
-    throw `Could not delete review with id of ${id}`;
-  }
+  const user = await userCollection.findOne({
+    _id: new ObjectId(userId)
+  });
+  if(!user) throw new Error("could not get a user to delete review!")
+    const deletionInfo = await reviewRatingsCollection.findOneAndDelete({
+      _id: new ObjectId(id)
+    });
+  
+    if (deletionInfo.lastErrorObject.n === 0) {
+      throw `Could not delete review in review collection with id of ${id}`;
+    }
+
+    if(user.reviews.length === 0){
+      for (const key in user) {
+        if(key === "overallRating"){
+          user[key] = 0
+        }
+      }
+      let newUser = await userCollection.findOneAndReplace(
+        { _id: new ObjectId(userId)},
+        user
+      );
+      if (newUser.lastErrorObject.n === 0) throw [404, `Could not update the overall rating with id ${id}`];
+    }else{
+      let totalRating =0
+      let len =0
+      for (const key in user) {
+        if(key === "reviews"){
+          user[key].forEach(element => {
+            len = len+1
+            totalRating = totalRating + element.rating
+          });
+        }
+      }
+  
+      for (const key in user) {
+        if(key === "overallRating"){
+          user[key] = totalRating/len
+        }
+      }
+      let newUser = await userCollection.findOneAndReplace(
+        { _id: new ObjectId(userId)},
+        user
+      );
+      if (newUser.lastErrorObject.n === 0) throw [404, `Could not update the overall rating with id ${id}`];
+    }
+  
   result["commentId"] = id;
   result["deleted"] = true;
   return result;
@@ -203,15 +238,16 @@ export const updateReview = async (
   newRating
 ) => {
   
-  console.log("in update review!")
+  
   h.checkId(reviewId)
   h.checkComment(newComment)
 
     let oldReview = await getReviewByReviewId(reviewId)
-    console.log(oldReview)
+    if(!oldReview) throw new Error("Could not find a review to update!")
+    
     if(oldReview.comment === newComment && oldReview.rating === newRating) throw "Please make some change in comment to actually edit the review!"
 
-    // console.log(name,"name")
+    
     const newReviewsInfo ={
       userId:oldReview.userId,
       revieweeId:oldReview.revieweeId,
@@ -226,6 +262,7 @@ export const updateReview = async (
     const user = await userCollection.findOne({
       reviews: { $elemMatch: { _id: new ObjectId(reviewId) } },
     });
+    if(!user) throw new Error("could not find user with that review in database!")
     for (const key in user) {
       if(key === "reviews"){
         user[key].forEach(element => {
@@ -243,12 +280,13 @@ export const updateReview = async (
       user
     );
     if (newUser.lastErrorObject.n === 0) throw [404, `Could not update the review with id ${reviewId}`];
-    console.log("new user",user)
+    
     let newReview = await reviewRatingsCollection.findOneAndReplace(
       { _id: new ObjectId(reviewId)},
       newReviewsInfo
     );
     if (newReview.lastErrorObject.n === 0) throw [404, `Could not update the review with id ${reviewId}`];
+    
     
 
 let totalRating =0
@@ -265,14 +303,14 @@ let len =0
     for (const key in user) {
       if(key === "overallRating"){
         user[key] = totalRating/len
-        console.log(user[key],"vhjv")
       }
     }
+   
     newUser = await userCollection.findOneAndReplace(
       { _id: new ObjectId(userId)},
       user
     );
     if (newUser.lastErrorObject.n === 0) throw [404, `Could not update the review with id ${reviewId}`];
-
+    
     return newReview.value;
 };

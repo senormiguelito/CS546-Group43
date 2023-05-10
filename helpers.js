@@ -150,7 +150,6 @@ export const checkRating = (rating) => {
 };
 
 export const checkValid = (userId) => {
-  isvalid(userId, "userId");
   if (typeof userId !== "string")
     throw new Error("userId must be of type string");
   userId = userId.trim();
@@ -300,3 +299,4 @@ export const checkprospects = (prospects) => {
     }
   }
 };
+

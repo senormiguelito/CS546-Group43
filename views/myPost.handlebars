@@ -1,6 +1,9 @@
 <div class="me-mb-3">
-  <a href="/post/newPost/createPost" class="btn btn-primary" id="createPost">Create a job
-    posting!</a>
+  <a
+    href="/post/newPost/createPost"
+    class="btn btn-primary"
+    id="createPost"
+  >Create a job posting!</a>
 
 </div>
 <br />
@@ -9,12 +12,12 @@
     class="alert alert-success"
     id="success"
   >{{Message}}</p>{{/if}}
-  <h1 class="mb-3">Here are all the posts you've shared with your community!</h1>
+<h1 class="mb-3">Here are all the posts you've shared with your community!</h1>
 <div class="row">
   {{#if posts}}
     {{#each posts}}
       <div class="col-sm-3">
-        <div class="col-sm-3" id="myposts" data-id="{{_id}}">
+        <div class="col-sm-3" id="post-{{_id}}" data-id="{{_id}}">
           <div class="card" style="width: 18rem;">
             {{#if images}}
               <img src={{images}} class="card-img-top" alt="..." />
@@ -36,12 +39,14 @@
             </div>
           {{/if}}
         </div>
-        {{! <a href="#myModal"><button class="delete"> Delete </button></a> }}
-        <button id="myBtn" data-id="{{_id}}"><a
-            href="/post/{{_id}}/delete"
-          >Delete</a></button>
+        {{!-- href="/post/{{_id}}/delete" --}}
+        <button
+          class="deletePostbtn"
+          id="myBtn"
+          data-id="{{_id}}"
+        >Delete</button>
 
-        <div id="myModal" class="modal">
+        {{! <div id="myModal" class="modal">
           <form class="modal-content" action="/action_page.php">
             <span class="close">&times;</span>
             <div class="container">
@@ -54,7 +59,7 @@
               </div>
             </div>
           </form>
-        </div>
+        </div> }}
 
       </div>
 

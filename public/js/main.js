@@ -141,6 +141,24 @@ const signupForm = document.getElementById("signup-form");
 const loginForm = document.getElementById("login-form");
 
 const commentForm = document.getElementById("comment-form");
+commentForm.addEventListener("submit", (event) => {
+  event.preventDefault();
+  const comment = document.getElementById("postCommentInput").value;
+  const errorContainer = document.getElementById("posterror");
+  const errors = [];
+  if(comment.trim() === ""){
+    errors.push("Comment cannot be empty");
+  }
+  if(errors.length > 0){
+    errorContainer.innerText = errors.join(", ");
+    errorContainer.style.display = "block";
+    // showing the error only for 1.5 seconds.
+    setTimeout(function () {
+      errorContainer.style.display = "none";
+    }, 1500);
+  }
+});
+
 const editprofileForm = document.getElementById("myprofile-edit");
 const resetButton = document.getElementById("reset-button");
 const firstname = document.getElementById("firstNameInput");
@@ -165,6 +183,72 @@ if (createPostBtn) {
     sessionStorage.clear(); // clear the session from client side when user click on create post btn, becasue of city and state autofilling bug.
   });
 }
+
+// (function ($) {
+//   const deletePostHandler = async (event) => {
+//     console.log("you entered into delete ajax.");
+//     try {
+//       event.preventDefault();
+//       const button = $(event.currentTarget);
+//       const postId = button.data("id");
+//       let deleteReq = {
+//         method: "POST",
+//         url: `/post/${postId}/delete`,
+//         contentType: "application/json",
+//         data: JSON.stringify({
+//           id: postId,
+//         }),
+//       };
+//       $.ajax(deleteReq).then(function (responseMessage) {
+//         console.log(responseMessage);
+//       });
+//     } catch (error) {
+//       console.error(error);
+//     }
+//   };
+//   $(".deletePostbtn").on("click", deletePostHandler);
+// })(window.jQuery);
+
+(function ($) {
+  const deletePostHandler = async (event) => {
+    console.log("you entered into delete ajax.");
+    try {
+      event.preventDefault();
+      const button = $(event.currentTarget);
+      const postId = button.data("id");
+      const postElement = $("#post-" + postId);
+      let deleteReq = {
+        method: "POST",
+        url: `/post/${postId}/delete`,
+        contentType: "application/json",
+        data: JSON.stringify({
+          id: postId,
+        }),
+      };
+      $.ajax(deleteReq).then(function (responseMessage) {
+        console.log(responseMessage);
+        console.log(postElement);
+        if (responseMessage.success) {
+          postElement.remove();
+          button.remove();
+        }
+        // Display a success message at the top of the page
+        const message = $("<div>")
+          .addClass("alert alert-success")
+          .text("Post deleted successfully");
+        $("body").prepend(message);
+
+        // Remove the message after 5 seconds
+        setTimeout(function () {
+          message.remove();
+        }, 5000);
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  $(".deletePostbtn").on("click", deletePostHandler);
+})(window.jQuery);
 
 if (imgInput) {
   imgInput.addEventListener("change", (event) => {
@@ -490,7 +574,6 @@ const ListOfcategories = [
   "Restaurant",
   "Recreation",
   "Event Planning",
-  "Politics",
   "Home Services",
   "Dog Walker",
   "Pet Services",
@@ -654,5 +737,108 @@ if (document.getElementById("send-btn")) {
     }, 3000);
   });
 }
+
+var dmForm = document.getElementById("dm-form");
+dmForm.addEventListener("submit", function (e) {
+  e.preventDefault();
+  var dmInput = document.getElementById("dm-input");
+  var recId = document.getElementById("recId");
+  var error = document.getElementById("dmError");
+  var errors = [];
+  if (dmInput.value == "") {
+    errors.push("Please enter a message");
+  }
+  if(dmInput.value.trim() == ""){
+    errors.push("Please enter a valid message");
+  }
+  if (recId.value.trim() == "") {
+    errors.push("Please enter a valid recipient");
+  }
+  if (errors.length > 0) {
+    error.innerText = errors.join(", ");
+    error.style.display = "block";
+    // showing the error only for 1.5 seconds.
+    setTimeout(function () {
+      error.style.display = "none";
+    }, 1500);
+  } 
+});
+const profileForm = document.getElementById("add-review-form");
+if (profileForm) {
+  profileForm.addEventListener("submit", function (e) {
+    e.preventDefault();
+    const reviewInput = document.getElementById("reviewInput");
+    const profileError = document.getElementById("profileError");
+    const ratingInput = document.getElementById("ratingInput");
+    const errors = [];
+    if (reviewInput.value.trim() == "") {
+      errors.push("Please enter a valid review");
+    }
+    if (ratingInput.value.trim() == "") {
+      errors.push("Please enter a valid rating");
+    }
+    if (errors.length > 0) {
+      profileError.innerText = errors.join(", ");
+      profileError.style.display = "block";
+      // showing the error only for 1.5 seconds.
+      setTimeout(function () {
+        profileError.style.display = "none";
+      }, 1500);
+    } else {
+      profileForm.submit();
+    }
+  });
+}
+
+const filterFrom = document.getElementById("filter-form");
+if (filterFrom) {
+  filterFrom.addEventListener("submit", function (e) {
+    e.preventDefault();
+    const filterError = document.getElementById("filterError");
+    const filterInput = document.getElementById("searchAreaInput");
+    const errors = [];
+    if(filterInput.value.trim() == ""){
+      errors.push("Please enter a valid search area");
+    }
+    if (errors.length > 0) {
+      filterError.innerText = errors.join(", ");
+      filterError.style.display = "block";
+      // showing the error only for 1.5 seconds.
+      setTimeout(function () {
+        filterError.style.display = "none";
+      }, 1500);
+    } else {
+      filterFrom.submit();
+    }
+  });
+}
+
+const reviewsForm = document.getElementById("edit-review-form");
+if (reviewsForm) {
+  reviewsForm.addEventListener("submit", function (e) {
+    e.preventDefault();
+    const reviewInput = document.getElementById("editratingInput");
+    const profileError = document.getElementById("reviewsError");
+    const ratingInput = document.getElementById("editreviewInput");
+    const errors = [];
+    if (reviewInput.value.trim() == "") {
+      errors.push("Please enter a valid review");
+    }
+    if (ratingInput.value.trim() == "") {
+      errors.push("Please enter a valid rating");
+    }
+    if (errors.length > 0) {
+      profileError.innerText = errors.join(", ");
+      profileError.style.display = "block";
+      // showing the error only for 1.5 seconds.
+      setTimeout(function () {
+        profileError.style.display = "none";
+      }, 1500);
+    } else {
+      reviewsForm.submit();
+    }
+  });
+}
+
 
 window.addEventListener("change", addintohiddendiv); // on window change anything

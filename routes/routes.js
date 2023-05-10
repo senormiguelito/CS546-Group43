@@ -22,5 +22,3 @@ router.route("/").get(async (req, res) => {
 });
 
 export default router;
-
-//I THINK THERE IS NO USE OF THIS CODE, BECAUSE WE ARE DOING THIS MIDDLEWARE FUNCTIONS.

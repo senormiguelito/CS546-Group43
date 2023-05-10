@@ -328,14 +328,10 @@ export const update = async (
 };
 
 export const sortProvidersByDistance = async (user) => {
+  if(!user) throw new Error("could not sort")
   let userList = await getAll();
   if (!userList) throw "can not find users";
   let api_key = "nf919BzJadH9xpBfBcqqbtMrar3kcEhoW9YUw03v02LmV8zrTwUbrlmfj34PDiIa"
-    // 
-  // let zip_code1 = "07307"
-  // let zip_code2 = "07030"
-  // const distanceJson = await axios.get(`https://www.zipcodeapi.com/rest/${api_key}/distance.json/${zip_code1}/${zip_code2}/mile`)
-  // console.log(distanceJson.data.distance)
   async function getApi(zip_code1, zip_code2) {
     const distanceJson = await axios.get(
       `https://www.zipcodeapi.com/rest/${api_key}/distance.json/${zip_code1}/${zip_code2}/mile`
@@ -483,14 +479,12 @@ export const sortProvidersByDistance = async (user) => {
 };
 
 export const sortSeekersByDistance = async (user) => {
+  if(!user) throw new Error("could not perform sort")
   let userList = await getAll();
   if (!userList) throw "can not find users";
   let api_key =
   "nf919BzJadH9xpBfBcqqbtMrar3kcEhoW9YUw03v02LmV8zrTwUbrlmfj34PDiIa";
-  // let zip_code1 = "07307"
-  // let zip_code2 = "07030"
-  // const distanceJson = await axios.get(`https://www.zipcodeapi.com/rest/${api_key}/distance.json/${zip_code1}/${zip_code2}/mile`)
-  // console.log(distanceJson.data.distance)
+
   async function getApi(zip_code1, zip_code2) {
     const distanceJson = await axios.get(
       `https://www.zipcodeapi.com/rest/${api_key}/distance.json/${zip_code1}/${zip_code2}/mile`
@@ -504,30 +498,29 @@ export const sortSeekersByDistance = async (user) => {
       seekerUserList.push(element);
     }
   });
-  // console.log(seekerUserList)
 
-  // UNCOMMENT WHEN YOU WANT TO TEST. WE ONLY HAVE 50 REQ/HR FOR THIS API
-  // UNCOMMENT WHEN YOU WANT TO TEST. WE ONLY HAVE 50 REQ/HR FOR THIS API
-  // UNCOMMENT WHEN YOU WANT TO TEST. WE ONLY HAVE 50 REQ/HR FOR THIS API
+  // UNCOMMENT WHEN YOU WANT TO TEST. WE ONLY HAVE 200 REQ/HR FOR THIS API
+  // UNCOMMENT WHEN YOU WANT TO TEST. WE ONLY HAVE 200 REQ/HR FOR THIS API
+  // UNCOMMENT WHEN YOU WANT TO TEST. WE ONLY HAVE 200 REQ/HR FOR THIS API
 
   for (const iterator of seekerUserList) {
     let distance = await getApi(user.location_zip_code,iterator.location_zip_code)
     iterator['distance'] = distance.data.distance
   }
 
-  // console.log("======")
-
   let sortedPosts = seekerUserList.sort((p1, p2) =>
     p1.distance > p2.distance ? 1 : p1.distance < p2.distance ? -1 : 0
   );
 
-  // console.log(sortedPosts)
   return sortedPosts;
 };
 
 
 
 export const filterProviderBySearchArea = async (user, searchArea) => {
+  if(!user) throw new Error("could not perform seach")
+  if(!searchArea) throw new Error("enter search area to search")
+  if(typeof searchArea !== 'number') throw new Error('search area must be  a number')
   let userList = await getAll();
   if (!userList) throw "can not find users";
   let api_key =
@@ -561,6 +554,9 @@ export const filterProviderBySearchArea = async (user, searchArea) => {
 };
 
 export const filterSeekerBySearchArea = async (user, searchArea) => {
+  if(!user) throw new Error("could not perform seach")
+  if(!searchArea) throw new Error("enter search area to search")
+  if(typeof searchArea !== 'number') throw new Error('search area must be  a number')
   let userList = await getAll();
   if (!userList) throw "can not find users";
   let api_key =
@@ -595,13 +591,14 @@ export const filterSeekerBySearchArea = async (user, searchArea) => {
 
 export const sortProviderByRating = async () => {
   let userList = await getAll();
+  if(!userList) throw new Error("can not find users!")
   let providerlist =[]
   userList.forEach(element => {
     if(element.role === 'provider'){
       providerlist.push(element)
     }
   });
-  console.log(typeof providerlist,"PL")
+  
   let safeProviderList=[]
   providerlist.forEach(element => {
     if(element.overallRating){
@@ -611,6 +608,7 @@ export const sortProviderByRating = async () => {
   let sortedUsers = safeProviderList.sort((p1, p2) =>
     p1.overallRating > p2.overallRating ? 1 : p1.overallRating < p2.overallRating ? -1 : 0
   );
+  if(!sortedUsers) throw new Error("could not sort")
   sortedUsers.forEach(element => {
   console.log(element.overallRating,"OR")
   });
@@ -619,13 +617,13 @@ export const sortProviderByRating = async () => {
 
 export const sortSeekerByRating = async () => {
   let userList = await getAll();
+  if(!userList) throw new Error("can not find users!")
   let seekerlist =[]
   userList.forEach(element => {
     if(element.role === 'seeker'){
       seekerlist.push(element)
     }
   });
-  console.log(typeof seekerlist,"PL")
   let safeSeekerList=[]
   seekerlist.forEach(element => {
     if(element.overallRating){
@@ -635,45 +633,9 @@ export const sortSeekerByRating = async () => {
   let sortedUsers = safeSeekerList.sort((p1, p2) =>
     p1.overallRating > p2.overallRating ? 1 : p1.overallRating < p2.overallRating ? -1 : 0
   );
+  if(!sortedUsers) throw new Error("could not sort")
   sortedUsers.forEach(element => {
   console.log(element.overallRating,"OR")
   });
   return sortedUsers
 };
-
-// export const checkUser = async (emailAddress, password) => {
-//   h.checkemail(emailAddress);
-//   h.checkpassword(password);
-//   const emailExistUser = await userCollection.findOne({
-//     emailAddress: emailAddress,
-//   });
-//   if (emailExistUser === null)
-//     throw `Either the email address or password is invalid`;
-//   const checkedPassword = await bcrypt.compare(
-//     password,
-//     emailExistUser.password
-//   );
-//   if (!checkedPassword) throw "Either the email address or password is invalid";
-
-//   return {
-//     authentication: true,
-//     firstName: emailExistUser.firatName,
-//     lastName: emailExistUser.lastName,
-//     emailAddress: emailExistUser.emailAddress,
-//     role: emailExistUser.role,
-//   };
-// };
-
-// get users by category:
-// let userReturn = {
-//   _id: users_byCategory._id.toString(),
-//   firstName: users_byCategory.firstName,
-//   lastName: users_byCategory.lastName,
-//   emailAddress: users_byCategory.emailAddress,
-//   phoneNumber: users_byCategory.phoneNumber,
-//   role: users_byCategory.role,
-//   categories: users_byCategory.categories,
-//   location_city: users_byCategory.location_city,
-//   location_state: users_byCategory.location_state
-// }
-// return userReturn; --------> this way would only return 1 user

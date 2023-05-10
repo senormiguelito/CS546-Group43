@@ -29,7 +29,7 @@ app.use(
 app.use((req, res, next) => {
   res.setHeader(
     "Content-Security-Policy",
-    "script-src 'self' cdn.jsdelivr.net"
+    "script-src 'self' cdn.jsdelivr.net ajax.googleapis.com"
   );
   next();
 });
@@ -38,8 +38,10 @@ app.use((req, res, next) => {
 //   helmet.contentSecurityPolicy({
 //     directives: {
 //       "default-src": ["'self'"],
-//       "script-src": ["'self'", "api.zippopotam.us"], // i used outside resource for get city and state name by zipcode and to allow that i have to use helmet, otherwise it was throwing an error.
-//       "connect-src": ["'self'", "api.zippopotam.us"],
+//       "script-src": [
+//         "'self'",
+//         "https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js",
+//       ],
 //     },
 //   })
 // );
@@ -160,6 +162,8 @@ app.use("/login", (req, res, next) => {
       next();
     } else if (req.session.user.authentication) {
       return res.redirect("/home");
+    } else if (req.session.user.userID) {
+      return res.redirect("/home");
     }
   } else if (!req.session.user) {
     next();
@@ -227,7 +231,6 @@ app.use("/projects", (req, res, next) => {
   }
 });
 
-
 app.use("/api", (req, res, next) => {
   if (req.session.user) {
     next();
@@ -252,6 +255,17 @@ app.use("/post", (req, res, next) => {
   }
 });
 
+app.use("/post/newPost/createPost", (req, res, next) => {
+  if (req.session.user) {
+    next();
+  } else {
+    return res.status(403).render("error", {
+      title: "Error",
+      unauthorizedAccess: true,
+      isHide: true,
+    });
+  }
+});
 
 //please add your route name if you add any in futer, like /home/seekerpage/addpost
 // app.use("/yournewroute", (req, res, next) => {
@@ -280,6 +294,70 @@ app.use(async (req, res, next) => {
         req.originalUrl
       } ("Non-Authenticated User")`
     );
+  }
+  next();
+});
+
+app.use('/post/:commentId/deleteComment', async (req, res, next) => {
+  console.log(req);
+  if (req.method == 'GET') {
+    req.method = 'DELETE';
+  }
+  next();
+});
+
+app.use('/post/:postId/delete', async (req, res, next) => {
+  console.log(req);
+  if (req.method == 'POST') {
+    req.method = 'DELETE';
+  }
+  next();
+});
+
+app.use('/user/reviews/delete/:reviewId', async (req, res, next) => {
+  console.log(req);
+  if (req.method == 'POST') {
+    req.method = 'DELETE';
+  }
+  next();
+});
+
+app.use('/seekers/searchArea', async (req, res, next) => {
+  console.log(req);
+  if (req.method == 'POST') {
+    req.method = 'PUT';
+  }
+  next();
+});
+
+app.use('/user/reviews/edit/:reviewId', async (req, res, next) => {
+  console.log(req);
+  if (req.method == 'POST') {
+    req.method = 'PUT';
+  }
+  next();
+});
+
+app.use('/post/filter', async (req, res, next) => {
+  console.log(req);
+  if (req.method == 'POST') {
+    req.method = 'GET';
+  }
+  next();
+});
+
+app.use('/home/provideList/searchArea', async (req, res, next) => {
+  console.log(req);
+  if (req.method == 'POST') {
+    req.method = 'GET';
+  }
+  next();
+});
+
+app.use('/home/provideList/sortBy', async (req, res, next) => {
+  console.log(req);
+  if (req.method == 'POST') {
+    req.method = 'GET';
   }
   next();
 });

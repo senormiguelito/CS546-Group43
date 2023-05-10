@@ -14,7 +14,7 @@ router.route("/").get(async (req, res) => {
 
     return res.render("post", { posts: posts });
   } catch (e) {
-    return res.status(400).render("400", { error: e });
+    return res.status(400).render("justError", { error: e });
   }
 });
 
@@ -46,7 +46,7 @@ router.route("/newPost/createPost").get(async (req, res) => {
     // console.log("in create post");
     return res.render("create_post");
   } catch (e) {
-    return res.status(400).render("404", { error: e });
+    return res.status(400).render("justError", { error: e });
   }
 });
 
@@ -86,7 +86,6 @@ router.route("/createPost").post(upload.single("image"), async (req, res) => {
     } else {
       throw "image is not inserted, it is reuired.";
     }
-    // console.log(imageData);
 
     h.checkTitle(title);
     h.checkDescription(description);
@@ -96,7 +95,7 @@ router.route("/createPost").post(upload.single("image"), async (req, res) => {
     h.checkcity(city);
     h.checkstate(state);
     h.checkValid(userId);
-    // console.log(title, description, budget, role, categories, zip, city, state)
+
     let newPost = await postData.create(
       userId,
       title,
@@ -127,7 +126,6 @@ router.route("/:postId/interested").post(async (req, res) => {
   let role = xss(req.body.filter);
   let postId = req.params.postId;
 
-//  console.log("in interested route");
   try {
     let post = await postData.get(postId);
 
@@ -137,6 +135,7 @@ router.route("/:postId/interested").post(async (req, res) => {
     prospectpush["userId"] = req.session.user.userID;
     prospectpush["firstName"] = req.session.user.userSessionData.firstName;
     prospectpush["lastName"] = req.session.user.userSessionData.lastName;
+    prospectpush["role"] = req.session.user.userSessionData.role;
     prospectpush["email"] = req.session.user.userSessionData.emailAddress;
     prospectpush["userCity"] = req.session.user.userSessionData.location_city;
 
@@ -148,6 +147,7 @@ router.route("/:postId/interested").post(async (req, res) => {
       post.userId,
       post.title,
       post.description,
+      post.role,
       post.location_city,
       post.location_state,
       post.location_zip_code,
@@ -157,33 +157,27 @@ router.route("/:postId/interested").post(async (req, res) => {
       post.prospects,
       post.comments
     );
-
-    //it is redirecting back to same page so you might feel weather or not something happened
+ 
     if (updatedPost) {
       let comms = await postComment.getAll(postId);
       // okay so need a way to show number of people interested
       let interestCount = updatedPost.prospects.length;
 
-
-      // this is where we will use AJAX form submission --> update the page without refreshing/reloading to show updated interest count
-      
-      
       return res.render("post", {
         post: post,
         comms: comms,
         interestCount: interestCount,
       });
       // return res.redirect(`/post/${postId}`);
-      
     }
   } catch (e) {
     return res.status(400).render("error", { error: e });
   }
 });
 
-router.route("/filter").post(async (req, res) => {
+router.route("/filter").get(async (req, res) => {
   // console.log(req.params, req.body);
-  let role = req.body.filter; // xss?!
+  let role = xss(req.body.filter); // xss?!
   // console.log("in filter route");
   if (role === "all") {
     let posts = await postData.getAll();
@@ -202,22 +196,26 @@ router.route("/:postId").get(async (req, res) => {
     let thisUser = req.session.user.userID;
     let comms = await postComment.getAll(postId);
     
+    let prospectId;
     h.checkId(postId);
-
-    let alreadyProspect = false;
-
+   
     if (!post) throw "could not find post with that id";
-  //  let comms = await postComment.getAll(postId);
-    let interestCount = post.prospects.length;
-    
-    let notAuthor = true;
+
+    let interestCount = 0
     let isAuthor;
 
-    let canDelete;
 
-    for (let i in prospects) {
-      if (thisUser === prospects[i].userId) {
-        alreadyProspect = true;
+    if(req.session.user.userID === post.userId){
+      isAuthor = true
+    }
+    // console.log(isAuthor)
+    if(post.prospects.length === 0 ){
+      
+      if (req.session.user.userID === post.userId) {
+        isAuthor = true;
+        console.log("sess.ion.user is the user who posted");
+        console.log("post prospects:");
+        // console.log(post.prospects);
         return res.render("post", {
           post: post,
           comms: comms,
@@ -229,14 +227,28 @@ router.route("/:postId").get(async (req, res) => {
           postId: postId,
         });
       }
+      if (!comms) {
+      
+        return res.render("post", { post: post, interestCount: interestCount});
+      } else {
+        
+      return res.render("post", {
+        post: post,
+        comms: comms,
+        interestCount: interestCount,
+        isAuthor: isAuthor,
+        prospects: [],
+      })
+        return res.render("post", { post: post, comms: comms });
+      }
     }
+    interestCount = post.prospects.length;
 
     if (req.session.user.userID === post.userId) {
       isAuthor = true;
-      notAuthor = false;
-      canDelete = true;
-      // console.log("sess.ion.user is the user who posted");
-      // console.log("236 post prospects: ", post.prospects
+      console.log("sess.ion.user is the user who posted");
+      console.log("post prospects:");
+      console.log(post.prospects);
       return res.render("post", {
         post: post,
         comms: comms,
@@ -249,32 +261,15 @@ router.route("/:postId").get(async (req, res) => {
         postId: postId,
       });
     }
-
+    console.log("bsdkjc");
     if (!comms) {
+      console.log("bsdkjc");
       return res.render("post", {
         post: post,
         interestCount: interestCount,
-        notAuthor: notAuthor,
-        alreadyProspect: alreadyProspect,
-      }); 
-    } else {  // if there are comments on the post
-
-      for (let i in comms) {
-        if (comms.userId === thisUser) {
-          canDelete = true;
-          return res.render("post", {
-            post: post,
-            comms: comms,
-            interestCount: interestCount,
-            isAuthor: isAuthor,
-            notAuthor: notAuthor,
-            canDelete: canDelete,
-            alreadyProspect: alreadyProspect,
-            prospects: post.prospects,
-          });
-        }
-      }
-
+      }); //interestCount: interestCount
+    } else {
+      console.log("bsdkjc");
       return res.render("post", {
         post: post,
         comms: comms,
@@ -287,10 +282,10 @@ router.route("/:postId").get(async (req, res) => {
       });
     }
   } catch (e) {
-    return res.status(400).render("404", { error: e });
+    console.log("jhdavfk6")
+    return res.status(400).render("error", { error: e , badInput:true});
   }
 });
-
 
 router.route("/:postId/selectProspect").post(async (req, res) => {
   try {
@@ -306,9 +301,9 @@ router.route("/:postId/selectProspect").post(async (req, res) => {
 
     let post = await postData.get(postId);
     if (!post) throw new Error("no post specified");
-      let title = post.title
-      let description = post.description
-    
+    let title = post.title;
+    let description = post.description;
+
     console.log("264");
     // lets create the damn thing
     console.log(title, description, clientId, status, assignedToId);
@@ -316,28 +311,26 @@ router.route("/:postId/selectProspect").post(async (req, res) => {
     const project = await projectData.create(
       title,
       description,
-      clientId,         // THIS user
-      status,           // not started upon project creation
-      assignedToId,      // prospect selected from super sick drop down
-      postId
+      clientId, // THIS user
+      status, // not started upon project creation
+      assignedToId // prospect selected from super sick drop down
     );
     console.log("create went well");
 
+    console.log("project create called"); // --------> gotta delete posting, or hide it from the page - (now other users shouldn't be able to access it)
     if (project.created) {
-    // routes/user.js line 142
-      return res.render("projects", {project: project.newProject, created: project.created});  // super duper awesome
-    } 
-
+      // routes/user.js line 142
+      return res.render("projects", { created: created, project: project }); // super duper awesome
+    }
   } catch (e) {
-    return res.status(400).render("404", { error: e });
+    return res.status(400).render("justError", { error: e });
   }
 });
-
 
 router.route("/:postId/comment").post(async (req, res) => {
   try {
     let userId = req.session.user.userID;
-    let comm = req.body.postCommentInput;
+    let comm = xss(req.body.postCommentInput);
     let postId = xss(req.params.postId);
     h.checkId(userId);
     h.checkId(postId);
@@ -355,13 +348,14 @@ router.route("/:postId/comment").post(async (req, res) => {
     return res.redirect(`/post/${postId}`);
 
   } catch (e) {
-    return res.status(400).render("404", { error: e });
+    return res.status(400).render("justError", { error: e });
   }
 });
 
 // needs to change method from get to delete
-router.route("/:commentId/deleteComment").get(async (req, res) => {
+router.route("/:commentId/deleteComment").delete(async (req, res) => {
   try {
+    
     let userId = req.session.user.userID;
     let commentId = xss(req.params.commentId);
 
@@ -371,20 +365,22 @@ router.route("/:commentId/deleteComment").get(async (req, res) => {
     commentId = commentId.trim();
     let postByCommentId = await postData.getByCommentId(commentId);
     if (!postByCommentId) throw "could not find user with that comment";
-    let deletedComment = await postComment.remove(userId, commentId);
+
+    let  deletedComment = await postComment.remove(userId, commentId);
+    // console.log(deletedComment,"delcom")
+    if (!deletedComment) throw "could not delete comment";
     if (deletedComment)
       return res.redirect(`/post/${postByCommentId._id.toString()}`);
-    if (!deletedComment) throw "could not delete comment";
     // res.redirect(`/post/${postByCommentId._id.toString()}`)
   } catch (e) {
-    return res.status(400).render("404", { error: e });
+    return res.status(400).render("justError", { error: e });
   }
 });
 
-router.route("/:postId/delete").get(async (req, res) => {
+router.route("/:postId/delete").delete(async (req, res) => {
   try {
     let userId = req.session.user.userID;
-    let postId = xss(req.params.postId);
+    let postId = xss(req.body.id);
 
     h.checkValid(userId);
     h.checkId(postId);
@@ -396,13 +392,45 @@ router.route("/:postId/delete").get(async (req, res) => {
       throw "userId and postId is not matched";
     }
     let deletedPost = await postData.remove(postId);
-    req.session.successMessage = `Post(${deletedPost.postId}) deleted successfully`;
-    if (deletedPost.deleted) return res.redirect(`/post/myposts`);
+
+    if (deletedPost.deleted) {
+      console.log("successfully deleteted");
+      // req.session.successMessage = `Post(${deletedPost.postId}) deleted successfully`;
+      res.status(200).json({
+        success: true,
+        post_id: deletedPost.postId,
+      });
+    }
+    // return res.redirect(`/post/myposts`);
     else throw `could not delete this post : ${postId}`;
   } catch (e) {
-    req.session.errorMessage = `Post(${postId}) is not deleted successfully`;
-    return res.redirect(`/post/myposts`);
+    req.session.errorMessage = `Post is not deleted successfully`;
+    // return res.redirect(`/post/myposts`);
   }
 });
+// router.route("/:postId/delete").delete(async (req, res) => {
+//   try {
+//     console.log(req.method,"req")
+//     let userId = req.session.user.userID;
+//     let postId = (req.params.postId);
+
+//     h.checkValid(userId);
+//     h.checkId(postId);
+//     userId = userId.trim();
+//     postId = postId.trim();
+//     let postByPostId = await postData.get(postId);
+//     if (!postByPostId) throw "could not find user with that postId";
+//     if (postByPostId.userId !== userId) {
+//       throw "userId and postId is not matched";
+//     }
+//     let deletedPost = await postData.remove(postId);
+//     req.session.successMessage = `Post(${deletedPost.postId}) deleted successfully`;
+//     if (deletedPost.deleted) return res.redirect(`/post/myposts`);
+//     else throw `could not delete this post : ${postId}`;
+//   } catch (e) {
+//     req.session.errorMessage = `Post(${postId}) is not deleted successfully`;
+//     return res.redirect(`/post/myposts`);
+//   }
+// });
 
 export default router;
