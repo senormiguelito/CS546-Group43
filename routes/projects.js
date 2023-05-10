@@ -14,7 +14,9 @@ router.route("/").get(async (req, res) => {
   try {
     h.checkId(userId);
     userId = userId.trim(); // might as well
+    console.log("projRout17")
     if (!ObjectId.isValid(userId)) throw new Error("invalid userId");
+    console.log("projRout19")
   } catch (e) {
     return res.status(400).redirect("/", { error: e }); //  unverified, not sure where to redirect. Need help. And jesus.
   }
@@ -31,187 +33,169 @@ router.route("/").get(async (req, res) => {
   }
 });
 
-router
-  .route("/:userId") // getAll projects involved from this userId
-  .get(async (req, res) => {
+// router
+//   .route("/:userId") // getAll projects involved from this userId
+//   .get(async (req, res) => {
     
-    let userId = req.session.user.userID; // unsure of id-- is it userId or projectId? in this route, if wrong, replace all projectId with userId
+//     let userId = req.session.user.userID;
+//     try {
 
+//       if (userId === req.params.userId) {   // trying to click on our own projects, view individually
 
-    try {
+//         const userProjects = await projectData.getAllProjectsByUser(userId);
+//         if (userProjects.length === 0) {
+//           return res.render("projects", {created: false, noProjects: true, projects: false})
+//         }
+//         else {
+//           return res.render("projects", {
+//             created: false,
+//             noProjects: false,
+//             projects: true,
+//             userProjects:userProjects,
+//             title: userProjects,
+//             description: userProjects.allUserProjects,
+//             status: userProjects.allUserProjects.status,
+//           });
+//         }
+//       }
 
-      if (userId === req.params.userId) {   // trying to click on our own projects, view individually
+//       h.checkId(userId);
+//       userId = userId.trim(); // might as well
+//       console.log("ProjRoutes 64")
+//       if (ObjectId.isValid(userId)) throw new Error("invalid userId");
+//       console.log("projectRoute66")
+//     } catch (e) {
+//       return res.status(400).render("error", { error: e, badInput: true }); //  unverified, not sure where to redirect. Need help. And jesus.
+//     }
 
-        const userProjects = await projectData.getAllProjectsByUser(userId);
-        if (!userProjects) {
-          throw new Error("This user is not involved in any projects");
-        }
-        else {
-          res.render("/", {})
-        }
-      }
+//     try {
+//       if (userProjects.noProjects) {
+//         return res.status(200).render("projects", { projects: noProjects });
+//       } else {
+//         message = "Here are your projects! You are building the community!";
+//         return res.status(200).render("projects", { projects: projects, Message: message });
+//       }
+//     } catch (e) {
+//       return res.status(400).render("home", { error: e }); // ask smart group members about render in case of error
+//     }
+//   })
+//   .post(async (req, res) => {
+//     const clientId = req.params.clientId;
+//     const assignedToId = req.params.assignedToId;
 
-      h.checkId(userId);
-      userId = userId.trim(); // might as well
-      if (ObjectId.isValid(userId)) throw new Error("invalid userId");
-    } catch (e) {
-      return res.status(400).render("error", { error: e, badInput: true }); //  unverified, not sure where to redirect. Need help. And jesus.
-    }
+//     const projectInfo = xss(req.body);
+//     try {
+//       // h.checkId(clientId);
+//       // h.checkId(assignedToId);
+//       if (!clientId) throw new Error("invalid req.param: clientId");
+//       if (!assignedToId) throw new Error("invalid req.param: assignedToId");
 
-    try {
-      if (userProjects.noProjects) {
-        return res.status(200).render("projects", { projects: noProjects });
-      } else {
-        message = "Here are your projects! You are building the community!";
-        return res.status(200).render("projects", { projects: projects, Message: message });
-      }
-    } catch (e) {
-      return res.status(400).render("home", { error: e }); // ask smart group members about render in case of error
-    }
-  })
-  .post(async (req, res) => {
-    const clientId = req.params.clientId;
-    const assignedToId = req.params.assignedToId;
+//       h.checkTitle(projectInfo.title);
+//       h.checkDescription(projectInfo.description);
+//       h.checkId(projectInfo.clientId);
+//       h.checkId(projectInfo.assignedToId);
+//       h.checkstatus(projectInfo.status);
+//     } catch (e) {
+//       return res.status(400).redirect("/", { error: e }); // just return to /projects page
+//     }
 
-    const projectInfo = xss(req.body);
-    try {
-      // h.checkId(clientId);
-      // h.checkId(assignedToId);
-      if (!clientId) throw new Error("invalid req.param: clientId");
-      if (!assignedToId) throw new Error("invalid req.param: assignedToId");
+//     try {
+//       await userData.get(req.params.userId); // confused on the userId aspect here. Can someone verify/check this
+//       const createProject = await projectData.create(
+//         // req.params.userId,      // figure out about userId or projectId?
+//         req.params.title,
+//         req.params.description,
+//         clientId,
+//         req.params.status,
+//         assignedToId
+//       );
 
-      h.checkTitle(projectInfo.title);
-      h.checkDescription(projectInfo.description);
-      h.checkId(projectInfo.clientId);
-      h.checkId(projectInfo.assignedToId);
-      h.checkstatus(projectInfo.status);
-    } catch (e) {
-      return res.status(400).redirect("/", { error: e }); // just return to /projects page
-    }
+//       const user = await projectData.getUserByProject(
+//         createProject._id.toString()
+//       );
 
-    try {
-      await userData.get(req.params.userId); // confused on the userId aspect here. Can someone verify/check this
-      const createProject = await projectData.create(
-        // req.params.userId,      // figure out about userId or projectId?
-        req.params.title,
-        req.params.description,
-        clientId,
-        req.params.status,
-        assignedToId
-      );
+//       const bothUsers = await projectData.getBothUsersByProject(
+//         createProject._id.toString()
+//       );
+//       const client = bothUsers[0];
+//       const assignedTo = bothUsers[1];
 
-      const user = await projectData.getUserByProject(
-        createProject._id.toString()
-      );
+//       if (user._id.toString() === client._id.toString()) {
+//         const clientProjects = await projectData.getAllProjectsByUser(
+//           user._id.toString()
+//         );
+//         return res.status(200).render("projects", { projects: projects }); // returns updated client projects
+//       } else if (user._id.toString() === assignedTo._id.toString()) {
+//         const assignedToProjects = await projectData.getAllProjectsByUser(
+//           user._id.toString()
+//         );
+//         return res.status(200).render("projects", { projects: projects }); // returns updated user projects
+//       }
+//       // Maybe this works? Idea is to render the projects page with the updated user projects after insertion.
+//     } catch (e) {
+//       return res.status(404).render("error", { error: e });
+//     }
+//   })
+//   .delete(async (req, res) => {
+//     try {
+//       if (!req.params.id) throw new Error("No projectId specified");
+//       h.checkId(req.params.id);
+//     } catch (e) {
+//       return res.status(400).redirect("../home", { error: e });
+//     }
 
-      const bothUsers = await projectData.getBothUsersByProject(
-        createProject._id.toString()
-      );
-      const client = bothUsers[0];
-      const assignedTo = bothUsers[1];
+//     try {
+//       // this is tripping me up because in the data function I call both users to remove, but here I am unsure how/if I need to do that
+//       const users = await projectData.getBothUsersByProject(
+//         req.params.id.toString()
+//       );
+//       // users is an array
+//       const client = users[0];
+//       const assignedTo = users[1];
 
-      if (user._id.toString() === client._id.toString()) {
-        const clientProjects = await projectData.getAllProjectsByUser(
-          user._id.toString()
-        );
-        return res.status(200).render("projects", { projects: projects }); // returns updated client projects
-      } else if (user._id.toString() === assignedTo._id.toString()) {
-        const assignedToProjects = await projectData.getAllProjectsByUser(
-          user._id.toString()
-        );
-        return res.status(200).render("projects", { projects: projects }); // returns updated user projects
-      }
-      // Maybe this works? Idea is to render the projects page with the updated user projects after insertion.
-    } catch (e) {
-      return res.status(404).render("error", { error: e });
-    }
-  })
-  .delete(async (req, res) => {
-    try {
-      if (!req.params.id) throw new Error("No projectId specified");
-      h.checkId(req.params.id);
-    } catch (e) {
-      return res.status(400).redirect("../home", { error: e });
-    }
+//       const removeProject = await projectData.removeProject(req.params.id); // remove project by requested projectId
 
-    try {
-      // this is tripping me up because in the data function I call both users to remove, but here I am unsure how/if I need to do that
-      const users = await projectData.getBothUsersByProject(
-        req.params.id.toString()
-      );
-      // users is an array
-      const client = users[0];
-      const assignedTo = users[1];
+//       let clientRemoved;
+//       let assignedToRemoved;
 
-      const removeProject = await projectData.removeProject(req.params.id); // remove project by requested projectId
+//       for (let i in client.projects) {
+//         if (
+//           removeProject._id.toString() === client.projects[i]._id.toString()
+//         ) {
+//           clientRemoved = true;
+//           //res.status(200).render({ projectId: req.params.id, deleted: true });
+//         }
+//       }
+//       for (let i in assignedTo.projects) {
+//         if (
+//           removeProject._id.toString() === assignedTo.projects[i]._id.toString()
+//         ) {
+//           assignedToRemoved = true;
+//           //res.status(200).render({ projectId: req.params.id, deleted: true });
+//         }
+//       }
 
-      let clientRemoved;
-      let assignedToRemoved;
-
-      for (let i in client.projects) {
-        if (
-          removeProject._id.toString() === client.projects[i]._id.toString()
-        ) {
-          clientRemoved = true;
-          //res.status(200).render({ projectId: req.params.id, deleted: true });
-        }
-      }
-      for (let i in assignedTo.projects) {
-        if (
-          removeProject._id.toString() === assignedTo.projects[i]._id.toString()
-        ) {
-          assignedToRemoved = true;
-          //res.status(200).render({ projectId: req.params.id, deleted: true });
-        }
-      }
-
-      if (clientRemoved && assignedToRemoved) {
-        return res
-          .status(200)
-          .redirect("/projects", { projectId: req.params.id, deleted: true });
-      } else {
-        throw new Error("We had a problem deleting that project");
-      }
-    } catch (e) {
-      return res.status(404).render("error", { error: e });
-    }
-  });
-
-router.route("/").get(async (req, res) => {
-  let userId = req.session.user.userID; // unsure of id-- is it userId or projectId? in this route, if wrong, replace all projectId with userId
-  const userProjects = await projectData.getAllProjectsByUser(userId);
-
-  try {
-    h.checkId(userId);
-    userId = userId.trim(); // might as well
-    if (!ObjectId.isValid(userId)) throw new Error("invalid userId");
-  } catch (e) {
-    return res.status(400).redirect("/", { error: e }); //  unverified, not sure where to redirect. Need help. And jesus.
-  }
-
-  console.log("userProjects", userProjects);
-  console.log("userProjects.noProjects: ", userProjects.noProjects);
-  try {
-    if (userProjects.noProjects) {
-      return res.render("projects", { userProjects: userProjects, noProjects: true });
-    }
-    if (userProjects.projects) {
-      return res.render("projects", { userProjects: userProjects, projects: true });
-    }
-  } catch (e) {
-    return res.redirect("/home", 400);
-  }
-})
+//       if (clientRemoved && assignedToRemoved) {
+//         return res
+//           .status(200)
+//           .redirect("/projects", { projectId: req.params.id, deleted: true });
+//       } else {
+//         throw new Error("We had a problem deleting that project");
+//       }
+//     } catch (e) {
+//       return res.status(404).render("error", { error: e });
+//     }
+//   });
 
 router
   .route('/:projectId').get(async (req, res) => {  // get projectById
-    let message = "";
     let projectId = req.params.projectId;
+
     try {
       if (!projectId) throw new Error("id not specified");
       h.checkId(projectId);
     } catch (e) {
-      return res.status(400).redirect("/projects", { error: e });
+      return res.status(400).render("error", { error: e , badInput: true });
     }
     try {
       const projectReq = await projectData.getProjectById(projectId);
@@ -219,12 +203,13 @@ router
         throw new Error(
           "project with this projectId was not found in the database"
         );
-      message = "we found the project you're looking for!\n";
-      res
-        .status(200)
-        .render("projects", { projectId: projectReq, Message: message });
+      return res.render("just1project", {
+        title: projectReq.title,
+        description: projectReq.description,
+        status: projectReq.status,
+      });
     } catch (e) {
-      return res.status(404).render("error", { error: e });
+      return res.status(404).render("error", { error: e, badInput: true });
     }
   })
   .put(async (req, res) => {
@@ -269,37 +254,5 @@ router
       return res.status(400).redirect("/", { error: e });
     }
   });
-
-router.route("/").get(async (req, res) => {
-  let userId = req.session.user.userID; // unsure of id-- is it userId or projectId? in this route, if wrong, replace all projectId with userId
-  const userProjects = await projectData.getAllProjectsByUser(userId);
-
-  try {
-    h.checkId(userId);
-    userId = userId.trim(); // might as well
-    if (!ObjectId.isValid(userId)) throw new Error("invalid userId");
-  } catch (e) {
-    return res.status(400).redirect("/", { error: e }); //  unverified, not sure where to redirect. Need help. And jesus.
-  }
-
-  // console.log("userProjects", userProjects);
-  // console.log("userProjects.noProjects: ", userProjects.noProjects);
-  try {
-    if (userProjects.noProjects) {
-      return res.render("projects", {
-        userProjects: userProjects,
-        noProjects: true,
-      });
-    }
-    if (userProjects.projects) {
-      return res.render("projects", {
-        userProjects: userProjects,
-        projects: true,
-      });
-    }
-  } catch (e) {
-    return res.redirect("/home", 400);
-  }
-});
 
 export default router;

@@ -82,12 +82,13 @@ console.log(postId,"pid in create")
 export const getAllProjectsByUser = async (userId) => {
   h.checkValid(userId);
 
-  if (!ObjectId.isValid(userId)) throw new Error("invalid userId");
   userId = userId.trim();
-
+  console.log("projects85: ", userId);
+  if (!ObjectId.isValid(userId)) throw new Error("invalid userId");
+  console.log("88");
   const user = await userCollection.findOne({ _id: new ObjectId(userId) }); // converts string userId to an objectId to be compared
   if (!user) throw new Error("No user with that ID in our database");
-  const allUserProjects = user.projects;
+  let allUserProjects = user.projects;
   for (let i in allUserProjects) {
     allUserProjects[i]._id = allUserProjects[i]._id.toString();
   }
@@ -99,14 +100,15 @@ export const getAllProjectsByUser = async (userId) => {
 };
 
 export const getProjectById = async (projectId) => {
+  
   h.checkId(projectId);
 
   if (!ObjectId.isValid(projectId)) throw new Error("projectId is not a valid objectId");
-  projectId = projectId.trim();
 
   let userProjects = await userCollection.findOne({ 'projects._id': new ObjectId(projectId), }, { projection: { _id: 0, projects: 1 } });
   if (!userProjects) throw new Error("No project with this ID found in our database");
   userProjects = userProjects.projects;
+  console.log("111 userProjects", userProjects);
   
   for (let i in userProjects) {
     if (userProjects[i]._id.toString() === projectId) {
