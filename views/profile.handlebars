@@ -14,27 +14,35 @@
                     width="200" height="200">
                   {{/if}}
                 </div>
-                <h6 class="f-w-600">{{user.firstName}} {{user.lastName}}</h6>
-                <p>{{user.role}}</p>
+                {{#if user.firstName}}<h6 class="f-w-600">{{user.firstName}} {{user.lastName}}</h6>{{/if}}
+               {{#if user.role}}<p>{{user.role}}</p>{{/if}}
                 <i class=" mdi mdi-square-edit-outline feather icon-edit m-t-10 f-16"></i>
               </div>
             </div>
             <div class="col-sm-8">
+              <span class="contact-icon text-primary">
+                  <a href="tel:+1{{#if user.phoneNumber}}{{user.phoneNumber}}{{else}}5510000000p{{/if}}123"><i class="fas fa-phone"></i></a>
+                </span>
+                <!-- Email icon -->
+              <span class="contact-icon text-primary">
+                <a href="mailto:{{#if user.emailAddress}}{{user.emailAddress}}{{else}}emailnotprovided@TradeBridge.com{{/if}}"><i class="fas fa-envelope"></i></a>
+              </span>
               <div class="card-block">
-                <h6 class="m-b-20 p-b-5 b-b-default f-w-600">Information</h6>
+                <h6 class="m-b-20 p-b-5 b-b-default f-w-600">Information : </h6>
+                
                 <div class="row">
                   <div class="col-sm-3">
                     <h5 class="m-b-10 f-w-600">Name:</h5>
-                    <h6 class="text-muted f-w-400">{{user.firstName}} {{user.lastName}}</h6>
+                    {{#if user.firstName}}<h6 class="text-muted f-w-400">{{user.firstName}} {{user.lastName}}</h6>{{/if}}
                   </div>
                   <div class="col-sm-3">
                     <h5 class="m-b-10 f-w-600">Email:</h5>
-                    <h6 class="text-muted f-w-400">{{user.emailAddress}}</h6>
+                    {{#if user.emailAddress}}<h6 class="text-muted f-w-400">{{user.emailAddress}}</h6>{{/if}}
                   </div>
 
                   <div class="col-sm-3">
                     <h5 class="m-b-10 f-w-600">Phone Number:</h5>
-                    <h6 class="text-muted f-w-400">{{user.phoneNumber}}</h6>
+                    {{#if user.phoneNumber}}<h6 class="text-muted f-w-400">{{user.phoneNumber}}</h6>{{/if}}
                   </div>
                 </div>
               </div>
@@ -44,15 +52,15 @@
                 <div class="row">
                   <div class="col-sm-3">
                     <h5 class="m-b-10 f-w-600">Role:</h5>
-                    <h6 class="text-muted f-w-400">{{user.role}}</h6>
+                    {{#if user.role}}<h6 class="text-muted f-w-400">{{user.role}}</h6>{{/if}}
                   </div>
                   <div class="col-sm-3">
                     <h5 class="m-b-10 f-w-600">Bio</h5>
-                    <h6 class="text-muted f-w-400">{{user.bio}}</h6>
+                    {{#if user.bio}}<h6 class="text-muted f-w-400">{{user.bio}}</h6>{{/if}}
                   </div>
                   <div class="col-sm-3">
                     <h5 class="m-b-10 f-w-600">Joining Date:</h5>
-                    <h6 class="text-muted f-w-400">{{user.joiningDate}}</h6>
+                    {{#if user.joiningDate}}<h6 class="text-muted f-w-400">{{user.joiningDate}}</h6>{{/if}}
                   </div>
                 </div>
               </div>
@@ -62,15 +70,15 @@
                 <div class="row">
                   <div class="col-sm-3">
                     <h5 class="m-b-10 f-w-600">City:</h5>
-                    <h6 class="text-muted f-w-400">{{user.location_city}}</h6>
+                    {{#if user.location_city}}<h6 class="text-muted f-w-400">{{user.location_city}}</h6>{{/if}}
                   </div>
                   <div class="col-sm-3">
                     <h5 class="m-b-10 f-w-600">State:</h5>
-                    <h6 class="text-muted f-w-400">{{user.location_state}}</h6>
+                    {{#if user.location_state}}<h6 class="text-muted f-w-400">{{user.location_state}}</h6>{{/if}}
                   </div>
                   <div class="col-sm-3">
                     <h5 class="m-b-10 f-w-600">Zipcode:</h5>
-                    <h6 class="text-muted f-w-400">{{user.location_zip_code}}</h6>
+                    {{#if user.location_zip_code}}<h6 class="text-muted f-w-400">{{user.location_zip_code}}</h6>{{/if}}
                   </div>
                 </div>
               </div>
@@ -80,7 +88,7 @@
                 <div class="row">
                   <div class="col-sm-3">
                     <h5 class="m-b-10 f-w-600"></h5>
-                    <h6 class="text-muted f-w-400">{{user.categories}}</h6>
+                    {{#if user.categories}}<h6 class="text-muted f-w-400">{{user.categories}}</h6>{{/if}}
                   </div>
                 </div>
               </div>

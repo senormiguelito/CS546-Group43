@@ -19,13 +19,13 @@
                       alt="User-Profile-Image"
                       width="200"
                       height="200"
-                    >
+                    />
                   {{else}}
                     <img
                       src="/public/images/No_User.jpg"
                       class="card-img-top"
                       alt="..."
-                    >
+                    />
                   {{/if}}
                 </div>
                 {{#if objectUser.firstName}}<h6
@@ -36,9 +36,26 @@
                 <i
                   class="mdi mdi-square-edit-outline feather icon-edit m-t-10 f-16"
                 ></i>
+                <button id="shareBtn">share your profile :
+                  <i class="fas fa-share"></i></button>
+                <div id="shareModal" class="modal">
+                  <div class="modal-content">
+                    <span class="close">&times;</span>
+                    <p>Select a platform to share:</p>
+                    <ul id="platformList">
+                      <li data-platform="facebook" class="fab fa-facebook"></li>
+                      <li data-platform="whatsapp" class="fab fa-whatsapp"></li>
+                      <li data-platform="twitter" class="fab fa-twitter"></li>
+                      <li data-platform="telegram" class="fab fa-telegram"></li>
+                      <li data-platform="linkedin" class="fab fa-linkedin"></li>
+                      <li data-platform="reddit" class="fab fa-reddit"></li>
+                    </ul>
+                  </div>
+                </div>
               </div>
             </div>
             <div class="col-sm-8">
+
               <div class="card-block">
                 <h6 class="m-b-20 p-b-5 b-b-default f-w-600">Information</h6>
                 <div class="row">

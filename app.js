@@ -29,7 +29,7 @@ app.use(
 app.use((req, res, next) => {
   res.setHeader(
     "Content-Security-Policy",
-    "script-src 'self' cdn.jsdelivr.net ajax.googleapis.com"
+    "script-src 'self' cdn.jsdelivr.net ajax.googleapis.com kit.fontawesome.com/f7fb940881.js https://khan.github.io/tota11y/dist/tota11y.min.js 'unsafe-eval'"
   );
   next();
 });
@@ -282,8 +282,8 @@ app.use("/post/newPost/createPost", (req, res, next) => {
 
 app.use("/post/:postId/interested", (req, res, next) => {
   if (req.session.user) {
-    if (req.method == 'POST') {
-      req.method = 'PUT';
+    if (req.method == "POST") {
+      req.method = "PUT";
     }
     next();
   } else {
@@ -334,57 +334,51 @@ app.use(async (req, res, next) => {
 //   next();
 // });
 
-app.use('/post/:postId/delete', async (req, res, next) => {
-  if (req.method == 'POST') {
-    req.method = 'DELETE';
+app.use("/post/:postId/delete", async (req, res, next) => {
+  if (req.method == "POST") {
+    req.method = "DELETE";
   }
   next();
 });
 
-app.use('/user/reviews/delete/:reviewId', async (req, res, next) => {
-  
-  if (req.method == 'POST') {
-    req.method = 'DELETE';
+app.use("/user/reviews/delete/:reviewId", async (req, res, next) => {
+  if (req.method == "POST") {
+    req.method = "DELETE";
   }
   next();
 });
 
-app.use('/seekers/searchArea', async (req, res, next) => {
-  
-  if (req.method == 'POST') {
-    req.method = 'PUT';
+app.use("/seekers/searchArea", async (req, res, next) => {
+  if (req.method == "POST") {
+    req.method = "PUT";
   }
   next();
 });
 
-app.use('/user/reviews/edit/:reviewId', async (req, res, next) => {
-  
-  if (req.method == 'POST') {
-    req.method = 'PUT';
+app.use("/user/reviews/edit/:reviewId", async (req, res, next) => {
+  if (req.method == "POST") {
+    req.method = "PUT";
   }
   next();
 });
 
-app.use('/post/filter', async (req, res, next) => {
-  
-  if (req.method == 'POST') {
-    req.method = 'GET';
+app.use("/post/filter", async (req, res, next) => {
+  if (req.method == "POST") {
+    req.method = "GET";
   }
   next();
 });
 
-app.use('/home/provideList/searchArea', async (req, res, next) => {
-  
-  if (req.method == 'POST') {
-    req.method = 'GET';
+app.use("/home/provideList/searchArea", async (req, res, next) => {
+  if (req.method == "POST") {
+    req.method = "GET";
   }
   next();
 });
 
-app.use('/home/provideList/sortBy', async (req, res, next) => {
-
-  if (req.method == 'POST') {
-    req.method = 'GET';
+app.use("/home/provideList/sortBy", async (req, res, next) => {
+  if (req.method == "POST") {
+    req.method = "GET";
   }
   next();
 });
