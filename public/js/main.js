@@ -159,6 +159,24 @@ commentForm.addEventListener("submit", (event) => {
   }
 });
 
+commentForm.addEventListener("submit", (event) => {
+  event.preventDefault();
+  const comment = document.getElementById("postCommentInput").value;
+  const errorContainer = document.getElementById("posterror");
+  const errors = [];
+  if(comment.trim() === ""){
+    errors.push("Comment cannot be empty");
+  }
+  if(errors.length > 0){
+    errorContainer.innerText = errors.join(", ");
+    errorContainer.style.display = "block";
+    // showing the error only for 1.5 seconds.
+    setTimeout(function () {
+      errorContainer.style.display = "none";
+    }, 1500);
+  }
+});
+
 const editprofileForm = document.getElementById("myprofile-edit");
 const resetButton = document.getElementById("reset-button");
 const firstname = document.getElementById("firstNameInput");

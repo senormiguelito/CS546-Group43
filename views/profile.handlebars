@@ -106,6 +106,7 @@
     <a href="../user/reviews/{{user._id}}/allReviews">View All Reviews</a>
     <br>
     <div>
+      <p id = "profileError"></p>
       <form method="post" action="../user/reviews/{{user._id}}" id="add-review-form">
 
         <label for="reviewInput">Enter Review: </label>
@@ -126,9 +127,10 @@
       <div class="dropdown">
   <button class="dropbtn">Contact</button>
   <div class="dropdown-content">
-     <form method = "POST" action ='/home/messages/'>
-        <input type="text" placeholder="Enter your message" name = "message" id = "message"><br><br>
-        <input type="hidden" name = "recieverId" id = "recieverId" value = "{{user._id}}">
+    <p id = "dmError"></p>
+     <form method = "POST" action ='/home/messages/' id = "dm-form">
+        <input id = "dm-input" type="text" placeholder="Enter your message" name = "message" id = "message"><br><br>
+        <input id = "recId" type="hidden" name = "recieverId" id = "recieverId" value = "{{user._id}}">
         <input type="submit" value="Send" id = "send-btn">
       </form>
   </div>
