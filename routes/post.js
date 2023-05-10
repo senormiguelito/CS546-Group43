@@ -43,7 +43,6 @@ router.route("/myPosts").get(async (req, res) => {
 
 router.route("/newPost/createPost").get(async (req, res) => {
   try {
-    // console.log("in create post");
     return res.render("create_post");
   } catch (e) {
     return res.status(400).render("justError", { error: e });
@@ -63,8 +62,6 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 router.route("/createPost").post(upload.single("image"), async (req, res) => {
   try {
-    // console.log("in /createPost route");
-    // console.log(req.body.categorydata);
     let title = xss(req.body.titleInput);
     let description = xss(req.body.descriptionInput);
     let budget = xss(req.body.budgetInput);
@@ -77,9 +74,9 @@ router.route("/createPost").post(upload.single("image"), async (req, res) => {
     const arrCategories = categories
       .split(",")
       .map((s) => s.trim().replace(/"/g, "")); // convert categories from html into array
-    // console.log(arrCategories);
+
     let imageData = "";
-    // console.log(req.file);
+
     if (req.file) {
       imageData =
         "http://localhost:3000/public/images/post/" + req.file.filename;
@@ -139,7 +136,6 @@ router.route("/:postId/interested").post(async (req, res) => {
     prospectpush["email"] = req.session.user.userSessionData.emailAddress;
     prospectpush["userCity"] = req.session.user.userSessionData.location_city;
 
-    // console.log(prospectpush);
     post.prospects.push(prospectpush);
 
     const updatedPost = await postData.update(
@@ -163,12 +159,13 @@ router.route("/:postId/interested").post(async (req, res) => {
       // okay so need a way to show number of people interested
       let interestCount = updatedPost.prospects.length;
 
-      return res.render("post", {
-        post: post,
-        comms: comms,
-        interestCount: interestCount,
-      });
-      // return res.redirect(`/post/${postId}`);
+      // return res.render("post", {
+      //   post: post,
+      //   comms: comms,
+      //   interestCount: interestCount,
+      // });
+      req.session.user = { interestedUpdated: true, post, comms, interestCount, postId };
+      return res.redirect(`/post/${postId}`);
     }
   } catch (e) {
     return res.status(400).render("error", { error: e });
@@ -176,9 +173,9 @@ router.route("/:postId/interested").post(async (req, res) => {
 });
 
 router.route("/filter").get(async (req, res) => {
-  // console.log(req.params, req.body);
-  let role = xss(req.body.filter); // xss?!
-  // console.log("in filter route");
+
+  let role = xss(req.body.filter); 
+
   if (role === "all") {
     let posts = await postData.getAll();
     return res.render("home", { posts: posts });
@@ -190,6 +187,20 @@ router.route("/filter").get(async (req, res) => {
 
 router.route("/:postId").get(async (req, res) => {
   try {
+    if (req.session.user.interestedUpdated) {
+      const post = req.session.user.post;
+      const comms = req.session.user.comms;
+      const interestCount = req.session.user.interestCount;
+      const postId = req.session.user.postId;
+      return res.render("post", {
+        post: post,
+        comms: comms,
+        interestCount: interestCount,
+        isAuthor: false,
+        prospects: post.prospects,
+        postId: postId,
+      });
+    }
     let postId = req.params.postId;
     let post = await postData.get(postId);
     let prospects = post.prospects;
@@ -198,12 +209,11 @@ router.route("/:postId").get(async (req, res) => {
     
     let prospectId;
     h.checkId(postId);
-   
+
     if (!post) throw "could not find post with that id";
 
     let interestCount = 0
     let isAuthor;
-
 
     if(req.session.user.userID === post.userId){
       isAuthor = true
@@ -213,16 +223,11 @@ router.route("/:postId").get(async (req, res) => {
       
       if (req.session.user.userID === post.userId) {
         isAuthor = true;
-        // console.log("sess.ion.user is the user who posted");
-        // console.log("post prospects:");
-        // console.log(post.prospects);
         return res.render("post", {
           post: post,
           comms: comms,
           interestCount: interestCount,
           isAuthor: isAuthor,
-          notAuthor: notAuthor,
-          alreadyProspect: alreadyProspect,
           prospects: post.prospects,
           postId: postId,
         });
@@ -246,24 +251,17 @@ router.route("/:postId").get(async (req, res) => {
 
     if (req.session.user.userID === post.userId) {
       isAuthor = true;
-      // console.log("sess.ion.user is the user who posted");
-      // console.log("post prospects:");
-      // console.log(post.prospects);
       return res.render("post", {
         post: post,
         comms: comms,
         interestCount: interestCount,
         isAuthor: isAuthor,
-        notAuthor: notAuthor,
-        canDelete: canDelete,
-        alreadyProspect: alreadyProspect,
         prospects: post.prospects,
         postId: postId,
       });
     }
     // console.log("bsdkjc");
     if (!comms) {
-      // console.log("bsdkjc");
       return res.render("post", {
         post: post,
         interestCount: interestCount,
@@ -275,9 +273,6 @@ router.route("/:postId").get(async (req, res) => {
         comms: comms,
         interestCount: interestCount,
         isAuthor: isAuthor,
-        notAuthor: notAuthor,
-        canDelete: canDelete,
-        alreadyProspect: alreadyProspect,
         prospects: post.prospects,
       });
     }
@@ -289,12 +284,8 @@ router.route("/:postId").get(async (req, res) => {
 
 router.route("/:postId/selectProspect").post(async (req, res) => {
   try {
-    // console.log("254 in selectProspect");
     let postId = req.params.postId;
     let prospectId = xss(req.body.prospects);
-    // console.log("req.body: ", req.body, "req.params:", req.params)
-    //let title = xss(req.body.title);
-    //let description = xss(req.body.description);
     let clientId = req.session.user.userID;
     let status = "not started"; // how unbelievably wicked. Itsss alllll comming togetheaaa!
     let assignedToId = prospectId;
@@ -303,10 +294,6 @@ router.route("/:postId/selectProspect").post(async (req, res) => {
     if (!post) throw new Error("no post specified");
     let title = post.title;
     let description = post.description;
-
-    // console.log("264");
-    // lets create the damn thing
-    // console.log(title, description, clientId, status, assignedToId);
 
     const project = await projectData.create(
       title,
@@ -318,7 +305,6 @@ router.route("/:postId/selectProspect").post(async (req, res) => {
 
     // console.log("create went well");
 
-    // console.log("project create called"); // --------> gotta delete posting, or hide it from the page - (now other users shouldn't be able to access it)
     if (project.created) {
       // routes/user.js line 142
       return res.render("projects", { created: created, project: project }); // super duper awesome
@@ -353,7 +339,6 @@ router.route("/:postId/comment").post(async (req, res) => {
   }
 });
 
-// needs to change method from get to delete
 router.route("/:commentId/deleteComment").delete(async (req, res) => {
   try {
     
@@ -368,11 +353,10 @@ router.route("/:commentId/deleteComment").delete(async (req, res) => {
     if (!postByCommentId) throw "could not find user with that comment";
 
     let  deletedComment = await postComment.remove(userId, commentId);
-    // console.log(deletedComment,"delcom")
+
     if (!deletedComment) throw "could not delete comment";
     if (deletedComment)
       return res.redirect(`/post/${postByCommentId._id.toString()}`);
-    // res.redirect(`/post/${postByCommentId._id.toString()}`)
   } catch (e) {
     return res.status(400).render("justError", { error: e });
   }
@@ -395,43 +379,16 @@ router.route("/:postId/delete").delete(async (req, res) => {
     let deletedPost = await postData.remove(postId);
 
     if (deletedPost.deleted) {
-      // console.log("successfully deleteted");
-      // req.session.successMessage = `Post(${deletedPost.postId}) deleted successfully`;
       res.status(200).json({
         success: true,
         post_id: deletedPost.postId,
       });
     }
-    // return res.redirect(`/post/myposts`);
+
     else throw `could not delete this post : ${postId}`;
   } catch (e) {
     req.session.errorMessage = `Post is not deleted successfully`;
-    // return res.redirect(`/post/myposts`);
   }
 });
-// router.route("/:postId/delete").delete(async (req, res) => {
-//   try {
-//     console.log(req.method,"req")
-//     let userId = req.session.user.userID;
-//     let postId = (req.params.postId);
-
-//     h.checkValid(userId);
-//     h.checkId(postId);
-//     userId = userId.trim();
-//     postId = postId.trim();
-//     let postByPostId = await postData.get(postId);
-//     if (!postByPostId) throw "could not find user with that postId";
-//     if (postByPostId.userId !== userId) {
-//       throw "userId and postId is not matched";
-//     }
-//     let deletedPost = await postData.remove(postId);
-//     req.session.successMessage = `Post(${deletedPost.postId}) deleted successfully`;
-//     if (deletedPost.deleted) return res.redirect(`/post/myposts`);
-//     else throw `could not delete this post : ${postId}`;
-//   } catch (e) {
-//     req.session.errorMessage = `Post(${postId}) is not deleted successfully`;
-//     return res.redirect(`/post/myposts`);
-//   }
-// });
 
 export default router;
