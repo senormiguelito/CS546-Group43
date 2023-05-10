@@ -42,7 +42,7 @@ router.route("/:userId").post(async (req, res) => {
         reviewerLastName
       );
       if (thisReview.success) {
-        console.log(thisReview);
+        // console.log(thisReview);
         return res.redirect(`../../profile/${reviewee}`);
       }
     } else {
@@ -60,7 +60,7 @@ router.route("/:userId/allReviews").get(async (req, res) => {
     if (!reviews) throw new Error("could not find any reviews");
 
     if (reviews.reviewsList) {
-      console.log(reviews.reviewsList, "jvjj");
+      // console.log(reviews.reviewsList, "jvjj");
       return res
         .status(200)
         .render("reviews", { reviews: reviews.reviewsList, found: true });

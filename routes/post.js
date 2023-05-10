@@ -63,7 +63,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 router.route("/createPost").post(upload.single("image"), async (req, res) => {
   try {
-    console.log("in /createPost route");
+    // console.log("in /createPost route");
     // console.log(req.body.categorydata);
     let title = xss(req.body.titleInput);
     let description = xss(req.body.descriptionInput);
@@ -141,7 +141,7 @@ router.route("/:postId/interested").post(async (req, res) => {
     prospectpush["email"] = req.session.user.userSessionData.emailAddress;
     prospectpush["userCity"] = req.session.user.userSessionData.location_city;
 
-    console.log(prospectpush);
+    // console.log(prospectpush);
     post.prospects.push(prospectpush);
 
     const updatedPost = await postData.update(
@@ -217,8 +217,8 @@ router.route("/:postId").get(async (req, res) => {
       
       if (req.session.user.userID === post.userId) {
         isAuthor = true;
-        console.log("sess.ion.user is the user who posted");
-        console.log("post prospects:");
+        // console.log("sess.ion.user is the user who posted");
+        // console.log("post prospects:");
         // console.log(post.prospects);
         return res.render("post", {
           post: post,
@@ -252,14 +252,14 @@ router.route("/:postId").get(async (req, res) => {
     // THE ROUTE BELOW WILL WORK DIVINELY AND AFTER USER SUCCESSFULLY ENTERS THE
     // PARAMETERS, THEY WILL LINK TO THEIR PROJECTS PAGE WHICH WILL HAVE THIS NEW PROJECT
     // LGTM!
-    console.log("hjds");
+    // console.log("hjds");
 
-    console.log("hjds");
+    // console.log("hjds");
     if (req.session.user.userID === post.userId) {
       isAuthor = true;
-      console.log("sess.ion.user is the user who posted");
-      console.log("post prospects:");
-      console.log(post.prospects);
+      // console.log("sess.ion.user is the user who posted");
+      // console.log("post prospects:");
+      // console.log(post.prospects);
       return res.render("post", {
         post: post,
         comms: comms,
@@ -269,15 +269,15 @@ router.route("/:postId").get(async (req, res) => {
         postId: postId,
       });
     }
-    console.log("bsdkjc");
+    // console.log("bsdkjc");
     if (!comms) {
-      console.log("bsdkjc");
+      // console.log("bsdkjc");
       return res.render("post", {
         post: post,
         interestCount: interestCount,
       }); //interestCount: interestCount
     } else {
-      console.log("bsdkjc");
+      // console.log("bsdkjc");
       return res.render("post", {
         post: post,
         comms: comms,
@@ -287,14 +287,14 @@ router.route("/:postId").get(async (req, res) => {
       });
     }
   } catch (e) {
-    console.log("jhdavfk6")
+    // console.log("jhdavfk6")
     return res.status(400).render("error", { error: e , badInput:true});
   }
 });
 
 router.route("/:postId/selectProspect").post(async (req, res) => {
   try {
-    console.log("254 in selectProspect");
+    // console.log("254 in selectProspect");
     let postId = req.params.postId;
     let prospectId = xss(req.body.prospects);
     // console.log("req.body: ", req.body, "req.params:", req.params)
@@ -309,9 +309,9 @@ router.route("/:postId/selectProspect").post(async (req, res) => {
     let title = post.title;
     let description = post.description;
 
-    console.log("264");
+    // console.log("264");
     // lets create the damn thing
-    console.log(title, description, clientId, status, assignedToId);
+    // console.log(title, description, clientId, status, assignedToId);
 
     const project = await projectData.create(
       title,
@@ -321,9 +321,9 @@ router.route("/:postId/selectProspect").post(async (req, res) => {
       assignedToId // prospect selected from super sick drop down
     );
 
-    console.log("create went well");
+    // console.log("create went well");
 
-    console.log("project create called"); // --------> gotta delete posting, or hide it from the page - (now other users shouldn't be able to access it)
+    // console.log("project create called"); // --------> gotta delete posting, or hide it from the page - (now other users shouldn't be able to access it)
     if (project.created) {
       // routes/user.js line 142
       return res.render("projects", { created: created, project: project }); // super duper awesome
@@ -401,7 +401,7 @@ router.route("/:postId/delete").delete(async (req, res) => {
     let deletedPost = await postData.remove(postId);
 
     if (deletedPost.deleted) {
-      console.log("successfully deleteted");
+      // console.log("successfully deleteted");
       // req.session.successMessage = `Post(${deletedPost.postId}) deleted successfully`;
       res.status(200).json({
         success: true,

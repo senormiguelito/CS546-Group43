@@ -273,7 +273,7 @@ router
         }
       }
 
-      console.log(messages);
+      // console.log(messages);
 
       res.render("dmList", { title: "messages", messages: messages });
     } catch (e) {
@@ -310,7 +310,7 @@ router
       );
 
       const messages = await messageData.getMessages(userSession._id);
-      console.log(messages);
+      // console.log(messages);
       for (let i = 0; i < messages.length; i++) {
         // changing the senderId to senderName
         if (messages[i].senderId == userSession._id) {

@@ -18,8 +18,8 @@ router.route("/").get(async (req, res) => {
     return res.status(400).redirect("/", { error: e }); //  unverified, not sure where to redirect. Need help. And jesus.
   }
 
-  console.log("userProjects", userProjects);
-  console.log("userProjects.noProjects: ", userProjects.noProjects);
+  // console.log("userProjects", userProjects);
+  // console.log("userProjects.noProjects: ", userProjects.noProjects);
   try {
     if (userProjects.noProjects) {
       return res.render("projects", { userProjects: userProjects, noProjects: true });
@@ -245,8 +245,8 @@ router.route("/").get(async (req, res) => {
     return res.status(400).redirect("/", { error: e }); //  unverified, not sure where to redirect. Need help. And jesus.
   }
 
-  console.log("userProjects", userProjects);
-  console.log("userProjects.noProjects: ", userProjects.noProjects);
+  // console.log("userProjects", userProjects);
+  // console.log("userProjects.noProjects: ", userProjects.noProjects);
   try {
     if (userProjects.noProjects) {
       return res.render("projects", {

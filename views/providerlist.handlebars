@@ -13,15 +13,14 @@
               <option value="rating">Rating</option>
               <option value="all">Get All</option>
             </select>
-            <button type="submit" id="find">Find</button>
+            <button type="submit" id="filterfind">Find</button>
             </form>
         </div>
         <div class="filter-button">
-            <p id = "filterError"></p>
-            <form method="post" action = "/home/provideList/searchArea" id="filter-form" >
+            <form method="post" action = "/home/provideList/searchArea" id="provider-filter-form" >
             <label>Filter using area of search: </label>
-            <input type="text" placeholder = "Enter search area in miles: "name ="searchAreaInput" id = "searchAreaInput">
-            <button type="submit" id="find">Find</button>
+            <input type="text" placeholder = "Enter search area in miles: " name ="searchAreaInput" id = "searchAreaInput">
+            <button type="submit" id="searchfind">Find</button>
             </form>
         </div>
         <div class="row">
@@ -35,7 +34,7 @@
                       <img src="/public/images/No_Image_Available.jpg" class="card-img-top" alt="...">
                       {{/if}} 
                     <div class="card-body">
-                        <h2 card-title>{{firstName}} {{lastName}}</h2>
+                        <h2>{{firstName}} {{lastName}}</h2>
                             <p class="card-text">{{location_city}}, {{location_state}}</p>
                             <p><a href="/profile/{{_id}}" class="btn btn-primary">View {{firstName}}'s profile!</a></p>
                     </div>

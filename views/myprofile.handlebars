@@ -19,18 +19,20 @@
                       alt="User-Profile-Image"
                       width="200"
                       height="200"
-                    />
+                    >
                   {{else}}
                     <img
                       src="/public/images/No_User.jpg"
                       class="card-img-top"
                       alt="..."
-                    />
+                    >
                   {{/if}}
                 </div>
-                <h6 class="f-w-600">{{objectUser.firstName}}
-                  {{objectUser.lastName}}</h6>
-                <p>{{objectUser.role}}</p>
+                {{#if objectUser.firstName}}<h6
+                    class="f-w-600"
+                  >{{objectUser.firstName}}
+                    {{objectUser.lastName}}</h6>{{/if}}
+                {{#if objectUser.role}}<p>{{objectUser.role}}</p>{{/if}}
                 <i
                   class="mdi mdi-square-edit-outline feather icon-edit m-t-10 f-16"
                 ></i>
@@ -42,14 +44,16 @@
                 <div class="row">
                   <div class="col-sm-3">
                     <h5 class="m-b-10 f-w-600">Name:</h5>
-                    <h6 class="text-muted f-w-400">{{objectUser.firstName}}
-                      {{objectUser.lastName}}</h6>
+                    {{#if objectUser.firstName}}<h6
+                        class="text-muted f-w-400"
+                      >{{objectUser.firstName}}
+                        {{objectUser.lastName}}</h6>{{/if}}
                   </div>
                   <div class="col-sm-3">
                     <h5 class="m-b-10 f-w-600">Email:</h5>
-                    <h6
-                      class="text-muted f-w-400"
-                    >{{objectUser.emailAddress}}</h6>
+                    {{#if objectUser.emailAddress}}<h6
+                        class="text-muted f-w-400"
+                      >{{objectUser.emailAddress}}</h6>{{/if}}
                   </div>
                   <div class="col-sm-3">
                     <h5 class="m-b-10 f-w-600">Date of Birth:</h5>
@@ -57,29 +61,32 @@
                   </div>
                   <div class="col-sm-3">
                     <h5 class="m-b-10 f-w-600">Phone Number:</h5>
-                    <h6
-                      class="text-muted f-w-400"
-                    >{{objectUser.phoneNumber}}</h6>
+                    {{#if objectUser.phoneNumber}}<h6
+                        class="text-muted f-w-400"
+                      >{{objectUser.phoneNumber}}</h6>{{/if}}
                   </div>
                 </div>
               </div>
 
               <div class="card-block">
-                <h6 class="m-b-20 p-b-5 b-b-default f-w-600"></h6>
                 <div class="row">
                   <div class="col-sm-3">
                     <h5 class="m-b-10 f-w-600">Role:</h5>
-                    <h6 class="text-muted f-w-400">{{objectUser.role}}</h6>
+                    {{#if objectUser.role}}<h6
+                        class="text-muted f-w-400"
+                      >{{objectUser.role}}</h6>{{/if}}
                   </div>
                   <div class="col-sm-3">
                     <h5 class="m-b-10 f-w-600">Bio</h5>
-                    <h6 class="text-muted f-w-400">{{objectUser.bio}}</h6>
+                    {{#if objectUser.bio}}<h6
+                        class="text-muted f-w-400"
+                      >{{objectUser.bio}}</h6>{{/if}}
                   </div>
                   <div class="col-sm-3">
                     <h5 class="m-b-10 f-w-600">Joining Date:</h5>
-                    <h6
-                      class="text-muted f-w-400"
-                    >{{objectUser.joiningDate}}</h6>
+                    {{#if objectUser.joiningDate}}<h6
+                        class="text-muted f-w-400"
+                      >{{objectUser.joiningDate}}</h6>{{/if}}
                   </div>
                 </div>
               </div>
@@ -89,21 +96,21 @@
                 <div class="row">
                   <div class="col-sm-3">
                     <h5 class="m-b-10 f-w-600">City:</h5>
-                    <h6
-                      class="text-muted f-w-400"
-                    >{{objectUser.location_city}}</h6>
+                    {{#if objectUser.location_city}}<h6
+                        class="text-muted f-w-400"
+                      >{{objectUser.location_city}}</h6>{{/if}}
                   </div>
                   <div class="col-sm-3">
                     <h5 class="m-b-10 f-w-600">State:</h5>
-                    <h6
-                      class="text-muted f-w-400"
-                    >{{objectUser.location_state}}</h6>
+                    {{#if objectUser.location_state}}<h6
+                        class="text-muted f-w-400"
+                      >{{objectUser.location_state}}</h6>{{/if}}
                   </div>
                   <div class="col-sm-3">
                     <h5 class="m-b-10 f-w-600">Zipcode:</h5>
-                    <h6
-                      class="text-muted f-w-400"
-                    >{{objectUser.location_zip_code}}</h6>
+                    {{#if objectUser.location_zip_code}}<h6
+                        class="text-muted f-w-400"
+                      >{{objectUser.location_zip_code}}</h6>{{/if}}
                   </div>
                 </div>
               </div>
@@ -112,10 +119,9 @@
                 <h6 class="m-b-20 p-b-5 b-b-default f-w-600">Categories</h6>
                 <div class="row">
                   <div class="col-sm-3">
-                    <h5 class="m-b-10 f-w-600"></h5>
-                    <h6
-                      class="text-muted f-w-400"
-                    >{{objectUser.categories}}</h6>
+                    {{#if objectUser.categories}}<h6
+                        class="text-muted f-w-400"
+                      >{{objectUser.categories}}</h6>{{/if}}
                   </div>
                 </div>
               </div>
@@ -127,7 +133,10 @@
     </div>
   </div>
 </div>
-<a href="http://localhost:3000/user/reviews/{{objectUser._id}}/allReviews">View all reviews:</a>
+{{#if objectUser._id}}
+  <a
+    href="http://localhost:3000/user/reviews/{{objectUser._id}}/allReviews"
+  >View all reviews:</a>{{/if}}
 {{!-- <a href="/home/myprofile/{{userID}}/edit" class="edit-button">Edit</a> --}}
 {{#if userID}}
   <p> <a href="/home/myprofile/{{userID}}/edit">Edit</a></p>

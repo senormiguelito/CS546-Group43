@@ -187,7 +187,7 @@ router.route("/seekers/sortBy").post(async (req, res) => {
     }
     if (filterBy.toLowerCase() === "all") {
       userList = await userData.getUsersBy("seeker");
-      console.log(userList);
+      // console.log(userList);
     }
 
     res.status(200).render("seekerlist", { userList: userList });
@@ -211,7 +211,7 @@ router.route("/seekers/searchArea").put(async (req, res) => {
 router.route("/profile/:userId").get(async (req, res) => {
   // access a profile page
   const userId = req.params.userId;
-  console.log(userId);
+  // console.log(userId);
 
   try {
     if (!userId) throw new Error("no userId specified");
