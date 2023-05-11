@@ -1,15 +1,3 @@
-{{! <h1>Seekers!</h1>
-    <h2>Click on a user's profile to learn more about them!</h2> }}
-{{!-- {{#each userList}}
-        <div class="seeker">
-            <h2>{{firstName}} {{lastName}}</h2>
-            <p>{{location_city}}, {{location_state}}</p>
-            <p><a href="/profile/{{_id}}">View {{firstName}}'s profile!</a></p>
-        </div>
-    {{/each}}
-
-    <p>{{error}}</p> --}}
-{{! <li><a href="/" id="auth">Back</a></li> }}
 
 <section id="playgrounds" class="my-4">
 
@@ -59,7 +47,7 @@
                 >
               {{/if}}
               <div class="card-body">
-                <h2 card-title>{{firstName}} {{lastName}}</h2>
+                <h2 >{{firstName}} {{lastName}}</h2>
                 <p class="card-text">{{location_city}}, {{location_state}}</p>
                 <p><a href="/profile/{{_id}}" class="btn btn-primary">View
                     {{firstName}}'s profile!</a></p>

@@ -83,7 +83,7 @@ export const getAllPostsByUser = async (userId) => {
   userId = userId.trim();
 
   let posts = await postsCollection.find({ userId: userId }).toArray(); //gets all post with the userId parameter in
-  console.log(posts);
+  // console.log(posts);
   if (!posts) {
     return [];
   } else {
@@ -108,23 +108,18 @@ export const get = async (id) => {
 
 export const remove = async (id) => {
   // (postId)
-  console.log("the problem , 111")
-  console.log(id,"id")
+
   h.checkId(id);
-  console.log("the problem , 113")
   id = id.trim();
   let result = {};
 
-  console.log("the problem , 116")
   const deletionInfo = await postsCollection.findOneAndDelete({
     _id: new ObjectId(id),
   });
-  console.log("no problem, 120")
 
   if (deletionInfo.lastErrorObject.n === 0)
     throw `Could not delete post with id of ${id}`;
 
-  console.log("the problem")
   result["postId"] = id;
   result["deleted"] = true;
 
@@ -217,7 +212,7 @@ export const update = async (
     JSON.stringify(oldPost.prospects) === JSON.stringify(prospects)   &&  // AHA!
     JSON.stringify(oldPost.comments) === JSON.stringify(comments)
   ) {
-    console.log("199 postUpdate, Hit because no changes detected");
+    // console.log("199 postUpdate, Hit because no changes detected");
     throw "You must change something to submit an update request";
   }
 
@@ -245,7 +240,7 @@ export const update = async (
   if (newPost.lastErrorObject.n === 0)
     throw [404, `Could not update the post with id ${postId}`];
 
-  console.log("228 newPost value: ", newPost.value);
+  // console.log("228 newPost value: ", newPost.value);
   return newPost.value;
 };
 

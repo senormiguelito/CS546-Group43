@@ -21,13 +21,13 @@
                       alt="User-Profile-Image"
                       width="200"
                       height="200"
-                    />
+                    >
                   {{else}}
                     <img
                       src="/public/images/No_User.jpg"
                       class="card-img-top"
                       alt="..."
-                    />
+                    >
                   {{/if}}
                 </div>
                 {{#if objectUser.firstName}}<h3
@@ -76,7 +76,7 @@
                   </div>
                   <div class="col-sm-3">
                     <h5 class="m-b-10 f-w-600">Date of Birth:</h5>
-                    <h6 class="text-muted f-w-400">{{objectUser.dob}}</h6>
+                    {{#if objectUser.dob}}<h6 class="text-muted f-w-400">{{objectUser.dob}}</h6>{{/if}}
                   </div>
                   <div class="col-sm-3">
                     <h5 class="m-b-10 f-w-600">Phone Number:</h5>
@@ -144,7 +144,6 @@
                   </div>
                 </div>
               </div>
-
             </div>
           </div>
         </div>

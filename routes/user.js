@@ -208,8 +208,7 @@ router.route("/seekers/searchArea").put(async (req, res) => {
     let searchArea = xss(req.body.searchAreaInput);
     let userList = await userData.filterSeekerBySearchArea(user, searchArea);
     if (!userList) throw new Error("No user in that search area");
-    // const userList = await userData.getUsersByRole("provider");
-    // console.log(userList)
+
     return res.status(200).render("seekerlist", { userList: userList });
 
   } catch (e) {
@@ -220,7 +219,7 @@ router.route("/seekers/searchArea").put(async (req, res) => {
 router.route("/profile/:userId").get(async (req, res) => {
   // access a profile page
   const userId = req.params.userId;
-  // console.log(userId);
+
 
   try {
     if (!userId) throw new Error("no userId specified");
@@ -261,8 +260,7 @@ router.route("/comment/profile/:commentId").get(async (req, res) => {
     const post = await postData.getByCommentId(commentId);
 
     if (!post) throw new Error("No post was found with that commentId");
-    // console.log("req.session.user:");
-    // console.log(req.session.user);
+    // console.log("req.session.user:", req.session.user );
 
     let userId = undefined;
     post.comments.forEach((element) => {

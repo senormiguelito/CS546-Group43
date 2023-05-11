@@ -136,56 +136,6 @@ router.route("/").get(async (req, res) => {
 //       return res.status(404).render("error", { error: e });
 //     }
 //   })
-//   .delete(async (req, res) => {
-//     try {
-//       if (!req.params.id) throw new Error("No projectId specified");
-//       h.checkId(req.params.id);
-//     } catch (e) {
-//       return res.status(400).redirect("../home", { error: e });
-//     }
-
-//     try {
-//       // this is tripping me up because in the data function I call both users to remove, but here I am unsure how/if I need to do that
-//       const users = await projectData.getBothUsersByProject(
-//         req.params.id.toString()
-//       );
-//       // users is an array
-//       const client = users[0];
-//       const assignedTo = users[1];
-
-//       const removeProject = await projectData.removeProject(req.params.id); // remove project by requested projectId
-
-//       let clientRemoved;
-//       let assignedToRemoved;
-
-//       for (let i in client.projects) {
-//         if (
-//           removeProject._id.toString() === client.projects[i]._id.toString()
-//         ) {
-//           clientRemoved = true;
-//           //res.status(200).render({ projectId: req.params.id, deleted: true });
-//         }
-//       }
-//       for (let i in assignedTo.projects) {
-//         if (
-//           removeProject._id.toString() === assignedTo.projects[i]._id.toString()
-//         ) {
-//           assignedToRemoved = true;
-//           //res.status(200).render({ projectId: req.params.id, deleted: true });
-//         }
-//       }
-
-//       if (clientRemoved && assignedToRemoved) {
-//         return res
-//           .status(200)
-//           .redirect("/projects", { projectId: req.params.id, deleted: true });
-//       } else {
-//         throw new Error("We had a problem deleting that project");
-//       }
-//     } catch (e) {
-//       return res.status(404).render("error", { error: e });
-//     }
-//   });
 
 router
   .route('/:projectId').get(async (req, res) => {  // get projectById
