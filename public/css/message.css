@@ -15,6 +15,7 @@
 
   .message p {
     margin: 0;
+    color: #6f6f6f;
   }
 
   .message p:first-child {
@@ -28,7 +29,7 @@
   }
 
   .message p:last-child {
-    color: #888888;
+    color: #6f6f6f;
     font-size: 12px;
   }
 
@@ -38,7 +39,7 @@
   }
 
   .dropbtn {
-    background-color: #4CAF50;
+    background-color: #008b00  ;
     color: white;
     padding: 8px;
     font-size: 14px;
@@ -73,7 +74,7 @@
   }
 
   .dropdown-content input[type="submit"] {
-    background-color: #4CAF50;
+    background-color: #008b00  ;
     color: white;
     padding: 8px;
     font-size: 14px;

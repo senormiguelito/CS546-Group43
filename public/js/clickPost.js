@@ -1,4 +1,5 @@
 const postListBoxes = document.querySelectorAll('.post-list-box');
+if(postListBoxes){
 postListBoxes.forEach(postListBox => {
   postListBox.addEventListener('click', () => {
     const postId = postListBox.getAttribute('data-id');
@@ -6,9 +7,10 @@ postListBoxes.forEach(postListBox => {
       window.location.href = `/post/${postId}`;
     }
   });
-});
+});}
 
 const projectListBoxes = document.querySelectorAll('.project-list-box');
+if(projectListBoxes){
 projectListBoxes.forEach(projectListBox => {
   projectListBox.addEventListener('click', () => {
     const projectId = projectListBox.getAttribute('data-id');
@@ -16,7 +18,7 @@ projectListBoxes.forEach(projectListBox => {
       window.location.href = `/projects/${projectId}`;
     }
   });
-});
+});}
 
 const mmodal = document.getElementById("mmodal");
 const closeBtn = document.getElementsByClassName("close")[0];

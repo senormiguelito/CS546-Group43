@@ -141,27 +141,29 @@ const signupForm = document.getElementById("signup-form");
 const loginForm = document.getElementById("login-form");
 
 const commentForm = document.getElementById("comment-form");
-// if (commentForm) {
-//   console.log("asbcz")
-// commentForm.addEventListener("submit", (event) => {
-//   event.preventDefault();
-//   console.log("vhjsdchzj")
-//   const comment = document.getElementById("postCommentInput").value;
-//   const errorContainer = document.getElementById("posterror");
-//   const errors = [];
-//   if(comment.trim() === ""){
-//     errors.push("Comment cannot be empty");
-//   }
-//   if(errors.length > 0){
-//     errorContainer.innerText = errors.join(", ");
-//     errorContainer.style.display = "block";
-//     // showing the error only for 1.5 seconds.
-//     setTimeout(function () {
-//       errorContainer.style.display = "none";
-//     }, 1500);
-//   }
-// });
-// }
+if (commentForm) {
+  console.log("asbcz");
+  commentForm.addEventListener("submit", (event) => {
+    event.preventDefault();
+    console.log("vhjsdchzj");
+    const comment = document.getElementById("postCommentInput").value;
+    const errorContainer = document.getElementById("posterror");
+    let errors = [];
+    if (comment.trim() === "") {
+      errors.push("Comment cannot be empty");
+    }
+    if (errors.length > 0) {
+      errorContainer.innerText = errors.join(", ");
+      errorContainer.style.display = "block";
+      // showing the error only for 1.5 seconds.
+      setTimeout(function () {
+        errorContainer.style.display = "none";
+      }, 1500);
+    } else {
+      commentForm.submit();
+    }
+  });
+}
 
 const editprofileForm = document.getElementById("myprofile-edit");
 const resetButton = document.getElementById("reset-button");
@@ -733,7 +735,8 @@ if (addCategoryButton) {
 
 if (document.getElementById("send-btn")) {
   document.getElementById("send-btn").addEventListener("click", function () {
-    const messageStatus = document.getElementById("message-status");
+    
+    const messageStatus = document.createElement("message-status");
     messageStatus.innerText = "Message sent successfully!";
     messageStatus.style.display = "block";
     setTimeout(function () {
@@ -742,74 +745,58 @@ if (document.getElementById("send-btn")) {
   });
 }
 
-// const dmForm = document.getElementById("dm-form");
-// if (dmForm) {
-//   dmForm.addEventListener("submit", function (e) {
-//     console.log("clickeddd")
-//     e.preventDefault();
-//     const dmInput = document.getElementById("message");
-//     const dmError = document.getElementById("dmError");
-//     const errors = [];
-//     if(!dmInput){
-//       errors.push("invalid message");
-//     }
-//     if (!dmInput.value) {
-//       errors.push("Please refresh the page and please enter a valid message ");
-//     }
-//     if(dmInput.value.trim().length===0){
-//       errors.push("Please refresh the page and please enter a non-empty message");
-//     }
+const selectpros = document.getElementById("selectProspect");
+const whointerested = document.getElementById("prospects");
+if (selectpros) {
+  selectpros.addEventListener("submit", function (event) {
+    event.preventDefault();
+    errorDiv.hidden = true;
+    let error;
+    if (!whointerested) error = "you have not selected any.";
+    if (whointerested.value == "Choose the right fit for the job!")
+      error = "again you have to select something.";
 
-//     if (errors.length > 0) {
-//       dmError.innerText = errors.join(", ");
-//       dmError.style.display = "block";
-//       setTimeout(function () {
-//         dmError.style.display = "none";
-//       }, 3000);
-      
-//     } 
-//     else {
-//       dmForm.submit();
-//     }
-//   });
-// }
+    if (error) {
+      errorDiv.hidden = false;
+      errorDiv.textContent = error;
+      window.history.replaceState({}, document.title, "?status=400");
+    } else {
+      selectpros.submit();
+    }
+  });
+}
 
+const dmForm = document.getElementById("dm-form");
+if (dmForm) {
+  dmForm.addEventListener("submit", function (e) {
+    console.log("clickeddd");
+    e.preventDefault();
+    const dmInput = document.getElementById("message");
+    const dmError = document.getElementById("dmError");
+    const errors = [];
+    if (!dmInput) {
+      errors.push("invalid message");
+    }
+    if (!dmInput.value) {
+      errors.push("Please refresh the page and please enter a valid message ");
+    }
+    if (dmInput.value.trim().length === 0) {
+      errors.push(
+        "Please refresh the page and please enter a non-empty message"
+      );
+    }
 
-
-// const dmPageForm = document.getElementById("dmPage-form");
-// if (dmForm) {
-//   dmForm.addEventListener("submit", function (e) {
-//     console.log("clickeddd")
-//     e.preventDefault();
-//     const dmInput = document.getElementById("message");
-//     const dmError = document.getElementById("dmPageError");
-//     const errors = [];
-//     if(!dmInput){
-//       errors.push("invalid message");
-//     }
-//     if (!dmInput.value) {
-//       errors.push("Please refresh the page and please enter a valid message ");
-//     }
-//     if(dmInput.value.trim().length===0){
-//       errors.push("Please refresh the page and please enter a non-empty message");
-//     }
-
-//     if (errors.length > 0) {
-//       dmError.innerText = errors.join(", ");
-//       dmError.style.display = "block";
-//       setTimeout(function () {
-//         dmError.style.display = "none";
-//       }, 3000);
-      
-//     } 
-//     else {
-//       dmForm.submit();
-//     }
-//   });
-// }
-
-
-
+    if (errors.length > 0) {
+      dmError.innerText = errors.join(", ");
+      dmError.style.display = "block";
+      setTimeout(function () {
+        dmError.style.display = "none";
+      }, 3000);
+    } else {
+      dmForm.submit();
+    }
+  });
+}
 
 const profileForm = document.getElementById("add-review-form");
 if (profileForm) {

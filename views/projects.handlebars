@@ -15,7 +15,7 @@
  {{#if noProjects}}
  <header>Here, you can view all projects you have been involved in!</header>
   <h1>It looks like you aren't yet involved in any projects!</h1>
-  <p>Your community awaits you, <a href="/post/newPost/createPost" class="btn btn-primary" id="createPost">click here</a> to make a posting!</p>
+  <p>Your community awaits you, <a href="/post/newPost/createPost" class="btn btn-primary" id="createPost">click here if you want to post</a> to make a posting!</p>
 {{/if}} 
 </div>
 
@@ -28,8 +28,8 @@
       <div class="col-sm-3">
         <div class="project-list-box" id="projects" data-id="{{_id}}">
           <div class="card" style="width: 18rem;">
-            {{#if images}}
-              <img src={{images}} class="card-img-top" alt="..." />
+            {{#if image}}
+              <img src={{image}} class="card-img-top" alt="..." />
             {{else}}
               <img
                 src="../public/images/No_Image_Available.jpg"

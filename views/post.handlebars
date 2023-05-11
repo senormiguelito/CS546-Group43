@@ -37,7 +37,7 @@
         <div> {{interestCount}} people are interested in this project!</div>
         <div class="comment-box">
             <form method="post" action = "/post/{{post._id}}/comment" id="comment-form" >
-            <label>Add comment</label>
+            <label for="postCommentInput">Add comment</label>
             <input = "text" placeholder="Comment" name="postCommentInput" id="postCommentInput" maxlength="250">
             <input type="submit" value="post">
             </form>
@@ -52,11 +52,11 @@
         </div>
         {{/unless}}
 
-       
+       <div id="error" class="alert alert-danger" hidden></div>
       {{#if isAuthor}}
-      <form method="POST" action="/post/{{post._id}}/selectProspect">
+      <form method="POST" action="/post/{{post._id}}/selectProspect" id="selectProspect">
         <div class="dropdown">
-          <select name ="prospects" class="grey-text">{{!id="prospects"}}
+          <select name ="prospects" id="prospects" class="grey-text">{{!id="prospects"}}
             <option selected disabled>Choose the right fit for the job!</option>
             {{#each prospects}}
             <option value="{{userId}}">{{firstName}} {{lastName}}</option>
@@ -68,7 +68,7 @@
       {{/if}}
     </div>
 
-  <div class="dropdown">
+  {{#if userId}}<div class="dropdown">
   <button class="dropbtn">Contact:</button>
   <div class="dropdown-content">
     <p>
@@ -78,10 +78,12 @@
     <p>
       {{email}}
     </p>
-     <form method = "POST" action ='/home/messages/'>
+    
+     <form method = "POST" action ='/home/messages/' id="dm-form">
         <input type="text" placeholder="Enter your message" name = "message" id = "message"><br><br>
-        <input type="hidden" name = "recieverId" id = "recieverId" value = "{{senderId}}">
+        <input type="hidden" name = "recieverId" id = "recieverId" value = "{{userId}}">
         <input type="submit" value="Send" id = "send-btn">
       </form>
+      {{/if}}
   </div>
 </div>

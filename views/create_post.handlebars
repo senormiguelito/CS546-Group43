@@ -16,11 +16,11 @@
     {{#if Error}} <p class="alert alert-danger">{{Error}}</p>{{/if}}
     {{#if Message}}<p class="alert alert-success" id="success">{{Message}}</p>{{/if}}
     <div id="error" class="alert alert-danger" role="alert" hidden></div>
+    <label for="myImageInput">Post Image:</label>
       <input
         type="file"
         id="myImageInput"
         name="image"
-        id="input-files"
         accept=".jpg, .jpeg, .png"
         class="form-control-file border"
       /><span class="required">*</span><br />
@@ -42,7 +42,7 @@
         <option value="seeker">Service Seeker</option>
       </select>
       <div>
-        <label for="categoriesInput">Categories<span class="required">*</span>:
+        <label for="categoryInput">Categories<span class="required">*</span>:
           (One or more, up to four)</label>
         <input
           type="text"
@@ -64,12 +64,15 @@
         <div class="input-group"></div>
         <input type="hidden" name="categorydata" id="categorydata" />
         <div class="input-group-append">
+          <label for="addCategoryButton" hidden></label>
           <button class="btn btn-sm btn-warning" type="button" id="addCategoryButton">
             <i class="fas fa-plus"></i>
           </button>
           </div>
         </div>
-        <label for="Address">Location<span class="required">*</span>:</label>
+        <label for="zipInput">Location<span class="required">*</span>:</label>
+        <label for="cityInput" hidden></label>
+        <label for="stateInput" hidden></label>
         <input
           class="addr"
           type="text"

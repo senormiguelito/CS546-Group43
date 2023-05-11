@@ -13,7 +13,8 @@ export const create = async (
   clientId,           // THIS user
   status,             // not started/in progress/finished --> only 3 options
   assignedToId,       // other user involved
-  postId
+  postId,
+  imageData
 ) => {
 
 console.log(postId,"pid in create")
@@ -22,6 +23,7 @@ console.log(postId,"pid in create")
   h.checkId(clientId);
   h.checkstatus(status);
   h.checkId(assignedToId);
+
   // h.checkId(postId);
 
   
@@ -48,7 +50,8 @@ console.log(postId,"pid in create")
     clientId: clientId,
     status: status,
     assignedToId: assignedToId,
-    createdAt: date.toISOString()
+    createdAt: date.toISOString(),
+    image: imageData
   };
 
   const updatedClient = await userCollection.updateOne({ _id: new ObjectId(clientId) }, {

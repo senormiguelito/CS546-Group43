@@ -113,7 +113,6 @@ router.route("/createPost").post(upload.single("image"), async (req, res) => {
     } else {
       throw "could not create new post";
     }
-
   } catch (e) {
     return res.status(400).render("create_post", { Error: e });
   }
@@ -169,17 +168,22 @@ router.route("/:postId/interested").put(async (req, res) => {
       //   comms: comms,
       //   interestCount: interestCount,
       // });
-      req.session.interestedPost = { interestedUpdated: true, post, comms, interestCount, postId };
+      req.session.interestedPost = {
+        interestedUpdated: true,
+        post,
+        comms,
+        interestCount,
+        postId,
+      };
       return res.status(200).redirect(`/post/${postId}`);
     }
   } catch (e) {
-    res.status(400).render("error", { error: e , badInput: true}); // thi won't work ig
+    res.status(400).render("error", { error: e, badInput: true }); // thi won't work ig
   }
 });
 
 router.route("/filter").get(async (req, res) => {
-
-  let role = xss(req.body.filter); 
+  let role = xss(req.body.filter);
 
   if (role === "all") {
     let posts = await postData.getAll();
@@ -191,46 +195,50 @@ router.route("/filter").get(async (req, res) => {
 });
 
 router.route("/:postId").get(async (req, res) => {
+  let postId = req.params.postId;
+
   try {
     if (req.session.interestedPost) {
-      if (req.session.interestedPost.interestedUpdated === true){
-      let post = req.session.interestedPost.post;
-      let comms = await postComment.getAll(postId);
-      let interestCount = req.session.interestedPost.interestCount;
-      const postId = req.session.interestedPost.postId;
-      return res.render("post", {
-        post: post,
-        comms: comms,
-        interestCount: interestCount,
-        isAuthor: false,
-        prospects: post.prospects,
-        postId: postId,
-      });
+      if (req.session.interestedPost.interestedUpdated === true) {
+        let comms = await postComment.getAll(postId);
+        let post = req.session.interestedPost.post;
+        let userId = post.userId;
+        let interestCount = req.session.interestedPost.interestCount;
+        const ipostId = req.session.interestedPost.postId;
+        return res.render("post", {
+          post: post,
+          comms: comms,
+          interestCount: interestCount,
+          isAuthor: false,
+          prospects: post.prospects,
+          postId: ipostId,
+          userId: userId,
+        });
       }
-
     }
-    let postId = req.params.postId;
+
     let post = await postData.get(postId);
-    let prospects = post.prospects;
-    let thisUser = req.session.user.userID;
+    let userId = post.userId;
+    // let prospects = post.prospects;
+    // let thisUser = req.session.user.userID;
     let comms = await postComment.getAll(postId);
-    
-    let prospectId;
+
+    // let prospectId;
     h.checkId(postId);
 
     if (!post) throw "could not find post with that id";
 
-    let interestCount = 0
+    let interestCount = 0;
     let isAuthor;
 
-    if(req.session.user.userID === post.userId){
-      isAuthor = true
+    if (req.session.user.userID === post.userId) {
+      isAuthor = true;
     }
 
-    if(post.prospects.length === 0 ){
-      
+    if (post.prospects.length === 0) {
       if (req.session.user.userID === post.userId) {
         isAuthor = true;
+
         return res.render("post", {
           post: post,
           comms: comms,
@@ -241,17 +249,16 @@ router.route("/:postId").get(async (req, res) => {
         });
       }
       if (!comms) {
-      
-        return res.render("post", { post: post, interestCount: interestCount});
+        return res.render("post", { post: post, interestCount: interestCount });
       } else {
-        
-      return res.render("post", {
-        post: post,
-        comms: comms,
-        interestCount: interestCount,
-        isAuthor: isAuthor,
-        prospects: [],
-      })
+        return res.render("post", {
+          post: post,
+          comms: comms,
+          interestCount: interestCount,
+          isAuthor: isAuthor,
+          prospects: [],
+          userId: userId,
+        });
         // return res.render("post", { post: post, comms: comms });
       }
     }
@@ -273,19 +280,20 @@ router.route("/:postId").get(async (req, res) => {
       return res.render("post", {
         post: post,
         interestCount: interestCount,
+        userId: userId,
       }); //interestCount: interestCount
     } else {
-
       return res.render("post", {
         post: post,
         comms: comms,
         interestCount: interestCount,
         isAuthor: isAuthor,
         prospects: post.prospects,
+        userId: userId,
       });
     }
   } catch (e) {
-    return res.status(400).render("error", { error: e , badInput:true});
+    return res.status(400).render("error", { error: e, badInput: true });
   }
 });
 
@@ -296,21 +304,23 @@ router.route("/:postId/selectProspect").post(async (req, res) => {
     let clientId = req.session.user.userID;
     let status = "not started"; // how unbelievably wicked. Itsss alllll comming togetheaaa!
     let assignedToId = prospectId;
-    
+
     let post = await postData.get(postId);
 
     if (!post) throw new Error("no post specified");
 
     let title = post.title;
     let description = post.description;
+    let imageData = post.images;
 
     const project = await projectData.create(
       title,
       description,
-      clientId,       // THIS user
-      status,         // not started upon project creation
-      assignedToId,   // prospect selected from super sick drop down
-      postId
+      clientId, // THIS user
+      status, // not started upon project creation
+      assignedToId, // prospect selected from super sick drop down
+      postId,
+      imageData
     );
 
     if (project.created) {
@@ -321,7 +331,7 @@ router.route("/:postId/selectProspect").post(async (req, res) => {
         title: project.newProject.title,
         description: project.newProject.description,
         status: project.newProject.status,
-        assignedToId: project.newProject.assignedToId
+        assignedToId: project.newProject.assignedToId,
       }); // super duper awesome
     }
   } catch (e) {
@@ -333,7 +343,7 @@ router.route("/:postId/comment").post(async (req, res) => {
   try {
     let userId = req.session.user.userID;
     let comm = xss(req.body.postCommentInput);
-    let postId = req.params.postId;   // I think this is the issue
+    let postId = req.params.postId; // I think this is the issue
     h.checkId(userId);
     h.checkId(postId);
 
@@ -348,7 +358,6 @@ router.route("/:postId/comment").post(async (req, res) => {
     if (!comment) throw "could not add comment";
 
     return res.redirect(`/post/${postId}`);
-
   } catch (e) {
     return res.status(400).render("justError", { error: e });
   }
@@ -357,18 +366,17 @@ router.route("/:postId/comment").post(async (req, res) => {
 // needs to change method from get to delete
 router.route("/:commentId/deleteComment").get(async (req, res) => {
   try {
-    
     let userId = req.session.user.userID;
     let commentId = xss(req.params.commentId);
 
-    h.checkId(userId);    //h.checkValid(userId);
+    h.checkId(userId); //h.checkValid(userId);
     h.checkId(commentId);
     userId = userId.trim();
     commentId = commentId.trim();
     let postByCommentId = await postData.getByCommentId(commentId);
     if (!postByCommentId) throw "could not find user with that comment";
 
-    let  deletedComment = await postComment.remove(userId, commentId);
+    let deletedComment = await postComment.remove(userId, commentId);
 
     if (!deletedComment) throw "could not delete comment";
     if (deletedComment)
@@ -399,9 +407,7 @@ router.route("/:postId/delete").delete(async (req, res) => {
         success: true,
         post_id: deletedPost.postId,
       });
-    }
-
-    else throw `could not delete this post : ${postId}`;
+    } else throw `could not delete this post : ${postId}`;
   } catch (e) {
     req.session.errorMessage = `Post is not deleted successfully`;
   }
