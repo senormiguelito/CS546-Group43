@@ -49,7 +49,6 @@
               </div>
 
               <div class="card-block">
-                <h6 class="m-b-20 p-b-5 b-b-default f-w-600"></h6>
                 <div class="row">
                   <div class="col-sm-3">
                     <h5 class="m-b-10 f-w-600">Role:</h5>
@@ -88,7 +87,6 @@
                 <h6 class="m-b-20 p-b-5 b-b-default f-w-600">Categories</h6>
                 <div class="row">
                   <div class="col-sm-3">
-                    <h5 class="m-b-10 f-w-600"></h5>
                     {{#if user.categories}}<h6 class="text-muted f-w-400">{{user.categories}}</h6>{{/if}}
                   </div>
                 </div>
@@ -139,7 +137,7 @@
   <div class="dropdown-content">
     
      <form method = "POST" action ='/home/messages/' id = "dmPage-form">
-        <input type="text" placeholder="Enter your message" name = "message" id = "message"><br><br>
+        <input type="text" placeholder="Enter your message" id="message" name = "message"><br><br>
         <input type="hidden" name = "recieverId" id = "recieverId" value = "{{user._id}}">
         <input type="submit" value="Send" id = "send-btn">
       </form>
