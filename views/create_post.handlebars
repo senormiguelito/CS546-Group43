@@ -9,7 +9,7 @@
       alt="User-Profile-Image"
       width="200"
       height="200"
-    />
+    >
   </div>
   <div class="result">
     <form id="create-post-form" method="POST" action="/post/createPost" enctype="multipart/form-data">
@@ -23,19 +23,19 @@
         name="image"
         accept=".jpg, .jpeg, .png"
         class="form-control-file border"
-      /><span class="required">*</span><br />
+      ><span class="required">*</span><br >
       <label for="titleInput">Title<span class="required">*</span>:</label>
-      <input type="text" name="titleInput" id="titleInput" placeholder="Give Your Post A Concise Title!"/>
-      <br />
+      <input type="text" name="titleInput" id="titleInput" placeholder="Give Your Post A Concise Title!">
+      <br >
       <label for="descriptionInput">Description<span
           class="required"
         >*</span>:</label>
       <textarea name="descriptionInput" id="descriptionInput" placeholder="Here you can describe the project in detail." maxlength="2500"></textarea>
-      <br />
+      <br >
       <label for="budgetInput">Budget<span class="required">*</span>:</label>
-      <input type="text" name="budgetInput" id="budgetInput" pattern="\d*" maxlength="10" placeholder="(currency is USD)"/>
+      <input type="text" name="budgetInput" id="budgetInput" pattern="\d*" maxlength="10" placeholder="(currency is USD)">
 
-      <br />
+      <br >
       <label for="roleInput">Role<span class="required">*</span>:</label>
       <select name="roleInput" id="roleInput">
         <option value="provider">Service Provider</option>
@@ -50,7 +50,7 @@
           
           list="category-options"
           placeholder="Enter a category"
-        />
+        >
         <div class="category-container">
           {{#if notnull}}
             {{#each objectUser.categories}}
@@ -62,7 +62,7 @@
           {{/if}}
         </div>
         <div class="input-group"></div>
-        <input type="hidden" name="categorydata" id="categorydata" />
+        <input type="hidden" name="categorydata" id="categorydata" >
         <div class="input-group-append">
           <label for="addCategoryButton" hidden></label>
           <button class="btn btn-sm btn-warning" type="button" id="addCategoryButton">
@@ -80,13 +80,13 @@
           id="zipInput"
           maxlength="5"
           placeholder="zipcode"
-        />
-        <input class="addr" type="text" name="cityInput" id="cityInput" placeholder="City"/>
-        <input class="addr" type="text" name="stateInput" id="stateInput" placeholder="State"/>
-        <br />
+        >
+        <input class="addr" type="text" name="cityInput" id="cityInput" placeholder="City">
+        <input class="addr" type="text" name="stateInput" id="stateInput" placeholder="State">
+        <br >
       </div>
 
-      <br />
+      <br >
       <button type="submit">Create</button>
     </form>
   </div>

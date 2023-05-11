@@ -12,13 +12,13 @@
                       alt="User-Profile-Image"
                       width="200"
                       height="200"
-                    />
+                    >
                   {{else}}
                     <img
                       src="/public/images/No_User.jpg"
                       class="card-img-top"
                       alt="..."
-                    />
+                    >
                   {{/if}}
       </div>
       <div class="result">
@@ -29,7 +29,7 @@
         <div id="error" class="alert alert-danger" role="alert" hidden></div>
         <p><strong>Accepted image types:</strong> .jpg, .jpeg, .png</p>
         <label for="myImageInput">User Image</label>
-        <input type="file" id="myImageInput" name="image" multiple class="form-control-file border"/><br>
+        <input type="file" id="myImageInput" name="image" multiple class="form-control-file border"><br>
         <label for="firstNameInput">First Name<span class="required">*</span></label>
         <input type="text" name="firstName" id="firstNameInput" value="{{objectUser.firstName}}">
         <label for="lastNameInput">Last Name<span class="required">*</span></label>

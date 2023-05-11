@@ -160,7 +160,6 @@ router.route("/:postId/interested").put(async (req, res) => {
 
     if (updatedPost) {
       let comms = await postComment.getAll(postId);
-      // okay so need a way to show number of people interested
       let interestCount = updatedPost.prospects.length + 1;
 
       // return res.render("post", {
@@ -343,7 +342,7 @@ router.route("/:postId/comment").post(async (req, res) => {
   try {
     let userId = req.session.user.userID;
     let comm = xss(req.body.postCommentInput);
-    let postId = req.params.postId; // I think this is the issue
+    let postId = req.params.postId; 
     h.checkId(userId);
     h.checkId(postId);
 
@@ -363,7 +362,7 @@ router.route("/:postId/comment").post(async (req, res) => {
   }
 });
 
-// needs to change method from get to delete
+
 router.route("/:commentId/deleteComment").get(async (req, res) => {
   try {
     let userId = req.session.user.userID;

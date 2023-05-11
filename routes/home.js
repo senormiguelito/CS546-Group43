@@ -9,7 +9,6 @@ const router = Router();
 router.route("/").get(async (req, res) => {
   try {
     // let posts = await postData.getAll();
-    // console.log(posts.title, posts.description)
     let role = req.session.user.userSessionData.role;
     if (!role) throw "You must provide a role";
     let message = "";
@@ -75,9 +74,7 @@ router.route("/provideList").get(async (req, res) => {
 
 router.route("/provideList/sortBy").get(async (req, res) => {
   try {
-    // console.log(req.method,"req")
-    // console.log("in porviderList filter route")
-    // console.log(req.params,req.body)
+
     let user = req.session.user.userSessionData;
     let filterBy = xss(req.body.filter);
     let userList = undefined;
@@ -100,8 +97,7 @@ router.route("/provideList/sortBy").get(async (req, res) => {
 
 router.route("/provideList/searchArea").get(async (req, res) => {
   try {
-    // console.log("in porviderList search area filter route")
-    // console.log(req.params,req.body)
+
     let user = req.session.user.userSessionData;
     let searchArea = xss(req.body.searchAreaInput);
     let userList = undefined;
@@ -109,7 +105,7 @@ router.route("/provideList/searchArea").get(async (req, res) => {
     searchArea = parseInt(searchArea)
     userList = await userData.filterProviderBySearchArea(user, searchArea);
     // const userList = await userData.getUsersByRole("provider");
-    // console.log(userList)
+
     return res.status(200).render("providerlist", { userList: userList });
   } catch (e) {
     return res.status(400).render("providerlist", { error: e });
@@ -191,8 +187,7 @@ router
       const arrCategories = categories
         .split(",")
         .map((s) => s.trim().replace(/"/g, "")); // convert categories from html into array
-      // console.log(arrCategories);
-      // console.log(Array.isArray(arr));
+
 
       const profileUpdated = await userData.update(
         req.session.user.userID,
@@ -226,23 +221,12 @@ router
     }
   });
 
-// router.route("/seekers").get(async (req, res) => {
-//   try {
-//     const userList = await userData.getUsersByRole("seeker");
-//     // console.log(userList)
-//     res.render("seekerList", { userList: userList });
-//   } catch (e) {
-//     res.render("seekerList", { error: e });
-//     // return res.status(400).render("error", { error: e });
-//   }
-// });
-
 router
   .route("/messages")
   .get(async (req, res) => {
     const userSession = req.session.user.userSessionData;
 
-    // console.log(userSession)
+
     try {
       let messages = await messageData.getMessages(userSession._id);
       for (let i = 0; i < messages.length; i++) {
@@ -271,16 +255,14 @@ router
         }
       }
 
-      // console.log(messages);
+
 
       return res.render("dmList", { title: "messages", messages: messages });
     } catch (e) {
       console.log(e); // --------------------------------> I think we need that return here
       // return res.status(400).render("error", { error: e });
     }
-    // const messages = await messageData.getMessages(userSession._id);
-    // console.log(messages);
-    // res.render("dmList", { title: "messages", messages: messages });
+
   })
   .post(async (req, res) => {
     const userSession = req.session.user.userSessionData;
@@ -290,8 +272,7 @@ router
     if(message.trim().length==0){
       return res.status(400).render("error", { error: "Empty message", badInput : true });
     }
-    // console.log(reciever, "reciever");
-    // console.log(message, "message");
+
     try {
       if (message.includes("localhost:3000")) {
         message =
@@ -306,7 +287,7 @@ router
       );
 
       const messages = await messageData.getMessages(userSession._id);
-      // console.log(messages);
+
       for (let i = 0; i < messages.length; i++) {
         // changing the senderId to senderName
         let m = messages[i].message;
@@ -331,15 +312,14 @@ router
           messages[i].sender = false;
         }
       }
-      // res.redirect("/messages");
+
       return res
         .status(200)
         .render("dmList", { title: "messages", messages: messages });
-      // return res.redirect("/home/messages");
+
     } catch (e) {
-      // console.log(e)
-      // console.log(e);
-      return res.status(400).render("error", { error: e });
+
+      return res.status(400).render("error", { error: e, badInput: true });
     }
   });
 
