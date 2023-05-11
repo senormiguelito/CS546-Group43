@@ -14,8 +14,9 @@
                     width="200" height="200">
                   {{/if}}
                 </div>
-                {{#if user.firstName}}<h6 class="f-w-600">{{user.firstName}} {{user.lastName}}</h6>{{/if}}
-               {{#if user.role}}<p>{{user.role}}</p>{{/if}}
+                {{#if user.firstName}}<h1 class="f-w-600">{{user.firstName}} {{user.lastName}}</h1>{{/if}}
+
+               {{#if user.role}}<h2>{{user.role}}</h2>{{/if}}
                 <i class=" mdi mdi-square-edit-outline feather icon-edit m-t-10 f-16"></i>
               </div>
             </div>
@@ -28,8 +29,8 @@
                 <a href="mailto:{{#if user.emailAddress}}{{user.emailAddress}}{{else}}emailnotprovided@TradeBridge.com{{/if}}"><i class="fas fa-envelope"></i></a>
               </span>
               <div class="card-block">
-                <h6 class="m-b-20 p-b-5 b-b-default f-w-600">Information : </h6>
-                
+                <h3 class="m-b-20 p-b-5 b-b-default f-w-600">Information : </h3>
+                <h4>...</h4>
                 <div class="row">
                   <div class="col-sm-3">
                     <h5 class="m-b-10 f-w-600">Name:</h5>
