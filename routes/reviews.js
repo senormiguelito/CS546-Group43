@@ -65,14 +65,19 @@ router.route("/:userId/allReviews").get(async (req, res) => {
     if (reviews.reviewsList) {
       // console.log(reviews.reviewsList, "jvjj");
       let abletoedituser = req.session.user.userID;
-      
-      return res
-        .status(200)
-        .render("reviews", {
-          reviews: reviews.reviewsList,
-          found: true,
-          abletoedituser,
-        });
+
+      reviews.reviewsList.forEach((review) => {
+        if (review.userId == abletoedituser) {
+          review.userId = true;
+        } else {
+          review.userId = false;
+        }
+      });
+
+      return res.status(200).render("reviews", {
+        reviews: reviews.reviewsList,
+        found: true,
+      });
     } else {
       badInput = true;
 
