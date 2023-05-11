@@ -204,9 +204,8 @@ router
           "project with this projectId was not found in the database"
         );
       return res.render("just1project", {
-        title: projectReq.title,
-        description: projectReq.description,
-        status: projectReq.status,
+        project: projectReq,
+        projectId: projectId
       });
     } catch (e) {
       return res.status(404).render("error", { error: e, badInput: true });

@@ -261,17 +261,6 @@ export const getByCommentId = async (id) => {
   return post;
 };
 
-// export const getpostByPostId = async (userId) => {
-//   h.checkId(userId);
-//   id = id.trim();
-//   const post = await postsCollection.findOne({
-//     userId: { $elemMatch: { _id: userId } },
-//   });
-
-//   if (!post) throw "No band with that id";
-//   // post._id = post._id.toString()
-//   return post;
-// };
 
 export const getByRole = async (role) => {
   h.checkrole(role);
@@ -291,10 +280,4 @@ export const getByRole = async (role) => {
 
   return postList;
 
-
-  // const post = await postsCollection.find({role: role});
-  // if (!post) throw 'No post found in the database with that id';
-  // post._id = post._id.toString()
-
-  // return post;
 };

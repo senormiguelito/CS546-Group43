@@ -3,6 +3,7 @@ import { ObjectId } from 'mongodb';
 import * as h from '../helpers.js';
 import { update } from './posts.js';
 import { projectData, userData, postData } from './index.js';
+import { all } from 'axios';
 let date = new Date();
 const userCollection = await user();
 
@@ -89,6 +90,7 @@ export const getAllProjectsByUser = async (userId) => {
   const user = await userCollection.findOne({ _id: new ObjectId(userId) }); // converts string userId to an objectId to be compared
   if (!user) throw new Error("No user with that ID in our database");
   let allUserProjects = user.projects;
+  console.log(allUserProjects)
   for (let i in allUserProjects) {
     allUserProjects[i]._id = allUserProjects[i]._id.toString();
   }

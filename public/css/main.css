@@ -123,7 +123,7 @@ button[type="button"]:hover {
 }
 
 .required {
-  color: red;
+  color: #e80000;
   margin-left: 5px;
   font-size: 18px;
   font-weight: bold;
